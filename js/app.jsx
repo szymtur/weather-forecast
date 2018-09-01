@@ -56,7 +56,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
         getData () {
-            fetch(`http://api.openweathermap.org/data/2.5/weather?q=${this.state.input}&units=${this.state.units}&lang=${this.state.lang}&appid=${this.state.appid}`)
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${this.state.input}&units=${this.state.units}&lang=${this.state.lang}&appid=${this.state.appid}`)
             .then(resp => {
                 if(resp.ok) {
                     return resp.json();
@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
         getNextDaysData () {
-            fetch(`http://api.openweathermap.org/data/2.5/forecast?q=${this.state.input}&units=${this.state.units}&lang=${this.state.lang}&appid=${this.state.appid}`)
+            fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${this.state.input}&units=${this.state.units}&lang=${this.state.lang}&appid=${this.state.appid}`)
             .then(resp => {
                 if(resp.ok) {
                     return resp.json();
