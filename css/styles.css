@@ -1,0 +1,261 @@
+/* Main styles - start */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    width: 100%;
+    height: 100vh;
+    font-family: Montserrat;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+#app {
+    width: 550px;
+    height: 90%;
+    background: #e0e0e0;
+}
+/* Main styles - end */
+
+
+
+/* Header styles - start */
+#app .header {
+    width: 95%;
+    height:15%;
+    display: flex;
+    justify-content: space-between;
+    margin: 0 auto;
+    padding: 2%;
+    overflow: hidden;
+}
+
+#app .header .caption {
+    margin-top: 2%
+}
+
+#app .current-date {
+    font-size: 0.9em;
+}
+/* Header styles - end */
+
+
+
+/* Search section styles - start */
+#app .search {
+    width: 95%;
+    height: 70px;
+    margin: 0 auto;
+    padding: 1%;
+}
+
+#app .search input {
+    width: 60%;
+    height: 30px;
+    border-radius: 5px;
+    outline: none;
+    border: 1px solid black;
+    text-align: center;
+}
+
+#app .search input[type='submit'] {
+    width: 37%;
+    margin-left: 2%;
+    height: 30px;
+    border-radius: 5px;
+    border: 1px solid black; 
+    background: gray;
+    outline: none;
+    color: white;
+    font-size: 0.9em;
+    font-weight: bold;
+    transition: all 0.5s;
+}
+
+#app .search input[type='submit']:hover {
+    background: black;
+    color: white;
+}
+/* Search section styles - end */
+
+
+
+/* Current weather section styles - start */
+.current-weather {
+    width: 93%;
+    height: 160px;
+    padding: 2%;
+    margin: 0 auto;
+    background: white;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    color: blue;
+    display: flex;
+    justify-content: space-between;
+    overflow: hidden;
+}
+
+.current-weather .left-col {
+    width: 40%;
+    height: 100%;
+}
+
+.current-weather .left-col h3{
+    font-weight: 600;
+}
+
+.current-weather .left-col .left-rows {
+    width: 100%;
+    height: 25%;
+} 
+
+.current-weather .left-col .left-rows p {
+    width: 30px;
+    margin-right: 10px;
+    text-align: center;
+    display: inline-block;
+}
+
+.current-weather .left-col .left-rows h3 {
+    display: inline-block;
+}
+
+.current-weather .left-col .left-rows p .wi {
+    font-size: 1.4em;
+    color: black;
+}
+
+.current-weather .right-col {
+    width: 59%;
+    height: 100%;
+    display: flex;
+    flex-wrap: wrap;
+}
+
+.current-weather .right-col .col-70 {
+    width: 70%;
+    height: 80%;
+    text-align: center;
+}
+
+.current-weather .right-col .col-70 h5 {
+    margin-top: 10%;
+    font-weight: 600;
+    font-size: 1em;
+}
+
+.current-weather .right-col .col-30 {
+    width: 30%;
+    height: 80%;
+    text-align: center;
+}
+
+.current-weather .right-col .col-30 .current-icon {
+    margin-top: 10%;
+    color: black;
+    font-size: 3.4em;
+}
+
+.current-weather .right-col .right-bottom {
+    width: 100%;
+    height: 20%;
+    text-align: right;
+}
+
+.current-weather .right-col .right-bottom button {
+    width: 120px;
+    height: 30px;
+    border: 1px solid gray; 
+    background: #e0e0e0;
+    outline: none;
+    color: gray;
+    font-size: 0.9em;
+    font-weight: bold;
+    transition: all 0.5s;
+}
+
+.current-weather .right-col .right-bottom button:hover {
+    background: white;
+    color: black;
+}
+/* Current weather section styles - end */
+
+
+
+/* Next five days section styles - start */
+.next-days-weather{
+    width: 93%;
+    height: 220px;
+    margin: 0 auto;
+    display: flex;
+    justify-content: space-between;
+}
+
+.next-days-weather .day-container {
+    width: 19.5%;
+    height: 100%;
+    background: #f5f5f5;
+    padding-bottom: 10px;
+    padding-top: 5px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.next-days-weather .day-container:first-child {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px; 
+}
+
+.next-days-weather .day-container:last-child {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px; 
+}
+
+.next-days-weather .day-container .row {
+    width: 100%;
+    padding: 2px;
+}
+
+.next-days-weather .day-container .row.date,
+.next-days-weather .day-container .row.icon,
+.next-days-weather .day-container .row.description,
+.next-days-weather .day-container .row p {
+    text-align: center;
+}
+
+.next-days-weather .day-container .row.date h5 {
+    font-weight: 600;
+    font-size: 0.8em;
+}
+
+.next-days-weather .day-container .row.icon {
+    font-size: 2em;
+}
+
+.next-days-weather .day-container .row.description {
+    height: 30px;
+}
+
+.next-days-weather .day-container .row.description h6 {
+    font-weight: 600;
+}
+
+.next-days-weather .day-container .row p {
+    display: inline-block;
+    width: 30px;
+}
+.next-days-weather .day-container .row h5 {
+    display: inline-block;
+    font-weight: 500;
+    font-size: 0.8em;
+}
+
+.next-days-weather .day-container .row p .wi {
+    font-size: 1em;
+}
+/* Next five days section styles - end */
