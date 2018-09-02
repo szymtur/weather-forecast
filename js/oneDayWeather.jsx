@@ -4,8 +4,10 @@ import CurrentIcon from './currentIcon.jsx';
 class OneDayWeather extends React.Component{
     render(){
         
+        //Destructuring object with weather data
         let {date, temp, pressure, humidity, description, icon, id} = this.props.nextDay;
 
+        //Function that adds the right temperature unit
         let tempWithUnit = (units) => {
             let data;
             if(units == 'metric'){

@@ -4,6 +4,7 @@ import CurrentIcon from './currentIcon.jsx';
 class CurrentWeather extends React.Component{
     render(){
 
+        //Destructuring object with weather data
         let {city, temp, pressure, humidity, description, icon, id} = this.props.currentDay;
 
         return(

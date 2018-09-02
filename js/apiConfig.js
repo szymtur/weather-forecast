@@ -1,11 +1,10 @@
 const apiConfig = { 
-    appid:  "d69fb57c3ccd6565f23957b76566730f",
+    appid:  "b6907d289e10d714a6e88b30761fae22",     //fake api key
     units:  "metric",
     lang:   "en"
 };
 
 module.exports = apiConfig;
-
 
 // Units format
 //     For temperature in Fahrenheit use units: "imperial"

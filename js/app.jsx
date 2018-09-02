@@ -23,8 +23,8 @@ document.addEventListener('DOMContentLoaded', function(){
             nextDay__5: {date: '', temp: '', pressure: '', humidity: '', description: '', icon: '', id: ''},
         }
 
-
-        handleClick = (event) => {
+        //'get weather' button handling
+        handleSubmit = (event) => {
             event.preventDefault();
             this.getData();
             this.getNextDaysData ();
@@ -33,14 +33,14 @@ document.addEventListener('DOMContentLoaded', function(){
             });
         }
 
-
+        //input field handling
         handleInput = (event) => {
             this.setState({
                 input: event.target.value,
             })
         }
 
-
+        //'5 day forecast' button function to show or hide 'nextDaysWeather' component
         displayNextDays = () => {
             if(this.state.displayNextDaysWeather === 'none'){
                 this.setState({
@@ -54,14 +54,15 @@ document.addEventListener('DOMContentLoaded', function(){
             }
         }
 
-
+        //get current weather info from api
         getData () {
-            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${this.state.input}&units=${this.state.units}&lang=${this.state.lang}&appid=${this.state.appid}`)
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${this.state.input.trim()}&units=${this.state.units}&lang=${this.state.lang}&appid=${this.state.appid}`)
             .then(resp => {
                 if(resp.ok) {
                     return resp.json();
                 } 
                 else {
+                    //errors handling
                     if(resp.status == 400 || resp.status == 404){
                         this.setState({
                             currentDay: {city: 'wrong city name'},
@@ -121,14 +122,15 @@ document.addEventListener('DOMContentLoaded', function(){
             });
         }
 
-
+        //get next five days weather info from api
         getNextDaysData () {
-            fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${this.state.input}&units=${this.state.units}&lang=${this.state.lang}&appid=${this.state.appid}`)
+            fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${this.state.input.trim()}&units=${this.state.units}&lang=${this.state.lang}&appid=${this.state.appid}`)
             .then(resp => {
                 if(resp.ok) {
                     return resp.json();
                 }
                 else {
+                    //errors handling
                     if(resp.status == 400 || resp.status == 404){
                         this.setState({
                             currentDay: {
@@ -231,8 +233,8 @@ document.addEventListener('DOMContentLoaded', function(){
                     </div>
 
                     <div  className="search">
-                        <form onSubmit={ this.handleClick }>
-                            <input onChange={ this.handleInput } value={ this.state.input } placeholder = "city"/>
+                        <form onSubmit={ this.handleSubmit }>
+                            <input type="text" onChange={ this.handleInput } value={ this.state.input } placeholder = "city"/>
                             <input type="submit" value="get weather" />
                         </form>
                     </div>
