@@ -71,6 +71,10 @@ body {
     outline: none;
     border: 1px solid black;
     text-align: center;
+
+    -webkit-appearance: none;
+        -moz-appearance: none;
+            appearance: none;
 }
 
 #app .search input[type='text'].normal::-webkit-input-placeholder{
@@ -124,16 +128,18 @@ body {
     border-radius: 5px;
     border: 1px solid black; 
     background: gray;
-    outline: none;
+    outline: none;    
     color: #ffffff;
     font-size: 0.9em;
     font-weight: bold;
-    -webkit-transition: all 0.5s;
-    -o-transition: all 0.5s;
+
     -webkit-appearance: none;
         -moz-appearance: none;
             appearance: none;
-    transition: all 0.5s;
+
+    -webkit-transition: all 0.5s;
+        -o-transition: all 0.5s;
+            transition: all 0.5s;
 }
 
 #app .search input[type='submit']:hover {
@@ -157,10 +163,10 @@ body {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
+    overflow: hidden;
     -webkit-box-pack: justify;
         -ms-flex-pack: justify;
             justify-content: space-between;
-    overflow: hidden;
 }
 
 .current-weather .left-col {

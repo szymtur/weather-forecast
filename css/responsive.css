@@ -42,9 +42,14 @@
         height: 220px;
         margin: 0 auto;
         margin-bottom: 20px;    
+        display: -webkit-box;    
+        display: -ms-flexbox;    
         display: flex;
-        justify-content: space-between;
-        flex-wrap: wrap;
+        -webkit-box-pack: justify;
+            -ms-flex-pack: justify;
+                justify-content: space-between;
+        -ms-flex-wrap: wrap;
+            flex-wrap: wrap;
     }
 
     .next-days-weather .day-container:nth-child(1),
@@ -75,6 +80,3 @@
         margin-left: 15%;
     }
 }
-
-
-
