@@ -20,9 +20,15 @@
         width: 150%;
     }
 
+    .current-weather .right-col .col-65,
+    .current-weather .right-col .col-35 {
+        width: 50%;
+    }
+
     .current-weather .right-col .col-35 .current-icon {
-        margin-right: 10px;
+        margin-right: 5px;
         font-size: 3em;
+        text-align: right;
     }
 
     .current-weather .right-col .col-65 h5 {
