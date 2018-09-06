@@ -53,13 +53,23 @@ body {
     padding: 1%;
 }
 
-#app .search input {
+#app .search input[type='text'] {
     width: 60%;
     height: 30px;
     border-radius: 5px;
     outline: none;
     border: 1px solid black;
     text-align: center;
+}
+
+#app .search input[type='text'].normal::placeholder{
+    font-family: Montserrat;
+    font-weight: 500;    
+}
+
+#app .search input[type='text'].warning::placeholder{
+    color: red;
+    font-weight: 600;
 }
 
 #app .search input[type='submit'] {
@@ -100,7 +110,7 @@ body {
 }
 
 .current-weather .left-col {
-    width: 40%;
+    width: 41%;
     height: 100%;
 }
 

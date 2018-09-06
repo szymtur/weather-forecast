@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', function(){
         handleSubmit = (event) => {
             event.preventDefault();
             this.getData();
-            this.getNextDaysData ();
+            this.getNextDaysData();
             this.setState({
                 input: "",
             });
@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function(){
         }
 
 
-        //get next five days weather info from api
+        //get five days weather info from api
         getNextDaysData () {
             fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${this.state.input.trim()}&units=${this.state.units}&lang=${this.state.lang}&appid=${this.state.appid}`)
             .then(resp => {
@@ -194,12 +194,12 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
         componentWillMount(){
-            //making background color on mobile devices
+            //add background color on mobile devices
             if (/iphone|ipod|ipad|blackberry|Android|webOS|IEMobile/i.test(navigator.userAgent)){
                 document.querySelector("body").style.background = "#e0e0e0";
             }
 
-            //depending on the current hour, selects the weather data for the next days from 12pm
+            //depending on the current hour, selects the weather data from 12pm for the next days 
             let currentHour = new Date().getHours();
 
             if(currentHour >= 8 && currentHour < 11){
@@ -255,8 +255,18 @@ document.addEventListener('DOMContentLoaded', function(){
 
                     <div  className="search">
                         <form onSubmit={this.handleSubmit}>
-                            <input type="text" onChange={this.handleInput} value={this.state.input} placeholder = {this.state.placeholder}/>
-                            <input type="submit" value="get weather" disabled={!this.state.input}/>
+                            <input 
+                                type="text" 
+                                onChange={this.handleInput} 
+                                value={this.state.input} 
+                                placeholder={this.state.placeholder} 
+                                className={this.state.placeholder === 'city' ? 'normal' : 'warning'}
+                            />
+                            <input 
+                                type="submit" 
+                                value="get weather" 
+                                disabled={!this.state.input}
+                            />
                         </form>
                     </div>
 
