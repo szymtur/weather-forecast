@@ -2,9 +2,10 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import CurrentDate from './currentDate.jsx';
 import CurrentWeather from './currentWeather.jsx';
-import apiConfig from './apiConfig.js';
 import NextDaysWeather from './nextDaysWeather.jsx';
+import apiConfig from './apiConfig.js';
 import '../css/styles.css';
+import '../css/responsive.css';
 
 document.addEventListener('DOMContentLoaded', function(){
 
@@ -14,8 +15,10 @@ document.addEventListener('DOMContentLoaded', function(){
             units: apiConfig.units,
             lang: apiConfig.lang,
             input: "",
+            placeholder: 'city',
             displayNextDaysWeather: 'none',
-            currentDay: {city: '', temp: '', pressure: '', humidity: '', description: '', icon: '', id: ''},
+            nextDaysDataList: [],
+            currentDay: {city: '', country: '', temp: '', pressure: '', humidity: '', description: '', icon: '', id: ''},
             nextDay__1: {date: '', temp: '', pressure: '', humidity: '', description: '', icon: '', id: ''},
             nextDay__2: {date: '', temp: '', pressure: '', humidity: '', description: '', icon: '', id: ''},
             nextDay__3: {date: '', temp: '', pressure: '', humidity: '', description: '', icon: '', id: ''},
@@ -23,15 +26,17 @@ document.addEventListener('DOMContentLoaded', function(){
             nextDay__5: {date: '', temp: '', pressure: '', humidity: '', description: '', icon: '', id: ''},
         }
 
+
         //'get weather' button handling
         handleSubmit = (event) => {
             event.preventDefault();
             this.getData();
             this.getNextDaysData ();
             this.setState({
-                input: ""
+                input: "",
             });
         }
+
 
         //input field handling
         handleInput = (event) => {
@@ -39,6 +44,7 @@ document.addEventListener('DOMContentLoaded', function(){
                 input: event.target.value,
             })
         }
+
 
         //'5 day forecast' button function to show or hide 'nextDaysWeather' component
         displayNextDays = () => {
@@ -54,73 +60,44 @@ document.addEventListener('DOMContentLoaded', function(){
             }
         }
 
+
         //get current weather info from api
         getData () {
             fetch(`https://api.openweathermap.org/data/2.5/weather?q=${this.state.input.trim()}&units=${this.state.units}&lang=${this.state.lang}&appid=${this.state.appid}`)
             .then(resp => {
                 if(resp.ok) {
+                    this.setState({ placeholder: 'city' });
                     return resp.json();
                 } 
                 else {
                     //errors handling
                     if(resp.status == 400 || resp.status == 404){
                         this.setState({
-                            currentDay: {city: 'wrong city name'},
-                            nextDay__1: {temp: ''},
-                            nextDay__2: {temp: ''},
-                            nextDay__3: {temp: ''},
-                            nextDay__4: {temp: ''},
-                            nextDay__5: {temp: ''},
+                           placeholder: 'wrong city name'
                         })
                     }
                     throw new Error(resp.statusText);
                 }
             })
             .then(data => {
-                if(this.state.units == 'metric'){
-                    this.setState({
-                        currentDay: {
-                            city: data.name, 
-                            temp: `${Math.round(data.main.temp)} \u00b0C`, 
-                            pressure: `${Math.round(data.main.pressure)} hPa`, 
-                            humidity: `${data.main.humidity} %`, 
-                            description: data.weather[0].description, 
-                            icon: data.weather[0].icon,
-                            id: data.weather[0].id
-                        }
-                    })
-                }
-                else if(this.state.units == 'imperial'){
-                    this.setState({
-                        currentDay: {
-                            city: data.name, 
-                            temp: `${Math.round(data.main.temp)} \u00b0F`, 
-                            pressure: `${Math.round(data.main.pressure)} hPa`, 
-                            humidity: `${data.main.humidity} %`, 
-                            description: data.weather[0].description, 
-                            icon: data.weather[0].icon,
-                            id: data.weather[0].id
-                        }
-                    })
-                }
-                else{
-                    this.setState({
-                        currentDay: {
-                            city: data.name, 
-                            temp: `${Math.round(data.main.temp)} \u00b0K`, 
-                            pressure: `${Math.round(data.main.pressure)} hPa`, 
-                            humidity: `${data.main.humidity} %`, 
-                            description: data.weather[0].description, 
-                            icon: data.weather[0].icon,
-                            id: data.weather[0].id
-                        }
-                    })
-                }
+                this.setState({
+                    currentDay: {
+                        city: data.name,
+                        country: data.sys.country, 
+                        temp: `${Math.round(data.main.temp)}`, 
+                        pressure: `${Math.round(data.main.pressure)} hPa`, 
+                        humidity: `${data.main.humidity} %`, 
+                        description: data.weather[0].description, 
+                        icon: data.weather[0].icon,
+                        id: data.weather[0].id
+                    }
+                })
             })
             .catch(error => {
                 console.log(error)
             });
         }
+
 
         //get next five days weather info from api
         getNextDaysData () {
@@ -130,23 +107,15 @@ document.addEventListener('DOMContentLoaded', function(){
                     return resp.json();
                 }
                 else {
-                    //errors handling
-                    if(resp.status == 400 || resp.status == 404){
-                        this.setState({
-                            currentDay: {
-                                city: 'wrong city name'
-                            }
-                        })
-                    }
                     throw new Error(resp.statusText);
                 }
             })
             .then(data => {
-                updateStateDay__1(data, 7);
-                updateStateDay__2(data, 15);
-                updateStateDay__3(data, 23);
-                updateStateDay__4(data, 31);
-                updateStateDay__5(data, 39);
+                updateStateDay__1(data, this.state.nextDaysDataList[0]);
+                updateStateDay__2(data, this.state.nextDaysDataList[1]);
+                updateStateDay__3(data, this.state.nextDaysDataList[2]);
+                updateStateDay__4(data, this.state.nextDaysDataList[3]);
+                updateStateDay__5(data, this.state.nextDaysDataList[4]);
             })
             .catch(error => {
                 console.log(error)
@@ -224,6 +193,58 @@ document.addEventListener('DOMContentLoaded', function(){
         }
 
 
+        componentWillMount(){
+            //making background color on mobile devices
+            if (/iphone|ipod|ipad|blackberry|Android|webOS|IEMobile/i.test(navigator.userAgent)){
+                document.querySelector("body").style.background = "#e0e0e0";
+            }
+
+            //depending on the current hour, selects the weather data for the next days from 12pm
+            let currentHour = new Date().getHours();
+
+            if(currentHour >= 8 && currentHour < 11){
+                this.setState({
+                    nextDaysDataList: [1, 9, 17, 25, 33]
+                })
+            }
+            else if(currentHour >= 5 && currentHour < 8){
+                this.setState({
+                    nextDaysDataList: [2, 10, 18, 26, 34]
+                })
+            }
+            else if(currentHour >= 2 && currentHour < 5){
+                this.setState({
+                    nextDaysDataList: [3, 11, 19, 27, 35]
+                })
+            }
+            else if(currentHour >= 23 && currentHour < 2){
+                this.setState({
+                    nextDaysDataList: [4, 12, 20, 28, 36]
+                })
+            }
+            else if(currentHour >= 20 && currentHour < 23){
+                this.setState({
+                    nextDaysDataList: [5, 13, 21, 29, 37] 
+                })
+            }
+            else if(currentHour >= 17 && currentHour < 20){
+                this.setState({
+                    nextDaysDataList: [6, 14, 22, 30, 38] 
+                })
+            }
+            else if(currentHour >= 14 && currentHour < 17){
+                this.setState({
+                    nextDaysDataList: [7, 15, 23, 31, 39] 
+                })
+            }
+            else if(currentHour >= 11 && currentHour < 14){
+                this.setState({
+                    nextDaysDataList: [8, 16, 24, 32, 39]
+                })
+            }
+        }
+
+
         render(){
             return(
                 <div>
@@ -233,13 +254,14 @@ document.addEventListener('DOMContentLoaded', function(){
                     </div>
 
                     <div  className="search">
-                        <form onSubmit={ this.handleSubmit }>
-                            <input type="text" onChange={ this.handleInput } value={ this.state.input } placeholder = "city"/>
-                            <input type="submit" value="get weather" />
+                        <form onSubmit={this.handleSubmit}>
+                            <input type="text" onChange={this.handleInput} value={this.state.input} placeholder = {this.state.placeholder}/>
+                            <input type="submit" value="get weather" disabled={!this.state.input}/>
                         </form>
                     </div>
 
-                    <CurrentWeather 
+                    <CurrentWeather
+                        units = {this.state.units}
                         currentDay = {this.state.currentDay}
                         displayNextDays = {this.displayNextDays}
                     />

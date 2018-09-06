@@ -5,17 +5,31 @@ class CurrentWeather extends React.Component{
     render(){
 
         //Destructuring object with weather data
-        let {city, temp, pressure, humidity, description, icon, id} = this.props.currentDay;
+        let {city, country, temp, pressure, humidity, description, icon, id} = this.props.currentDay;
+
+        //Function that adds the right temperature unit
+        let tempWithUnit = (units) => {
+            let data;
+            if(units == 'metric'){
+                return data = `${temp} \u00b0C`
+            }
+            else if(units == 'imperial'){
+                return data = `${temp} \u00b0F`
+            }
+            else{
+                return data = `${temp} \u00b0K`
+            }
+        }
 
         return(
-            <div className = "current-weather">
+            <div className = "current-weather" style={{display: city === "" ? 'none' : 'flex'}}>
 
                 <div className = "left-col">
                     <div className="left-rows">
-                        <h3>{city}</h3>
+                        <h3>{city} {country}</h3>
                     </div>
                     <div className="left-rows">
-                        <p><i className="wi wi-thermometer"></i></p><h3>{temp}</h3>
+                        <p><i className="wi wi-thermometer"></i></p><h3>{tempWithUnit(this.props.units)}</h3>
                     </div>
                     <div className="left-rows">
                         <p><i className="wi wi-barometer"></i></p><h3>{pressure}</h3>
@@ -26,13 +40,15 @@ class CurrentWeather extends React.Component{
                 </div>
 
                 <div className = "right-col">
-                    <div className="col-70">
+                    <div className="col-65">
                         <h5>{description}</h5>
                     </div>
-                    <div className = "col-30">    
+                    <div className = "col-35">    
                         <CurrentIcon icon ={icon} id={id}/>
                     </div>
-                    <div className="right-bottom"><button onClick={this.props.displayNextDays}>5 day forecast</button></div>
+                    <div className="right-bottom">
+                        <button onClick={this.props.displayNextDays}>5 day forecast</button>
+                    </div>
                 </div>
                 
             </div>

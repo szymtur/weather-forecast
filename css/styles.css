@@ -70,15 +70,15 @@ body {
     border: 1px solid black; 
     background: gray;
     outline: none;
-    color: white;
+    color: #ffffff;
     font-size: 0.9em;
     font-weight: bold;
     transition: all 0.5s;
 }
 
 #app .search input[type='submit']:hover {
-    background: black;
-    color: white;
+    background: #000000;
+    color: #ffffff;
 }
 /* Search section styles - end */
 
@@ -90,10 +90,10 @@ body {
     height: 160px;
     padding: 2%;
     margin: 0 auto;
-    background: white;
+    background: #ffffff;
     border-radius: 5px;
     margin-bottom: 10px;
-    color: blue;
+    color: #800080;
     display: flex;
     justify-content: space-between;
     overflow: hidden;
@@ -126,7 +126,7 @@ body {
 
 .current-weather .left-col .left-rows p .wi {
     font-size: 1.4em;
-    color: black;
+    color: #000000;
 }
 
 .current-weather .right-col {
@@ -136,27 +136,27 @@ body {
     flex-wrap: wrap;
 }
 
-.current-weather .right-col .col-70 {
-    width: 70%;
+.current-weather .right-col .col-65 {
+    width: 65%;
     height: 80%;
     text-align: center;
 }
 
-.current-weather .right-col .col-70 h5 {
+.current-weather .right-col .col-65 h5 {
     margin-top: 10%;
     font-weight: 600;
     font-size: 1em;
 }
 
-.current-weather .right-col .col-30 {
-    width: 30%;
+.current-weather .right-col .col-35 {
+    width: 35%;
     height: 80%;
     text-align: center;
 }
 
-.current-weather .right-col .col-30 .current-icon {
+.current-weather .right-col .col-35 .current-icon {
     margin-top: 10%;
-    color: black;
+    color: #000000;
     font-size: 3.4em;
 }
 
@@ -172,15 +172,15 @@ body {
     border: 1px solid gray; 
     background: #e0e0e0;
     outline: none;
-    color: gray;
+    color: #808080;
     font-size: 0.9em;
     font-weight: bold;
     transition: all 0.5s;
 }
 
 .current-weather .right-col .right-bottom button:hover {
-    background: white;
-    color: black;
+    background: #ffffff;
+    color: #000000;
 }
 /* Current weather section styles - end */
 
@@ -191,6 +191,7 @@ body {
     width: 93%;
     height: 220px;
     margin: 0 auto;
+    margin-bottom: 20px;    
     display: flex;
     justify-content: space-between;
 }

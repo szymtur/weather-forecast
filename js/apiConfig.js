@@ -1,5 +1,5 @@
 const apiConfig = { 
-    appid:  "b6907d289e10d714a6e88b30761fae22",     //fake api key
+    appid:  "d69fb57c3ccd6565f23957b76566730f",
     units:  "metric",
     lang:   "en"
 };
