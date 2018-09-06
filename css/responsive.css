@@ -26,14 +26,15 @@
     }
 
     .current-weather .right-col .col-35 .current-icon {
-        margin-right: 5px;
+        /* margin-right: 5px; */
         font-size: 3em;
-        text-align: right;
+        text-align: center;
     }
 
     .current-weather .right-col .col-65 h5 {
         margin-top: 75px;
         width: 155%;
+        font-size: 0.8em;
     }
 
     .next-days-weather{

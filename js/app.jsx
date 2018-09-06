@@ -268,6 +268,9 @@ document.addEventListener('DOMContentLoaded', function(){
                                 value="get weather" 
                                 disabled={!this.state.input}
                             />
+                            {/* <button type='submit' onClick={this.handleSubmit} disabled={!this.state.input}>
+                                get weather 
+                            </button> */}
                         </form>
                     </div>
 
