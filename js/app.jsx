@@ -261,6 +261,7 @@ document.addEventListener('DOMContentLoaded', function(){
                                 value={this.state.input} 
                                 placeholder={this.state.placeholder} 
                                 className={this.state.placeholder === 'city' ? 'normal' : 'warning'}
+                                autoFocus
                             />
                             <input 
                                 type="submit" 

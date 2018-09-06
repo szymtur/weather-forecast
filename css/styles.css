@@ -180,7 +180,8 @@ body {
 .current-weather .right-col .right-bottom button {
     width: 120px;
     height: 30px;
-    border: 1px solid gray; 
+    border: 1px solid gray;
+    border-radius: 4px; 
     background: #e0e0e0;
     outline: none;
     color: #808080;
