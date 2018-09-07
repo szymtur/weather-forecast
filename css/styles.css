@@ -89,7 +89,7 @@ body {
     border-radius:10px;
     background: red;
 
-    -webkit-appearance: searchfield-cancel-button;
+    -webkit-appearance: none;
         -moz-appearance: none;
 }
 
