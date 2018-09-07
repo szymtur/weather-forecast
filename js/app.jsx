@@ -32,6 +32,7 @@ document.addEventListener('DOMContentLoaded', function(){
             event.preventDefault();
             this.getData();
             this.getNextDaysData();
+            this.blurInputSearchField();
             this.setState({
                 input: "",
             });
@@ -58,6 +59,10 @@ document.addEventListener('DOMContentLoaded', function(){
                     displayNextDaysWeather: 'none'
                 }) 
             }
+        }
+
+        blurInputSearchField = () => {
+            document.querySelector('input[type="search"]').blur();
         }
 
 
@@ -246,6 +251,12 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
         render(){
+
+            document.body.addEventListener( 'touchend', function(){
+                if( document.getElementById('input[type="search"]') )
+                    document.getElementById('input[type="search"]').blur();    
+            });
+
             return(
                 <div>
                     <div className="header">
@@ -261,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function(){
                                     value={this.state.input} 
                                     placeholder={this.state.placeholder} 
                                     className={this.state.placeholder === 'city' ? 'normal' : 'warning'}
-                                    // autoFocus
+                                    autoFocus
                                 />
                                 <input 
                                     type="submit" 
