@@ -32,9 +32,10 @@ document.addEventListener('DOMContentLoaded', function(){
             event.preventDefault();
             this.getData();
             this.getNextDaysData();
-            this.blurInputSearchField();
+            this.blurSearchField();
             this.setState({
                 input: "",
+                focus: 'false'
             });
         }
 
@@ -61,8 +62,10 @@ document.addEventListener('DOMContentLoaded', function(){
             }
         }
 
-        blurInputSearchField = () => {
-            document.querySelector('input[type="search"]').blur();
+
+        //remove focus from search field
+        blurSearchField = () => {
+            ReactDOM.findDOMNode(this).querySelector('input[type="search"]').blur();
         }
 
 
@@ -199,11 +202,6 @@ document.addEventListener('DOMContentLoaded', function(){
 
 
         componentWillMount(){
-            //add background color on mobile devices
-            if (/iphone|ipod|ipad|blackberry|Android|webOS|IEMobile/i.test(navigator.userAgent)){
-                document.querySelector("body").style.background = "#e0e0e0";
-            }
-
             //depending on the current hour, selects the weather data from 12pm for the next days 
             let currentHour = new Date().getHours();
 
@@ -250,13 +248,16 @@ document.addEventListener('DOMContentLoaded', function(){
         }
 
 
+        componentDidMount(){
+            //on mobile devices add background color and blur on search input
+            if (/iphone|ipod|ipad|blackberry|Android|webOS|IEMobile/i.test(navigator.userAgent)){
+                ReactDOM.findDOMNode(this).querySelector('input[type="search"]').blur();
+                document.querySelector("body").style.background = "#e0e0e0";
+            }
+        }
+
+
         render(){
-
-            document.body.addEventListener( 'touchend', function(){
-                if( document.getElementById('input[type="search"]') )
-                    document.getElementById('input[type="search"]').blur();    
-            });
-
             return(
                 <div>
                     <div className="header">
@@ -272,7 +273,7 @@ document.addEventListener('DOMContentLoaded', function(){
                                     value={this.state.input} 
                                     placeholder={this.state.placeholder} 
                                     className={this.state.placeholder === 'city' ? 'normal' : 'warning'}
-                                    autoFocus
+                                    autoFocus="true"
                                 />
                                 <input 
                                     type="submit" 
