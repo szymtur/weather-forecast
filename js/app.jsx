@@ -255,19 +255,19 @@ document.addEventListener('DOMContentLoaded', function(){
 
                     <div  className="search">
                         <form onSubmit={this.handleSubmit}>
-                            <input 
-                                type="text" 
-                                onChange={this.handleInput} 
-                                value={this.state.input} 
-                                placeholder={this.state.placeholder} 
-                                className={this.state.placeholder === 'city' ? 'normal' : 'warning'}
-                                autoFocus
-                            />
-                            <input 
-                                type="submit" 
-                                value="get weather" 
-                                disabled={!this.state.input}
-                            />
+                                <input 
+                                    type="search" 
+                                    onChange={this.handleInput} 
+                                    value={this.state.input} 
+                                    placeholder={this.state.placeholder} 
+                                    className={this.state.placeholder === 'city' ? 'normal' : 'warning'}
+                                    autoFocus
+                                />
+                                <input 
+                                    type="submit" 
+                                    value="get weather" 
+                                    disabled={!this.state.input}
+                                />
                         </form>
                     </div>
 

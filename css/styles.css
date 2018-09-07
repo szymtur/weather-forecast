@@ -31,7 +31,7 @@ body {
 
 
 /* Header styles - start */
-#app .header {
+.header {
     width: 95%;
     height:15%;
     display: -webkit-box;
@@ -45,11 +45,11 @@ body {
     overflow: hidden;
 }
 
-#app .header .caption {
+.header .caption {
     margin-top: 2%
 }
 
-#app .current-date {
+.current-date {
     font-size: 0.9em;
 }
 /* Header styles - end */
@@ -64,7 +64,13 @@ body {
     padding: 1%;
 }
 
-#app .search input[type='text'] {
+#app .search form{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+#app .search input[type='search'] {
     width: 60%;
     height: 30px;
     border-radius: 5px;
@@ -74,48 +80,58 @@ body {
 
     -webkit-appearance: none;
         -moz-appearance: none;
-            appearance: none;
 }
 
-#app .search input[type='text'].normal::-webkit-input-placeholder{
+#app .search input[type='search']::-webkit-search-cancel-button {
+    margin-right: 10px;
+    height: 12px;
+    width: 12px;
+    border-radius:10px;
+    background: red;
+
+    -webkit-appearance: none;
+        -moz-appearance: none;
+}
+
+#app .search input[type='search'].normal::-webkit-input-placeholder {
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;    
 }
 
-#app .search input[type='text'].normal:-ms-input-placeholder{
+#app .search input[type='search'].normal:-ms-input-placeholder {
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;    
 }
 
-#app .search input[type='text'].normal::-ms-input-placeholder{
+#app .search input[type='search'].normal::-ms-input-placeholder {
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;    
 }
 
-#app .search input[type='text'].normal::placeholder{
+#app .search input[type='search'].normal::placeholder {
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;    
 }
 
-#app .search input[type='text'].warning::-webkit-input-placeholder{
+#app .search input[type='search'].warning::-webkit-input-placeholder {
     font-family: 'Montserrat', sans-serif;
     color: red;
     font-weight: 600;
 }
 
-#app .search input[type='text'].warning:-ms-input-placeholder{
+#app .search input[type='search'].warning:-ms-input-placeholder {
     font-family: 'Montserrat', sans-serif;
     color: red;
     font-weight: 600;
 }
 
-#app .search input[type='text'].warning::-ms-input-placeholder{
+#app .search input[type='search'].warning::-ms-input-placeholder {
     font-family: 'Montserrat', sans-serif;
     color: red;
     font-weight: 600;
 }
 
-#app .search input[type='text'].warning::placeholder{
+#app .search input[type='search'].warning::placeholder {
     font-family: 'Montserrat', sans-serif;
     color: red;
     font-weight: 600;
@@ -123,7 +139,7 @@ body {
 
 #app .search input[type='submit'] {
     width: 37%;
-    margin-left: 2%;
+    /* margin-left: 2%; */
     height: 30px;
     border-radius: 5px;
     border: 1px solid black; 
@@ -135,7 +151,6 @@ body {
 
     -webkit-appearance: none;
         -moz-appearance: none;
-            appearance: none;
 
     -webkit-transition: all 0.5s;
         -o-transition: all 0.5s;
@@ -224,11 +239,12 @@ body {
 .current-weather .right-col .col-35 {
     width: 35%;
     height: 80%;
-    text-align: center;
+    text-align: right;
 }
 
 .current-weather .right-col .col-35 .current-icon {
     margin-top: 10%;
+    margin-right: 5px;
     color: #000000;
     font-size: 3.4em;
 }
