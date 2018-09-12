@@ -1,4 +1,6 @@
-@media (max-width: 640px)  { 
+/* @media (max-width: 640px) and (orientation: portrait) {  */
+@media (max-width: 420px){ 
+    
     /* Main styles - start */
         body{
         background: #e0e0e0;
