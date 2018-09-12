@@ -249,7 +249,11 @@ document.addEventListener('DOMContentLoaded', function(){
             //on mobile devices add background color and blur on search input
             if (/iphone|ipod|ipad|blackberry|Android|webOS|IEMobile/i.test(navigator.userAgent)){
                 ReactDOM.findDOMNode(this).querySelector('input[type="search"]').blur();
-                ReactDOM.findDOMNode(this).querySelector('.current-date').style.marginTop ='0';
+    
+                if (window.innerHeight < window.innerWidth) {
+                    ReactDOM.findDOMNode(this).querySelector('.current-date').style.marginTop ='-10px';
+                }
+
                 document.querySelector("body").style.background = "#e0e0e0";
             }
         }

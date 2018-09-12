@@ -152,3 +152,9 @@
     }
     /* Next five days section styles - end */
 }
+
+/* @media handheld and (orientation:landscape) {
+    .header .current-date{
+        margin-top: -10px;
+    }
+} */

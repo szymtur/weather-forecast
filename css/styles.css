@@ -54,20 +54,20 @@ body {
     height: 20px;
     width: 100%;
     font-size: 0.9em;
-    margin: 20px 0 5px 2px;
+    margin: 20px 0 5px 3px;
 }
 /* Header styles - end */
 
 
 /* Search section styles - start */
-#app .search {
+.search {
     width: 95%;
     height: 70px;
     margin: 0 auto;
     padding: 1.5%;
 }
 
-#app .search form{
+.search form{
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -79,7 +79,7 @@ body {
             align-items: center;
 }
 
-#app .search input[type='search'] {
+.search input[type='search'] {
     width: 60%;
     height: 30px;
     border-radius: 5px;
@@ -91,7 +91,7 @@ body {
         -moz-appearance: none;
 }
 
-#app .search input[type='search']::-webkit-search-cancel-button {
+.search input[type='search']::-webkit-search-cancel-button {
     margin-right: 10px;
     height: 12px;
     width: 12px;
@@ -102,51 +102,51 @@ body {
         -moz-appearance: none;
 }
 
-#app .search input[type='search'].normal::-webkit-input-placeholder {
+.search input[type='search'].normal::-webkit-input-placeholder {
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;    
 }
 
-#app .search input[type='search'].normal:-ms-input-placeholder {
+.search input[type='search'].normal:-ms-input-placeholder {
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;    
 }
 
-#app .search input[type='search'].normal::-ms-input-placeholder {
+.search input[type='search'].normal::-ms-input-placeholder {
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;    
 }
 
-#app .search input[type='search'].normal::placeholder {
+.search input[type='search'].normal::placeholder {
     font-family: 'Montserrat', sans-serif;
     font-weight: 500;    
 }
 
-#app .search input[type='search'].warning::-webkit-input-placeholder {
+.search input[type='search'].warning::-webkit-input-placeholder {
     font-family: 'Montserrat', sans-serif;
     color: red;
     font-weight: 600;
 }
 
-#app .search input[type='search'].warning:-ms-input-placeholder {
+.search input[type='search'].warning:-ms-input-placeholder {
     font-family: 'Montserrat', sans-serif;
     color: red;
     font-weight: 600;
 }
 
-#app .search input[type='search'].warning::-ms-input-placeholder {
+.search input[type='search'].warning::-ms-input-placeholder {
     font-family: 'Montserrat', sans-serif;
     color: red;
     font-weight: 600;
 }
 
-#app .search input[type='search'].warning::placeholder {
+.search input[type='search'].warning::placeholder {
     font-family: 'Montserrat', sans-serif;
     color: red;
     font-weight: 600;
 }
 
-#app .search input[type='submit'] {
+.search input[type='submit'] {
     width: 37%;
     height: 30px;
     border-radius: 5px;
@@ -165,7 +165,7 @@ body {
             transition: all 0.5s;
 }
 
-#app .search input[type='submit']:hover {
+.search input[type='submit']:hover {
     background: #000000;
     color: #ffffff;
 }
@@ -209,6 +209,7 @@ body {
 
 .current-weather .local-info .city h3 {
     font-weight: 600;
+    margin-left: 8px;
 }
 
 .current-weather .local-info .date-time {
