@@ -11,13 +11,19 @@ document.addEventListener('DOMContentLoaded', function(){
 
     class Main extends React.Component{
         state = {
-            appid: apiConfig.appid,
+            owmAppid: apiConfig.owmAppid,
+            wbitAppid: apiConfig.wbitAppid,
+            tzdbAppid: apiConfig.tzdbAppid,
             units: apiConfig.units,
             lang: apiConfig.lang,
             input: "",
+            latitude:"",
+            longitude: "",
             placeholder: 'city',
+            fiveDaysBtnDisabled: true,
             displayNextDaysWeather: 'none',
-            nextDaysDataList: [],
+            nextDaysList: this.props.nextDays,
+            localtime: {time: '', date: '', gmt: ''},
             currentDay: {city: '', country: '', temp: '', pressure: '', humidity: '', description: '', icon: '', id: ''},
             nextDay__1: {date: '', temp: '', pressure: '', humidity: '', description: '', icon: '', id: ''},
             nextDay__2: {date: '', temp: '', pressure: '', humidity: '', description: '', icon: '', id: ''},
@@ -31,11 +37,9 @@ document.addEventListener('DOMContentLoaded', function(){
         handleSubmit = (event) => {
             event.preventDefault();
             this.getData();
-            this.getNextDaysData();
             this.blurSearchField();
             this.setState({
                 input: "",
-                focus: 'false'
             });
         }
 
@@ -71,7 +75,7 @@ document.addEventListener('DOMContentLoaded', function(){
 
         //get current weather info from api
         getData () {
-            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${this.state.input.trim()}&units=${this.state.units}&lang=${this.state.lang}&appid=${this.state.appid}`)
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${this.state.input.trim()}&units=${this.state.units}&lang=${this.state.lang}&appid=${this.state.owmAppid}`)
             .then(resp => {
                 if(resp.ok) {
                     this.setState({ placeholder: 'city' });
@@ -82,6 +86,11 @@ document.addEventListener('DOMContentLoaded', function(){
                     if(resp.status == 400 || resp.status == 404){
                         this.setState({
                            placeholder: 'wrong city name'
+                        })
+                    }    
+                    else if(resp.status == 401){
+                        this.setState({
+                            placeholder: 'unauthorized'
                         })
                     }
                     throw new Error(resp.statusText);
@@ -98,6 +107,38 @@ document.addEventListener('DOMContentLoaded', function(){
                         description: data.weather[0].description, 
                         icon: data.weather[0].icon,
                         id: data.weather[0].id
+                    },
+                    latitude: data.coord.lat,
+                    longitude: data.coord.lon
+                })
+            })
+            .then( ()=> {
+                this.getLocalTime();
+                this.getNextDaysData();
+            })
+            .catch(error => {
+                console.log(error)
+            });
+        }
+
+
+        //get local time for schearched city
+        getLocalTime() {
+            fetch(`https://api.timezonedb.com/v2.1/get-time-zone?format=json&by=position&lat=${this.state.latitude}&lng=${this.state.longitude}&key=${this.state.tzdbAppid}`)
+            .then(resp => {
+                if(resp.ok) {
+                    return resp.json();
+                }
+                else {
+                    throw new Error(resp.statusText);
+                }
+            })
+            .then(data => {
+                this.setState({
+                    localtime: {
+                        time: data.formatted.substring(11,16),
+                        date: data.formatted.substring(0,10).split('-').reverse().join('-'),
+                        gmt: data.gmtOffset > 0 ? `(GMT+${data.gmtOffset/3600})` : `(GMT${data.gmtOffset/3600})`,
                     }
                 })
             })
@@ -109,9 +150,12 @@ document.addEventListener('DOMContentLoaded', function(){
 
         //get five days weather info from api
         getNextDaysData () {
-            fetch(`https://api.openweathermap.org/data/2.5/forecast?q=${this.state.input.trim()}&units=${this.state.units}&lang=${this.state.lang}&appid=${this.state.appid}`)
+            fetch(`https://api.weatherbit.io/v2.0/forecast/daily?days=6&&lat=${this.state.latitude}&lon=${this.state.longitude}&units=${this.state.units.charAt(0)}&lang=${this.state.lang}&key=${this.state.wbitAppid}`)
             .then(resp => {
                 if(resp.ok) {
+                    this.setState({
+                        fiveDaysBtnDisabled: false,
+                    })
                     return resp.json();
                 }
                 else {
@@ -119,11 +163,11 @@ document.addEventListener('DOMContentLoaded', function(){
                 }
             })
             .then(data => {
-                updateStateDay__1(data, this.state.nextDaysDataList[0]);
-                updateStateDay__2(data, this.state.nextDaysDataList[1]);
-                updateStateDay__3(data, this.state.nextDaysDataList[2]);
-                updateStateDay__4(data, this.state.nextDaysDataList[3]);
-                updateStateDay__5(data, this.state.nextDaysDataList[4]);
+                updateStateDay__1(data, this.state.nextDaysList[0]);
+                updateStateDay__2(data, this.state.nextDaysList[1]);
+                updateStateDay__3(data, this.state.nextDaysList[2]);
+                updateStateDay__4(data, this.state.nextDaysList[3]);
+                updateStateDay__5(data, this.state.nextDaysList[4]);
             })
             .catch(error => {
                 console.log(error)
@@ -132,13 +176,13 @@ document.addEventListener('DOMContentLoaded', function(){
             let updateStateDay__1 = (data, a) => {
                 this.setState({
                     nextDay__1: {
-                        temp: `${Math.round(data.list[a].main.temp)}`,
-                        date: `${data.list[a].dt_txt.substring(0, 10).split('-').reverse().join('-')}`,
-                        pressure: `${Math.round(data.list[a].main.pressure)} hPa`,
-                        humidity: `${data.list[a].main.humidity} %`,
-                        description: data.list[a].weather[0].description,
-                        icon: data.list[a].weather[0].icon,
-                        id: data.list[a].weather[0].id
+                        temp: `${Math.round(data.data[a].temp)}`,
+                        date: `${data.data[a].valid_date.split('-').reverse().join('-')}`,
+                        pressure: `${Math.round(data.data[a].pres)} hPa`,
+                        humidity: `${data.data[a].rh} %`,
+                        description: data.data[a].weather.description.toLowerCase(),
+                        icon: data.data[a].weather.icon,
+                        id: data.data[a].weather.code
                     }
                 })
             }
@@ -146,13 +190,13 @@ document.addEventListener('DOMContentLoaded', function(){
             let updateStateDay__2 = (data, a) => {
                 this.setState({
                     nextDay__2: {
-                        temp: `${Math.round(data.list[a].main.temp)}`,
-                        date: `${data.list[a].dt_txt.substring(0, 10).split('-').reverse().join('-')}`,
-                        pressure: `${Math.round(data.list[a].main.pressure)} hPa`,
-                        humidity: `${data.list[a].main.humidity} %`,
-                        description: data.list[a].weather[0].description,
-                        icon: data.list[a].weather[0].icon,
-                        id: data.list[a].weather[0].id
+                        temp: `${Math.round(data.data[a].temp)}`,
+                        date: `${data.data[a].valid_date.split('-').reverse().join('-')}`,
+                        pressure: `${Math.round(data.data[a].pres)} hPa`,
+                        humidity: `${data.data[a].rh} %`,
+                        description: data.data[a].weather.description.toLowerCase(),
+                        icon: data.data[a].weather.icon,
+                        id: data.data[a].weather.code
                     }
                 })
             }
@@ -160,13 +204,13 @@ document.addEventListener('DOMContentLoaded', function(){
             let updateStateDay__3 = (data, a, d) => {
                 this.setState({
                     nextDay__3: {
-                        temp: `${Math.round(data.list[a].main.temp)}`,
-                        date: `${data.list[a].dt_txt.substring(0, 10).split('-').reverse().join('-')}`,
-                        pressure: `${Math.round(data.list[a].main.pressure)} hPa`,
-                        humidity: `${data.list[a].main.humidity} %`,
-                        description: data.list[a].weather[0].description,
-                        icon: data.list[a].weather[0].icon,
-                        id: data.list[a].weather[0].id
+                        temp: `${Math.round(data.data[a].temp)}`,
+                        date: `${data.data[a].valid_date.split('-').reverse().join('-')}`,
+                        pressure: `${Math.round(data.data[a].pres)} hPa`,
+                        humidity: `${data.data[a].rh} %`,
+                        description: data.data[a].weather.description.toLowerCase(),
+                        icon: data.data[a].weather.icon,
+                        id: data.data[a].weather.code
                     }
                 })
             }
@@ -174,13 +218,13 @@ document.addEventListener('DOMContentLoaded', function(){
             let updateStateDay__4 = (data, a) => {
                 this.setState({
                     nextDay__4: {
-                        temp: `${Math.round(data.list[a].main.temp)}`,
-                        date: `${data.list[a].dt_txt.substring(0, 10).split('-').reverse().join('-')}`,
-                        pressure: `${Math.round(data.list[a].main.pressure)} hPa`,
-                        humidity: `${data.list[a].main.humidity} %`,
-                        description: data.list[a].weather[0].description,
-                        icon: data.list[a].weather[0].icon,
-                        id: data.list[a].weather[0].id
+                        temp: `${Math.round(data.data[a].temp)}`,
+                        date: `${data.data[a].valid_date.split('-').reverse().join('-')}`,
+                        pressure: `${Math.round(data.data[a].pres)} hPa`,
+                        humidity: `${data.data[a].rh} %`,
+                        description: data.data[a].weather.description.toLowerCase(),
+                        icon: data.data[a].weather.icon,
+                        id: data.data[a].weather.code
                     }
                 })
             }
@@ -188,63 +232,16 @@ document.addEventListener('DOMContentLoaded', function(){
             let updateStateDay__5 = (data, a) => {
                 this.setState({
                     nextDay__5: {
-                        temp: `${Math.round(data.list[a].main.temp)}`,
-                        date: `${data.list[a].dt_txt.substring(0, 10).split('-').reverse().join('-')}`,
-                        pressure: `${Math.round(data.list[a].main.pressure)} hPa`,
-                        humidity: `${data.list[a].main.humidity} %`,
-                        description: data.list[a].weather[0].description,
-                        icon: data.list[a].weather[0].icon,
-                        id: data.list[a].weather[0].id
+                        temp: `${Math.round(data.data[a].temp)}`,
+                        date: `${data.data[a].valid_date.split('-').reverse().join('-')}`,
+                        pressure: `${Math.round(data.data[a].pres)} hPa`,
+                        humidity: `${data.data[a].rh} %`,
+                        description: data.data[a].weather.description.toLowerCase(),
+                        icon: data.data[a].weather.icon,
+                        id: data.data[a].weather.code
                     }
                 })
             }            
-        }
-
-
-        componentWillMount(){
-            //depending on the current hour, selects the weather data from 12pm for the next days 
-            let currentHour = new Date().getHours();
-
-            if(currentHour >= 8 && currentHour < 11){
-                this.setState({
-                    nextDaysDataList: [1, 9, 17, 25, 33]
-                })
-            }
-            else if(currentHour >= 5 && currentHour < 8){
-                this.setState({
-                    nextDaysDataList: [2, 10, 18, 26, 34]
-                })
-            }
-            else if(currentHour >= 2 && currentHour < 5){
-                this.setState({
-                    nextDaysDataList: [3, 11, 19, 27, 35]
-                })
-            }
-            else if(currentHour >= 23 && currentHour < 2){
-                this.setState({
-                    nextDaysDataList: [4, 12, 20, 28, 36]
-                })
-            }
-            else if(currentHour >= 20 && currentHour < 23){
-                this.setState({
-                    nextDaysDataList: [5, 13, 21, 29, 37] 
-                })
-            }
-            else if(currentHour >= 17 && currentHour < 20){
-                this.setState({
-                    nextDaysDataList: [6, 14, 22, 30, 38] 
-                })
-            }
-            else if(currentHour >= 14 && currentHour < 17){
-                this.setState({
-                    nextDaysDataList: [7, 15, 23, 31, 39] 
-                })
-            }
-            else if(currentHour >= 11 && currentHour < 14){
-                this.setState({
-                    nextDaysDataList: [8, 16, 24, 32, 39]
-                })
-            }
         }
 
 
@@ -261,8 +258,8 @@ document.addEventListener('DOMContentLoaded', function(){
             return(
                 <div>
                     <div className="header">
-                        <h2 className="caption">Weather Forecast</h2>
                         <CurrentDate />
+                        <div className="caption"><h2>Weather Forecast</h2></div>
                     </div>
 
                     <div  className="search">
@@ -285,7 +282,9 @@ document.addEventListener('DOMContentLoaded', function(){
 
                     <CurrentWeather
                         units = {this.state.units}
+                        localtime = {this.state.localtime}
                         currentDay = {this.state.currentDay}
+                        btnDisabled =  {this.state.fiveDaysBtnDisabled}
                         displayNextDays = {this.displayNextDays}
                     />
 
@@ -306,7 +305,7 @@ document.addEventListener('DOMContentLoaded', function(){
     
     class App extends React.Component{
         render(){
-            return <Main />
+            return <Main nextDays = {[1, 2, 3, 4, 5]}/>
         }
     }
     

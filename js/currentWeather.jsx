@@ -6,6 +6,7 @@ class CurrentWeather extends React.Component{
 
         //Destructuring object with weather data
         let {city, country, temp, pressure, humidity, description, icon, id} = this.props.currentDay;
+        let {time, date, gmt} = this.props.localtime;
 
         //Function that adds the right temperature unit
         let tempWithUnit = (units) => {
@@ -24,10 +25,16 @@ class CurrentWeather extends React.Component{
         return(
             <div className = "current-weather" style={{display: city === "" ? 'none' : 'flex'}}>
 
-                <div className = "left-col">
-                    <div className="left-rows">
+                <div className="local-info">
+                    <div className="city">
                         <h3>{city} {country}</h3>
                     </div>
+                    <div className="date-time">
+                        <h6>{date}  {gmt}  {time}</h6>
+                    </div>
+                </div>
+
+                <div className = "left-col">
                     <div className="left-rows">
                         <p><i className="wi wi-thermometer"></i></p><h3>{tempWithUnit(this.props.units)}</h3>
                     </div>
@@ -40,14 +47,18 @@ class CurrentWeather extends React.Component{
                 </div>
 
                 <div className = "right-col">
-                    <div className="col-65">
+                    <div className="col-60">
                         <h5>{description}</h5>
                     </div>
-                    <div className = "col-35">    
+                    <div className = "col-40">    
                         <CurrentIcon icon ={icon} id={id}/>
                     </div>
                     <div className="right-bottom">
-                        <button onClick={this.props.displayNextDays}>5 day forecast</button>
+                        <button
+                            onClick={this.props.displayNextDays}
+                            disabled={this.props.btnDisabled}>
+                            5 day forecast
+                        </button>
                     </div>
                 </div>
                 

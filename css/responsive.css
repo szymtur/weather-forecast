@@ -1,42 +1,105 @@
 @media (max-width: 640px) and (orientation: portrait){
-    body{
+    /* Main styles - start */
+        body{
         background: #e0e0e0;
     }
 
-    #app .header .caption {
-        font-size: 1.2em;
+    #app {
+        margin-top: 10px;
+    }
+    /* Main styles - end */
+
+
+    /* Header styles - start */
+    .header .current-date {
+        margin-top: 0;
     }
 
-    .current-weather .left-col .left-rows p {
-        width: 20px;
+    .header .current-date h4 {
+        font-size: 0.7em;
+    }
+
+    .header .caption{
+        padding-top: 3px;
+        margin-top: -5px;
+    }
+
+    .header .caption h2 {
+        font-size: 1.2em;
+    }
+    /* Header styles - end */
+    
+
+
+    /* Search section styles - start */
+    .search {
+        height: 55px;
+    }
+    /* Search section styles - end */
+
+
+    /* Current weather section styles - start */
+    .current-weather .local-info {
+        height: 35px;
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -ms-flex-wrap: wrap-reverse;
+            flex-wrap: wrap-reverse;
+        margin-bottom: 15px;
+    }
+
+    .current-weather .local-info .city {
+        width: 100%;
+        height: 20px;
+    }
+
+    .current-weather .local-info .city h3 {
+        font-size: 1em;
+    }
+
+    .current-weather .local-info .date-time {
+        margin: 0;
+        width: 100%;
+        height: 15px;
+        font-size: 0.8em;
+    }
+
+    .current-weather .local-info .date-time h6 {
+        line-height: 2em;
     }
 
     .current-weather .left-col .left-rows h3 {
         font-size: 0.9em;
     }
 
-    .current-weather .left-col .left-rows h3:first-child{
-        font-size: 1em;
-        width: 150%;
+    .current-weather .right-col {
+        margin-top: -30px;
+        height: 140px;
     }
 
-    .current-weather .right-col .col-65,
-    .current-weather .right-col .col-35 {
+    .current-weather .right-col .col-60,
+    .current-weather .right-col .col-40 {
         width: 50%;
+        height: 100px;
     }
 
-    .current-weather .right-col .col-35 .current-icon {
-        /* margin-right: 5px; */
+    .current-weather .right-col .col-40 .current-icon {
         font-size: 3em;
         text-align: center;
     }
 
-    .current-weather .right-col .col-65 h5 {
-        margin-top: 75px;
-        width: 155%;
+    .current-weather .right-col .col-60 h5 {
+        margin-top: 65px;
+        margin-left: 5px;
+        width: 160%;
         font-size: 0.9em;
+        height: 35px;
     }
+    /* Current weather section styles - end */
 
+
+    /* Next five days section styles - start */
     .next-days-weather{
         width: 93%;
         height: 220px;
@@ -57,20 +120,33 @@
     }
 
     .next-days-weather .day-container:nth-child(1),
-    .next-days-weather .day-container:nth-child(2),
-    .next-days-weather .day-container:nth-child(3) {
-        width: 32%;
+    .next-days-weather .day-container:nth-child(2) {
+        width: 49%;
         margin-bottom: 2%;
     }
 
+    .next-days-weather .day-container:nth-child(3),
     .next-days-weather .day-container:nth-child(4),
     .next-days-weather .day-container:nth-child(5) {
-        width: 49%;
-        margin-bottom: 10%;
+        width: 32%;
+        margin-bottom: 30px;
     }
     
-    .next-days-weather .day-container:nth-child(4) .row p,
-    .next-days-weather .day-container:nth-child(5) .row p{
+    .next-days-weather .day-container:nth-child(1) .row p,
+    .next-days-weather .day-container:nth-child(2) .row p{
         margin-left: 15%;
     }
+
+    .next-days-weather .day-container .row.description h6,
+    .next-days-weather .day-container .row.description h6 {
+        width: 95%;
+        margin: 0 auto;
+    }
+
+    .next-days-weather .day-container:nth-child(1) .row.description h6,
+    .next-days-weather .day-container:nth-child(2) .row.description h6 {
+        width: 75%;
+        margin: 0 auto;
+    }
+    /* Next five days section styles - end */
 }

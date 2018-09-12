@@ -1,5 +1,7 @@
 const apiConfig = { 
-    appid:  "d69fb57c3ccd6565f23957b76566730f",
+    owmAppid:  "d69fb57c3ccd6565f23957b76566730f",
+    wbitAppid: "2ed3773b146049209c0965f94c1f9d8c",
+    tzdbAppid: "MB4JWXQU14Q0",
     units:  "metric",
     lang:   "en"
 };
@@ -9,7 +11,7 @@ module.exports = apiConfig;
 // Units format
 //     For temperature in Fahrenheit use units: "imperial"
 //     For temperature in Celsius use units: "metric"
-//     For temperature in Kelvin use units: ""
+//     For temperature in Kelvin use units: "scientific"
 
 // Multilingual support
 //     Arabic - ar 
@@ -36,12 +38,8 @@ module.exports = apiConfig;
 //     Portuguese - pt
 //     Romanian - ro
 //     Russian - ru
-//     Swedish - se
 //     Slovak - sk
 //     Slovenian - sl
 //     Spanish - es
 //     Turkish - tr
 //     Ukrainian - ua
-//     Vietnamese - vi
-//     Chinese Simplified - zh_cn
-//     Chinese Traditional - zh_tw
