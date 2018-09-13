@@ -6,7 +6,7 @@ const apiConfig = {
     lang:   "en"
 };
 
-module.exports = apiConfig;
+export default apiConfig;
 
 // Units format
 //     For temperature in Fahrenheit use units: "imperial"

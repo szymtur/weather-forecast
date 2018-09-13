@@ -14,7 +14,7 @@
 
     /* Header styles - start */
     .header .current-date {
-        margin-top: 0;
+        margin-top: 10px;
     }
 
     .header .current-date h4 {

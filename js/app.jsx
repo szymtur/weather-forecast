@@ -4,6 +4,7 @@ import CurrentDate from './currentDate.jsx';
 import CurrentWeather from './currentWeather.jsx';
 import NextDaysWeather from './nextDaysWeather.jsx';
 import apiConfig from './apiConfig.js';
+import './styles.js';
 import '../css/styles.css';
 import '../css/responsive.css';
 
@@ -249,8 +250,6 @@ document.addEventListener('DOMContentLoaded', function(){
             //add background color and blur event on search input in mobile devices 
             if (/iphone|ipod|ipad|blackberry|Android|webOS|IEMobile/i.test(navigator.userAgent)){
                 ReactDOM.findDOMNode(this).querySelector('input[type="search"]').blur();
-                ReactDOM.findDOMNode(this).querySelector('.current-date').style.marginTop ='0';
-                document.querySelector("body").style.background = "#e0e0e0";
             }
         }
 
