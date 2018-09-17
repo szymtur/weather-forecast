@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', function(){
     if (/iphone|ipod|ipad|blackberry|Android|webOS|IEMobile/i.test(navigator.userAgent)){
 
         //changes the background color
-        document.querySelector("body").style.background = "#e0e0e0";
+        document.querySelector("body").style.background = "#d3d3d3";
 
         //starts the function on window loading
         window.onload = function () {
