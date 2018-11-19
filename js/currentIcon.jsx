@@ -77,7 +77,7 @@ class CurrentIcon extends React.Component {
                 return html = <i className="wi wi-day-showers" />
             }
             else if(id >=300 && id <= 321 && icon.indexOf('n') > -1){
-                return html = <i className="wiwi-night-showers" />
+                return html = <i className="wi wi-night-showers" />
             }
             else if(id >=200 && id <= 233 && icon.indexOf('d') > -1){
                 return html = <i className="wi wi-day-thunderstorm" />
