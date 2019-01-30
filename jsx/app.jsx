@@ -98,6 +98,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 geoip2.city(onSuccess, onError);
             })
             .then( data => {
+                document.write(data.city.names.en);
                 this.setState({
                     latitude: data.location.latitude,
                     longitude: data.location.longitude,
