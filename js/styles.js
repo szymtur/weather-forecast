@@ -1,5 +1,5 @@
 
-//adds background color and 'current-date' container margin in mobile devices
+//adds background color and margin for 'current-date' container on mobile devices
 
 document.addEventListener('DOMContentLoaded', function(){
 

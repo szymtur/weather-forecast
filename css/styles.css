@@ -1,6 +1,7 @@
 /* Main styles - start */
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/weather-icons.min.css');
+@import url('https://use.fontawesome.com/releases/v5.3.1/css/all.css');
 
 * {
     -webkit-box-sizing: border-box;
@@ -70,7 +71,7 @@ body {
     padding: 1.5%;
 }
 
-.search form{
+.search form {
     display: -webkit-box;
     display: -ms-flexbox;
     display: flex;
@@ -158,7 +159,8 @@ body {
     outline: none;    
     color: #ffffff;
     font-size: 0.9em;
-    font-weight: bold;
+    font-weight: 600;
+    letter-spacing: 0.5px;
 
     -webkit-appearance: none;
         -moz-appearance: none;
@@ -207,7 +209,9 @@ body {
 }
 
 .current-weather .local-info .city {
-    width: 40%;
+    width: 110%;
+    height: 1.5em;
+    overflow: hidden;
 }
 
 .current-weather .local-info .city h3 {
@@ -308,7 +312,7 @@ body {
     outline: none;
     color: #808080;
     font-size: 0.9em;
-    font-weight: bold;
+    font-weight: 600;
     -webkit-transition: all 0.5s;
     -o-transition: all 0.5s;
     transition: all 0.5s;
@@ -319,7 +323,6 @@ body {
     color: #000000;
 }
 /* Current weather section styles - end */
-
 
 
 /* Next five days section styles - start */
@@ -413,3 +416,37 @@ body {
     font-size: 1em;
 }
 /* Next five days section styles - end */
+
+
+/* Preloaders Styles - start */
+.preloader {
+    text-align: center;
+    padding: 5em;
+}
+
+.preloader .info {
+    padding: 0.5em;
+    font-weight: 600;
+}
+
+.preloader .loading {
+    width: 3.5em;
+    height: 3.5em;
+}
+
+.preloader .animation {
+    animation-name: spin;
+    animation-duration: 1800ms;
+    animation-iteration-count: infinite;
+    animation-timing-function: linear;
+}
+
+@keyframes spin {
+    from { 
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+/* Preloaders Styles - end */

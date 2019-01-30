@@ -1,22 +1,23 @@
 import React from 'react';
 import CurrentIcon from './currentIcon.jsx';
 
-class OneDayWeather extends React.Component{
-    render(){
-        
+class OneDayWeather extends React.Component {
+    render() {
+
         //Destructuring object with weather data
         let {date, temp, pressure, humidity, description, icon, id} = this.props.nextDay;
+        let units = this.props.units;
 
         //Function that adds the right temperature unit
-        let tempWithUnit = (units) => {
+        let tempWithUnit = (units, temp) => {
             let data;
-            if(units == 'metric'){
+            if (units == 'metric'){
                 return data = `${temp} \u00b0C`
             }
-            else if(units == 'imperial'){
+            else if (units == 'imperial') {
                 return data = `${temp} \u00b0F`
             }
-            else{
+            else {
                 return data = `${temp} \u00b0K`
             }
         } 
@@ -37,7 +38,7 @@ class OneDayWeather extends React.Component{
                 </div>
 
                 <div className="row">
-                    <p><i className="wi wi-thermometer"></i></p><h5>{tempWithUnit(this.props.units)}</h5>
+                    <p><i className="wi wi-thermometer"></i></p><h5>{tempWithUnit(units, temp)}</h5>
                 </div>
                 
                 <div className="row">

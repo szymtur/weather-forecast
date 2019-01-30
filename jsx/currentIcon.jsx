@@ -4,7 +4,7 @@ class CurrentIcon extends React.Component {
     render(){
 
         //function for selecting icons based on weather id and icon id
-        const selectIcon = (id, icon) =>{
+        const selectIcon = (id, icon) => {
             let html;
     
             if(id == 800 && icon.indexOf('d') > -1){
@@ -37,7 +37,7 @@ class CurrentIcon extends React.Component {
             else if(id == 804 && icon.indexOf('n') > -1){
                 return html = <i className="wi wi-night-cloudy-high" />
             }
-            else if(id == 900 && icon.indexOf('d') > -1 ){
+            else if(id == 900 && icon.indexOf('d') > -1){
                 return html = <i className="wi wi-day-rain" />
             }
             else if(id == 900 && icon.indexOf('n') > -1){
@@ -61,7 +61,7 @@ class CurrentIcon extends React.Component {
             else if(id == 511 && icon.indexOf('n') > -1){
                 return html = <i className="wi wi-night-snow" />
             }
-            else if(id >=500 && id <= 504 && icon.indexOf('d') > -1 ){
+            else if(id >=500 && id <= 504 && icon.indexOf('d') > -1){
                 return html = <i className="wi wi-day-rain" />
             }
             else if(id >=500 && id <= 504 && icon.indexOf('n') > -1){
