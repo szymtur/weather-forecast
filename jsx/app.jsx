@@ -40,8 +40,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-
-
         /* 'get weather' button handling */
         handleSubmit = (event) => {
             event.preventDefault();
@@ -118,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         /* geocoding - getting latitude and longitude from city name */
         getCoordinates() {
-            fetch(`https://nominatim.openstreetmap.org/?format=json&limit=1&addressdetails=1&city=${this.state.input.trim()}`)
+            fetch(`https://nominatim.openstreetmap.org/?format=json&limit=1&addressdetails=1&q=${this.state.input.trim()}`)
             .then(resp => {
                 if(resp.ok) {
                     return resp.json();
