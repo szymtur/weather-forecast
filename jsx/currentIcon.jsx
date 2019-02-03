@@ -49,10 +49,10 @@ class CurrentIcon extends React.Component {
             else if(id >= 701 && id <= 781 && icon.indexOf('n') > -1){
                 return html = <i className="wi wi-night-fog" />
             }
-            else if(id >=600 && id <= 622 && icon.indexOf('d') > -1){
+            else if(id >= 600 && id <= 622 && icon.indexOf('d') > -1){
                 return html = <i className="wi wi-day-snow" />
             }
-            else if(id >=600 && id <= 622 && icon.indexOf('n') > -1){
+            else if(id >= 600 && id <= 622 && icon.indexOf('n') > -1){
                 return html = <i className="wi wi-night-snow" />
             }
             else if(id == 511 && icon.indexOf('d') > -1){
@@ -61,28 +61,28 @@ class CurrentIcon extends React.Component {
             else if(id == 511 && icon.indexOf('n') > -1){
                 return html = <i className="wi wi-night-snow" />
             }
-            else if(id >=500 && id <= 504 && icon.indexOf('d') > -1){
+            else if(id >= 500 && id <= 504 && icon.indexOf('d') > -1){
                 return html = <i className="wi wi-day-rain" />
             }
-            else if(id >=500 && id <= 504 && icon.indexOf('n') > -1){
+            else if(id >= 500 && id <= 504 && icon.indexOf('n') > -1){
                 return html = <i className="wi wi-night-rain" />
             }
-            else if(id >=520 && id <= 531 && icon.indexOf('d') > -1){
+            else if(id >= 520 && id <= 531 && icon.indexOf('d') > -1){
                 return html = <i className="wi wi-day-rain" />
             }
-            else if(id >=520 && id <= 531 && icon.indexOf('n') > -1){
+            else if(id >= 520 && id <= 531 && icon.indexOf('n') > -1){
                 return html = <i className="wi wi-night-rain" />
             }
-            else if(id >=300 && id <= 321 && icon.indexOf('d') > -1){
+            else if(id >= 300 && id <= 321 && icon.indexOf('d') > -1){
                 return html = <i className="wi wi-day-showers" />
             }
-            else if(id >=300 && id <= 321 && icon.indexOf('n') > -1){
+            else if(id >= 300 && id <= 321 && icon.indexOf('n') > -1){
                 return html = <i className="wi wi-night-showers" />
             }
-            else if(id >=200 && id <= 233 && icon.indexOf('d') > -1){
+            else if(id >= 200 && id <= 233 && icon.indexOf('d') > -1){
                 return html = <i className="wi wi-day-thunderstorm" />
             }
-            else if(id >=200 && id <= 233 && icon.indexOf('n') > -1){
+            else if(id >= 200 && id <= 233 && icon.indexOf('n') > -1){
                 return html = <i className="wi wi-night-thunderstorm" />
             }
         }

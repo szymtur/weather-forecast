@@ -14,7 +14,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         strings = {
             input: '',
-            loading_data: 'loading data ...',
+            loading_data: 'loading data...',
             enter_manually: 'enter your location manually',
             wrong_city: 'wrong city name',
             connection_error: 'connection error'
@@ -189,7 +189,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         humidity: `${data.rh} %`, 
                         description: data.weather.description, 
                         icon: data.weather.icon,
-                        id: data.weather.code
+                        id: Number(data.weather.code)
                     },
                     displayCurrentDayWeather: true
                 });

@@ -1,5 +1,4 @@
-/* @media (max-width: 640px) and (orientation: portrait) {  */
-@media (max-width: 420px){ 
+@media (max-width: 420px) { 
     
     /* Main styles - start */
         body{
@@ -21,7 +20,7 @@
         font-size: 0.8em;
     }
 
-    .header .caption{
+    .header .caption {
         padding-top: 3px;
         margin-top: -5px;
     }
@@ -31,7 +30,6 @@
     }
     /* Header styles - end */
     
-
 
     /* Search section styles - start */
     .search {
@@ -43,32 +41,32 @@
     /* Current weather section styles - start */
     .current-weather .local-info {
         height: 35px;
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -ms-flex-wrap: wrap-reverse;
-            flex-wrap: wrap-reverse;
         margin-bottom: 15px;
     }
 
     .current-weather .local-info .city {
-        width: 70%;
-        height: 20px;
+        width: 60%;
+        height: 40px;
     }
 
     .current-weather .local-info .city h3 {
-        font-size: 1em;
+        font-size: 1.1em;
     }
 
     .current-weather .local-info .date-time {
         margin: 0;
-        width: 100%;
+        width: 45%;
         height: 15px;
         font-size: 0.8em;
     }
 
     .current-weather .local-info .date-time h6 {
         line-height: 2em;
+        margin-top: -2px;
+    }
+
+    .current-weather .left-col {
+        padding-top: 0;
     }
 
     .current-weather .left-col .left-rows h3 {
@@ -76,14 +74,14 @@
     }
 
     .current-weather .right-col {
-        margin-top: -30px;
-        height: 140px;
+        margin-top: -20px;
+        height: 130px;
     }
 
     .current-weather .right-col .col-60,
     .current-weather .right-col .col-40 {
         width: 50%;
-        height: 100px;
+        height: 99px;
     }
 
     .current-weather .right-col .col-40 .current-icon {
@@ -92,8 +90,8 @@
     }
 
     .current-weather .right-col .col-60 h5 {
-        margin-top: 65px;
-        margin-left: 5px;
+        margin-top: 63px;
+        margin-left: -10px;
         width: 160%;
         font-size: 0.9em;
         height: 35px;
@@ -102,7 +100,7 @@
 
 
     /* Next five days section styles - start */
-    .next-days-weather{
+    .next-days-weather {
         width: 93%;
         height: 220px;
         margin: 0 auto;
@@ -135,7 +133,7 @@
     }
     
     .next-days-weather .day-container:nth-child(1) .row p,
-    .next-days-weather .day-container:nth-child(2) .row p{
+    .next-days-weather .day-container:nth-child(2) .row p {
         margin-left: 15%;
     }
 
@@ -152,9 +150,3 @@
     }
     /* Next five days section styles - end */
 }
-
-/* @media handheld and (orientation:landscape) {
-    .header .current-date{
-        margin-top: -10px;
-    }
-} */

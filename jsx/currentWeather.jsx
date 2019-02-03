@@ -35,9 +35,11 @@ class CurrentWeather extends React.Component {
         else {
             return (
                 <div className = "current-weather">
-                    <div className="local-info">
-                        <div className="city">
-                            <h3>{city} {country}</h3>
+                    <div className = "local-info">
+                        <div className = "city">
+                            <h3 style = {{fontSize: city.length >= 20 ? "1em" : null }}>
+                                {city} {country}
+                            </h3>
                         </div>
                         <div className="date-time">
                             <h6>{date} {gmt} {time}</h6>

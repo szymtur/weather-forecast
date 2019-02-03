@@ -181,7 +181,7 @@ body {
 /* Current weather section styles - start */
 .current-weather {
     width: 93%;
-    height: 170px;
+    height: 175px;
     padding: 2%;
     margin: 0 auto;
     background: #ffffff;
@@ -197,7 +197,7 @@ body {
 }
 
 .current-weather .local-info {
-    height: 25px;
+    height: 30px;
     width: 100%;
     margin-bottom: 5px;
     display: -webkit-box;
@@ -210,38 +210,42 @@ body {
 
 .current-weather .local-info .city {
     width: 110%;
-    height: 1.5em;
+    height: 2.5em;
     overflow: hidden;
 }
 
 .current-weather .local-info .city h3 {
     font-weight: 600;
     margin-left: 8px;
+    font-size: 1.2em;
 }
 
 .current-weather .local-info .date-time {
-    width: 60%;
+    width: 85%;
     text-align: right;
+    height: 0.9em;
+    overflow: hidden;
 }
 
-.current-weather .local-info .date-time h6{
+.current-weather .local-info .date-time h6 {
     color: #444444;
     font-weight: 700;
     font-size: 0.8em;
-    margin-top: -1%;
 }
 
 .current-weather .left-col {
     width: 38%;
     height: 120px;
+    padding-top: 5px;
 }
 
 .current-weather .left-col .left-rows {
     width: 100%;
     height: 30%;
+    overflow: hidden;
 } 
 
-.current-weather .left-col h3{
+.current-weather .left-col h3 {
     font-weight: 600;
     line-height: 2.5em;
 }
@@ -279,7 +283,7 @@ body {
 }
 
 .current-weather .right-col .col-60 h5 {
-    margin-top: 5%;
+    margin-top: 10%;
     font-weight: 600;
     font-size: 1em;
     width: 95%;
@@ -326,7 +330,7 @@ body {
 
 
 /* Next five days section styles - start */
-.next-days-weather{
+.next-days-weather {
     width: 93%;
     height: 220px;
     margin: 0 auto;
