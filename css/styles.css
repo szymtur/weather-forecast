@@ -218,6 +218,7 @@ body {
     font-weight: 600;
     margin-left: 8px;
     font-size: 1.2em;
+    text-transform: capitalize;
 }
 
 .current-weather .local-info .date-time {
