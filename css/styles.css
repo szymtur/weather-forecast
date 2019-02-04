@@ -26,9 +26,10 @@ body {
 
 #app {
     width: 550px;
-    height: 575px;
+    height: 580px;
     background: #d3d3d3;
     margin-top: 20px;
+    border-radius: 6px;
 }
 /* Main styles - end */
 
