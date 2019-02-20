@@ -18,7 +18,7 @@ class NextDaysWeather extends React.Component {
             return null
         }
         else {
-            return(
+            return (
                 <div 
                     className = "next-days-weather" 
                     style = {{display: this.props.display ? "flex" : "none"}}

@@ -53,6 +53,15 @@
         font-size: 1.1em;
     }
 
+    .current-weather .local-info .dots-preloader {
+        padding-left: 25%;
+    }
+
+    .current-weather .local-info .dots-preloader .dots-loading {
+        width: 55px;
+        height: 8px;
+    }
+
     .current-weather .local-info .date-time {
         margin: 0;
         width: 45%;

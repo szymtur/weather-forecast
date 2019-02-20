@@ -11,11 +11,13 @@ document.addEventListener('DOMContentLoaded', function(){
         //starts the function on window loading
         window.onload = function () {
             changeMargin();
+            mainPreloaderPosition();
         };
 
         //starts the function when the window is resized
         window.onresize = function () {
             changeMargin();
+            mainPreloaderPosition();
         }
 
         //changes the size of the 'current-date' container margin depending on the device's orientation
@@ -25,6 +27,15 @@ document.addEventListener('DOMContentLoaded', function(){
             } 
             else {
                 document.querySelector('.current-date').style.marginTop ='10px';
+            }
+        }
+
+        mainPreloaderPosition = () => {
+            if (Math.abs(window.orientation) === 90) {
+                document.querySelector('.main-preloader').style.paddingTop ='2em';
+            } 
+            else {
+                document.querySelector('.main-preloader').style.paddingTop ='5em';
             }
         }
     }

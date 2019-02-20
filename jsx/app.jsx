@@ -47,6 +47,7 @@ document.addEventListener('DOMContentLoaded', function() {
             this.blurSearchField();
             this.setState({
                 input: "",
+                localTime: {},
                 displayNextDaysWeather: false,
                 displayCurrentDayWeather: false,
                 preloaderAlert: false,
@@ -80,44 +81,10 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-        /* geolocation - getting current position by ip address from geoip2 database */
+        /* geolocation - getting current position by ip address from ipapi.co */
         getCurrentPosition() {
-            return new Promise( (resolve, reject) => {
-                let onSuccess = (resp) => {
-                    resolve(resp);
-                }
-                let onError = (resp) => {
-                    this.setState({
-                        preloaderAlert: true,
-                        preloaderInfo: this.strings.enter_manually
-                    });
-                    reject(resp);
-                }
-                geoip2.city(onSuccess, onError);
-            })
-            .then( data => {
-                this.setState({
-                    latitude: data.location.latitude,
-                    longitude: data.location.longitude,
-                    location: {
-                        city: data.city.names.en, 
-                        country: data.country.iso_code.toUpperCase()
-                    }
-                });
-            })
-            .then( () => {
-                this.getData();
-            })
-            .catch( function(error){
-                console.error(error.code + "::" + error.error)
-            });
-        }
-
-
-        /* geocoding - getting latitude and longitude from city name */
-        getCoordinates() {
-            fetch(`https://nominatim.openstreetmap.org/?format=json&limit=1&addressdetails=1&q=${this.state.input.trim()}`)
-            .then(resp => {
+            fetch(`https://ipapi.co/json`)
+            .then( resp => {
                 if(resp.ok) {
                     return resp.json();
                 }
@@ -125,7 +92,41 @@ document.addEventListener('DOMContentLoaded', function() {
                     throw new Error(resp.statusText);
                 }
             })
-            .then(data => {
+            .then( data => {
+                this.setState({
+                    latitude: data.latitude,
+                    longitude: data.longitude,
+                    location: {
+                        city: data.city, 
+                        country: data.country.toUpperCase()
+                    }
+                });
+            })
+            .then( () => {
+                this.getData();
+            })
+            .catch( error => {
+                this.setState({
+                    preloaderAlert: true,
+                    preloaderInfo: this.strings.enter_manually
+                });
+                console.error(error);
+            });
+        }
+
+
+        /* geocoding - getting latitude and longitude from city name using openstreetmap.org */
+        getCoordinates() {
+            fetch(`https://nominatim.openstreetmap.org/?format=json&limit=1&addressdetails=1&q=${this.state.input.trim()}`)
+            .then( resp => {
+                if(resp.ok) {
+                    return resp.json();
+                }
+                else {
+                    throw new Error(resp.statusText);
+                }
+            })
+            .then( data => {
                 if(!data.length){
                     throw new Error('NO_DATA')
                 }
@@ -143,7 +144,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .then( () => {
                 this.getData();
             })
-            .catch(error => {
+            .catch( error => {
                 if(error == 'Error: NO_DATA') {
                     this.setState({
                         preloaderAlert: true,
@@ -156,7 +157,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         preloaderInfo: this.strings.connection_error
                     });
                 }
-                console.error(error)
+                console.error(error);
             });
         }
 
@@ -164,7 +165,7 @@ document.addEventListener('DOMContentLoaded', function() {
         /* getting weather forecast from Weatherbit Api and local time from TimezoneDb Api */
         getData() {
             fetch(`https://api.weatherbit.io/v2.0/current?lat=${this.state.latitude}&lon=${this.state.longitude}&units=${this.state.units.charAt(0)}&lang=${this.state.lang}&key=${this.state.wbitAppid}`)
-            .then(resp => {
+            .then( resp => {
                 if(resp.ok) {
                     return resp.json();
                 } 
@@ -172,7 +173,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     throw new Error(resp.statusText);
                 }
             })
-            .then(weather_data => {
+            .then( weather_data => {
                 let data = weather_data.data[0];
                 if(!this.state.location.city) {
                     this.setState({
@@ -195,12 +196,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             })
             .then( () => {
-                this.getLocalTime(`https://api.timezonedb.com/v2.1/get-time-zone?format=json&by=position&lat=${this.state.latitude}&lng=${this.state.longitude}&key=${this.state.tzdbAppid}`);
+                this.getLocalTime();
             })
             .then( () => {
-                this.getNextDaysData(`https://api.weatherbit.io/v2.0/forecast/daily?days=6&&lat=${this.state.latitude}&lon=${this.state.longitude}&units=${this.state.units.charAt(0)}&lang=${this.state.lang}&key=${this.state.wbitAppid}`);            
+                this.getNextDaysData();            
             })
-            .catch(error => {
+            .catch( error => {
                 this.setState({
                     preloaderAlert: true,
                     preloaderInfo: this.strings.connection_error
@@ -211,10 +212,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         /* getting next days weather info from Weatherbit Api */
-        getNextDaysData(weather_api_url) {
-            fetch(weather_api_url)
-            .then(resp => {
-                if(resp.ok) {
+        getNextDaysData() {
+            fetch(`https://api.weatherbit.io/v2.0/forecast/daily?days=6&&lat=${this.state.latitude}&lon=${this.state.longitude}&units=${this.state.units.charAt(0)}&lang=${this.state.lang}&key=${this.state.wbitAppid}`)
+            .then( resp => {
+                if( resp.ok) {
                     this.setState({
                         fiveDaysBtnDisabled: false,
                     })
@@ -224,7 +225,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     throw new Error(resp.statusText);
                 }
             })
-            .then(weather_data => {
+            .then( weather_data => {
                 let data = weather_data.data;
                 let nextDays = [];
 
@@ -243,24 +244,24 @@ document.addEventListener('DOMContentLoaded', function() {
                     nextDaysWeatherData: nextDays
                 });
             })
-            .catch(error => {
+            .catch( error => {
                 console.error(error)
             });
         }
 
 
         /* getting local time for schearched city */
-        getLocalTime(time_db_api_url) {
-            fetch(time_db_api_url)
-            .then(resp => {
-                if(resp.ok) {
+        getLocalTime() {
+            fetch(`https://api.timezonedb.com/v2.1/get-time-zone?format=json&by=position&lat=${this.state.latitude}&lng=${this.state.longitude}&key=${this.state.tzdbAppid}`)
+            .then( resp => {
+                if( resp.ok) {
                     return resp.json();
                 }
                 else {
                     throw new Error(resp.statusText);
                 }
             })
-            .then(data => {
+            .then( data => {
                 if (data.status === 'FAILED') return
                 else {
                     this.setState({
@@ -272,7 +273,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     })
                 }
             })
-            .catch(error => {
+            .catch( error => {
                 console.error(error)
             });
         }
@@ -284,7 +285,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         componentDidMount() {
-            /* adding background color and blur event on search input in mobile devices */ 
+            /* adding blur event on search input on mobile devices */ 
             if (/iphone|ipod|ipad|blackberry|Android|webOS|IEMobile/i.test(navigator.userAgent)){
                 ReactDOM.findDOMNode(this).querySelector('input[type="search"]').blur();
             }
@@ -316,7 +317,7 @@ document.addEventListener('DOMContentLoaded', function() {
                                 />
                         </form>
                     </div>
-
+                    
                     <CurrentWeather
                         units = {this.state.units}
                         localTime = {this.state.localTime}

@@ -26,7 +26,7 @@ body {
 
 #app {
     width: 550px;
-    height: 580px;
+    min-height: 580px;
     background: #d3d3d3;
     margin-top: 20px;
     border-radius: 6px;
@@ -222,11 +222,22 @@ body {
     text-transform: capitalize;
 }
 
+.current-weather .local-info .dots-preloader,
 .current-weather .local-info .date-time {
     width: 85%;
+    overflow: hidden;
+}
+
+.current-weather .local-info .dots-preloader {
+    text-align: center;
+    padding-left: 10%;
+    margin-top: -0.5%;
+
+}
+
+.current-weather .local-info .date-time {
     text-align: right;
     height: 0.9em;
-    overflow: hidden;
 }
 
 .current-weather .local-info .date-time h6 {
@@ -425,22 +436,22 @@ body {
 
 
 /* Preloaders Styles - start */
-.preloader {
+.main-preloader {
     text-align: center;
     padding: 5em;
 }
 
-.preloader .info {
+.main-preloader .info {
     padding: 0.5em;
     font-weight: 600;
 }
 
-.preloader .loading {
+.main-preloader .main-loading {
     width: 3.5em;
     height: 3.5em;
 }
 
-.preloader .animation {
+.main-preloader .animation {
     animation-name: spin;
     animation-duration: 1800ms;
     animation-iteration-count: infinite;

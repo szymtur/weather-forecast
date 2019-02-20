@@ -1,6 +1,7 @@
 import React from 'react';
 import CurrentIcon from './currentIcon.jsx';
-import Preloader from './preloader.jsx';
+import MainPreloader from './mainPreloader.jsx';
+import DotsPreloader from './dotsPreloader.jsx';
 
 class CurrentWeather extends React.Component {
     render() {
@@ -11,7 +12,7 @@ class CurrentWeather extends React.Component {
         let {city, country} = this.props.location;
 
         //Function that adds the right temperature unit
-        let tempWithUnit = (units) => {
+        const tempWithUnit = (units) => {
             let data;
             if (units == 'metric'){
                 return data = `${temp} \u00b0C`
@@ -24,9 +25,19 @@ class CurrentWeather extends React.Component {
             }
         }
 
+        const dotsPreloader = ( 
+            <DotsPreloader /> 
+        )
+
+        const localTime = (
+            <div className="date-time">
+                <h6>{date} {gmt} {time}</h6>
+            </div>
+        )
+
         if(!this.props.displayComponent) {
             return (
-                <Preloader
+                <MainPreloader
                     preloaderInfo = {this.props.preloaderInfo}
                     preloaderAlert = {this.props.preloaderAlert}
                 />
@@ -41,9 +52,7 @@ class CurrentWeather extends React.Component {
                                 {city} {country}
                             </h3>
                         </div>
-                        <div className="date-time">
-                            <h6>{date} {gmt} {time}</h6>
-                        </div>
+                        {Object.keys(this.props.localTime).length ? localTime : dotsPreloader}
                     </div>
 
                     <div className = "left-col">

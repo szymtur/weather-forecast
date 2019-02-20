@@ -22,7 +22,7 @@ class OneDayWeather extends React.Component {
             }
         } 
         
-        return(
+        return (
             <div className="day-container">
 
                 <div className="row date">
