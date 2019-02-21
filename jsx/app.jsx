@@ -162,7 +162,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-        /* getting weather forecast from Weatherbit Api and local time from TimezoneDb Api */
+        /* getting weather forecast from weatherbit.io and local time from timezonedb.com */
         getData() {
             fetch(`https://api.weatherbit.io/v2.0/current?lat=${this.state.latitude}&lon=${this.state.longitude}&units=${this.state.units.charAt(0)}&lang=${this.state.lang}&key=${this.state.wbitAppid}`)
             .then( resp => {
@@ -211,7 +211,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-        /* getting next days weather info from Weatherbit Api */
+        /* getting next days weather info from weatherbit.io */
         getNextDaysData() {
             fetch(`https://api.weatherbit.io/v2.0/forecast/daily?days=6&&lat=${this.state.latitude}&lon=${this.state.longitude}&units=${this.state.units.charAt(0)}&lang=${this.state.lang}&key=${this.state.wbitAppid}`)
             .then( resp => {
@@ -250,7 +250,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-        /* getting local time for schearched city */
+        /* getting local time for schearched city from timezonedb.com */
         getLocalTime() {
             fetch(`https://api.timezonedb.com/v2.1/get-time-zone?format=json&by=position&lat=${this.state.latitude}&lng=${this.state.longitude}&key=${this.state.tzdbAppid}`)
             .then( resp => {
