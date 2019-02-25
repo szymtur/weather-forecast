@@ -32,11 +32,13 @@ document.addEventListener('DOMContentLoaded', function(){
         }
 
         mainPreloaderPosition = () => {
-            if (Math.abs(window.orientation) === 90) {
-                document.querySelector('.main-preloader').style.paddingTop ='1em';
-            } 
-            else {
-                document.querySelector('.main-preloader').style.paddingTop ='5em';
+            if(!document.querySelector('.current-weather')) {
+                if (Math.abs(window.orientation) === 90) {
+                    document.querySelector('.main-preloader').style.paddingTop ='1em';
+                } 
+                else {
+                    document.querySelector('.main-preloader').style.paddingTop ='5em';
+                }
             }
         }
     }
