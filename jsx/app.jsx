@@ -1,12 +1,21 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import CurrentDate from './currentDate.jsx';
-import CurrentWeather from './currentWeather.jsx';
-import NextDaysWeather from './nextDaysWeather.jsx';
+import Promise from 'promise-polyfill';
+import 'isomorphic-fetch';
+
+import CurrentDate from '../jsx/currentDate.jsx';
+import CurrentWeather from '../jsx/currentWeather.jsx';
+import NextDaysWeather from '../jsx/nextDaysWeather.jsx';
+
+import isMobile from '../js/isMobile.js'
 import apiConfig from '../js/apiConfig.js';
-import '../js/styles.js';
+import locationNameChooser from '../js/locationChooser.js';
+
 import '../css/styles.css';
 import '../css/responsive.css';
+import '../jsx/mobileStyles.jsx';
+
+if (!window.Promise) { window.Promise = Promise };
 
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -127,15 +136,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .then( data => {
-                if(!data.length){
+                if(!data.length) {
                     throw new Error('NO_DATA')
                 }
-                else{
+                else {
                     this.setState({
                         latitude: parseFloat(data[0].lat).toFixed(4),
                         longitude: parseFloat(data[0].lon).toFixed(4),
                         location: {
-                            city: data[0].display_name.split(',')[0],
+							city: locationNameChooser.call(data),
                             country: data[0].address.country_code.toUpperCase()
                         }
                     });
@@ -286,7 +295,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         componentDidMount() {
             /* adding blur event on search input on mobile devices */ 
-            if (/iphone|ipod|ipad|blackberry|Android|webOS|IEMobile/i.test(navigator.userAgent)){
+            if (isMobile.any()) {
                 ReactDOM.findDOMNode(this).querySelector('input[type="search"]').blur();
             }
         }

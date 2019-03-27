@@ -9,7 +9,7 @@ class CurrentWeather extends React.Component {
         //Destructuring object with weather data
         let {temp, pressure, humidity, description, icon, id} = this.props.currentDay;
         let {time, date, gmt} = this.props.localTime;
-        let {city, country} = this.props.location;
+		let {city, country} = this.props.location;
 
         //Function that adds the right temperature unit
         const tempWithUnit = (units) => {
@@ -48,7 +48,7 @@ class CurrentWeather extends React.Component {
                 <div className = "current-weather">
                     <div className = "local-info">
                         <div className = "city">
-                            <h3 style = {{fontSize: city.length >= 20 ? "1em" : null }}>
+                            <h3 style = {{fontSize: String(city).length >= 20 ? "1em" : null }}>
                                 {city} {country}
                             </h3>
                         </div>

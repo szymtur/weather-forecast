@@ -1,28 +1,29 @@
-
 //adds background color and margin for '.current-date' container on mobile devices
 //changes padding-top for '.main-preloader' container on mobile devices
 
-document.addEventListener('DOMContentLoaded', function(){
+import isMobile from '../js/isMobile.js'
 
-    if (/iphone|ipod|ipad|blackberry|Android|webOS|IEMobile/i.test(navigator.userAgent)){
+document.addEventListener('DOMContentLoaded', () => {
+
+    if (isMobile.any()) {
 
         //changes the background color
         document.querySelector("body").style.background = "#d3d3d3";
 
-        //starts the function on window loading
-        window.onload = function () {
-            changeMargin();
-            mainPreloaderPosition();
-        };
+		//starts the function on window loading
+		window.onload = () => {
+			changeCurrentDateMargin();
+			mainPreloaderPosition();
+		};
 
-        //starts the function when the window is resized
-        window.onresize = function () {
-            changeMargin();
-            mainPreloaderPosition();
-        }
+		//starts the function when the window is resized
+		window.onresize = () => {
+			changeCurrentDateMargin();
+			mainPreloaderPosition();
+		}
 
         //changes the size of the 'current-date' container margin depending on the device's orientation
-        changeMargin = () => {
+        let changeCurrentDateMargin = () => {
             if (Math.abs(window.orientation) === 90) {
                 document.querySelector('.current-date').style.marginTop ='0';
             } 
@@ -31,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function(){
             }
         }
 
-        mainPreloaderPosition = () => {
+        let mainPreloaderPosition = () => {
             if(!document.querySelector('.current-weather')) {
                 if (Math.abs(window.orientation) === 90) {
                     document.querySelector('.main-preloader').style.paddingTop ='1em';
@@ -40,6 +41,6 @@ document.addEventListener('DOMContentLoaded', function(){
                     document.querySelector('.main-preloader').style.paddingTop ='5em';
                 }
             }
-        }
+		}
     }
 });

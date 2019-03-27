@@ -1,9 +1,8 @@
 const apiConfig = { 
-    owmAppid:  "d69fb57c3ccd6565f23957b76566730f",
     wbitAppid: "2ed3773b146049209c0965f94c1f9d8c",
     tzdbAppid: "MB4JWXQU14Q0",
-    units:  "metric",
-    lang:   "en"
+    units: "metric",
+    lang: "en"
 };
 
 export default apiConfig;
