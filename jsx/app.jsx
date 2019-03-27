@@ -9,7 +9,7 @@ import NextDaysWeather from '../jsx/nextDaysWeather.jsx';
 
 import isMobile from '../js/isMobile.js'
 import apiConfig from '../js/apiConfig.js';
-import locationNameChooser from '../js/locationChooser.js';
+import locationNameChooser from '../js/nameChooser.js';
 
 import '../css/styles.css';
 import '../css/responsive.css';
