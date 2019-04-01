@@ -1,7 +1,7 @@
 import React from 'react';
 
 class CurrentIcon extends React.Component {
-    render(){
+    render() {
 
         //function for selecting icons based on weather id and icon id
         const selectIcon = (id, icon) => {

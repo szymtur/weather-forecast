@@ -1,6 +1,6 @@
 import React from 'react';
 
-class CurrentDate extends React.Component {
+class CurrentDateHeader extends React.Component {
     state = {
         timezone: new Date().getTimezoneOffset() < 0 ? ` (GMT+${new Date().getTimezoneOffset()/-60}) ` : ` (GMT${new Date().getTimezoneOffset()/-60}) `,
         hours:    new Date().getHours().toString().length == 1 ? `0${new Date().getHours()}` : `${new Date().getHours()}`,
@@ -34,16 +34,19 @@ class CurrentDate extends React.Component {
         clearInterval(this.interval);
     }
 
-    render(){
+    render() {
         return(
-            <div className={"current-date"}>
-                <h4>
-                    {this.state.day}{this.state.month}{this.state.year}
-                    {this.state.timezone}{this.state.hours}{this.state.minutes}{this.state.seconds}
-                </h4>
-            </div>
+			<div className="header">
+	            <div className="current-date">
+    	            <h4>
+        	            {this.state.day}{this.state.month}{this.state.year}
+            	        {this.state.timezone}{this.state.hours}{this.state.minutes}{this.state.seconds}
+                	</h4>
+            	</div>
+				<div className="caption"><h2>Weather Forecast</h2></div>
+			</div>		
         )
     }
 }
 
-export default CurrentDate;
+export default CurrentDateHeader;

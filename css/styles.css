@@ -20,7 +20,7 @@ body {
 
 #app {
     width: 550px;
-    min-height: 580px;
+    min-height: 600px;
     background: #d3d3d3;
     margin-top: 20px;
     border-radius: 6px;
@@ -131,7 +131,6 @@ body {
 /* Current weather section styles - start */
 .current-weather {
     width: 93%;
-    height: 175px;
     padding: 2%;
     margin: 0 auto;
     background: #ffffff;
@@ -144,7 +143,6 @@ body {
 }
 
 .current-weather .local-info {
-    height: 30px;
     width: 100%;
     margin-bottom: 5px;
     display: flex;
@@ -153,31 +151,31 @@ body {
 
 .current-weather .local-info .city {
     width: 110%;
-    height: 2.5em;
+    height: 2.4em;
     overflow: hidden;
 }
 
 .current-weather .local-info .city h3 {
     font-weight: 600;
-    margin-left: 8px;
-    font-size: 1.2em;
-    text-transform: capitalize;
+    margin-left: 0.25em;
+	font-size: 1.3em;
 }
 
 .current-weather .local-info .dots-preloader,
 .current-weather .local-info .date-time {
-    width: 85%;
     overflow: hidden;
 }
 
 .current-weather .local-info .dots-preloader {
     text-align: center;
+    width: 75%;
     padding-left: 10%;
     margin-top: -0.5%;
 }
 
 .current-weather .local-info .date-time {
     text-align: right;
+    width: 85%;
     height: 0.9em;
 }
 
@@ -189,13 +187,13 @@ body {
 
 .current-weather .left-col {
     width: 38%;
-    height: 120px;
-    padding-top: 5px;
+    height: 130px;
+    margin-top: 0.15em;
 }
 
 .current-weather .left-col .left-rows {
     width: 100%;
-    height: 30%;
+    height: 25%;
     overflow: hidden;
 } 
 
@@ -206,7 +204,7 @@ body {
 
 .current-weather .left-col .left-rows p {
     width: 30px;
-    margin-right: 10px;
+    margin-right: 1em;
     text-align: center;
     display: inline-block;
 }
@@ -220,9 +218,14 @@ body {
     color: #000000;
 }
 
+.current-weather .left-col .left-rows p .wi.wi-strong-wind {
+	margin-left: 0.2em;
+}
+
 .current-weather .right-col {
     width: 62%;
-    height: 120px;
+	height: 120px;
+	margin-top: 1em;
     display: flex;
     flex-wrap: wrap;
 }
@@ -255,7 +258,8 @@ body {
 .current-weather .right-col .right-bottom {
     width: 100%;
     height: 30px;
-    text-align: right;
+	text-align: right;
+	margin-bottom: -0.25em
 }
 
 .current-weather .right-col .right-bottom button {

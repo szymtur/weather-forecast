@@ -7,7 +7,7 @@ class CurrentWeather extends React.Component {
     render() {
 
         //Destructuring object with weather data
-        let {temp, pressure, humidity, description, icon, id} = this.props.currentDay;
+        let {temp, pressure, humidity, wind, description, icon, id} = this.props.currentDay;
         let {time, date, gmt} = this.props.localTime;
 		let {city, country} = this.props.location;
 
@@ -52,7 +52,7 @@ class CurrentWeather extends React.Component {
                                 {city} {country}
                             </h3>
                         </div>
-                        {Object.keys(this.props.localTime).length ? localTime : dotsPreloader}
+						{Object.keys(this.props.localTime).length ? localTime : dotsPreloader}
                     </div>
 
                     <div className = "left-col">
@@ -64,6 +64,9 @@ class CurrentWeather extends React.Component {
                         </div>
                         <div className="left-rows">
                             <p><i className="wi wi-humidity"></i></p><h3>{humidity}</h3>
+                        </div>
+						<div className="left-rows">
+                            <p><i className="wi wi-strong-wind"></i></p><h3>{wind}</h3>
                         </div>
                     </div>
 

@@ -38,49 +38,53 @@
     /* Search section styles - end */
 
 
-    /* Current weather section styles - start */
+	/* Current weather section styles - start */
+	.current-weather {
+		height: fit-content;
+		padding: 2% 3% 1.5% 2%;
+	}
+
     .current-weather .local-info {
-        height: 35px;
-        margin-bottom: 15px;
+		height: 100%;
+		margin-top: -0.25em;
+		margin-bottom: 0.25em;
+		display: flex;
+		flex-direction: column-reverse;
     }
 
-    .current-weather .local-info .city {
-        width: 60%;
-        height: 40px;
-    }
+	.current-weather .local-info .date-time,
+	.current-weather .local-info .dots-preloader {
+		width: 100%;
+		height: 1.2em;
+        margin: 0 0 0.35em 0;
+	}
 
-    .current-weather .local-info .city h3 {
-        font-size: 1.1em;
-    }
-
-    .current-weather .local-info .dots-preloader,
-    .current-weather .local-info .date-time {
-        width: 45%;
-        height: 1.5em;
-    }
-
-    .current-weather .local-info .dots-preloader {
-        padding-left: 5%;
-        margin-top: -0.25em;
-    }
-
-    .current-weather .local-info .dots-preloader .dots-loading {
-        width: 55px;
-        height: 8px;
-    }
-
-    .current-weather .local-info .date-time {
-        margin: 0;
-        font-size: 0.8em;
+	.current-weather .local-info .dots-preloader {
+		text-align: right;
+		padding-right: 15%;
+	}
+	
+	.current-weather .local-info .dots-preloader .dots-loading {
+        width: 60px;
+        height: 10px;
     }
 
     .current-weather .local-info .date-time h6 {
-        line-height: 2em;
-        margin-top: -0.25em;
+        font-size: 0.75em;
+		line-height: 2em;
+    }
+
+    .current-weather .local-info .city {
+		width: 83;
+		height: fit-content;
+    }
+
+    .current-weather .local-info .city h3 {
+        font-size: 1.2em;
     }
 
     .current-weather .left-col {
-        padding-top: 0;
+        padding-top: 0.25em;
     }
 
     .current-weather .left-col .left-rows h3 {
@@ -88,7 +92,7 @@
     }
 
     .current-weather .right-col {
-        margin-top: -20px;
+        margin-top: 0;
         height: 130px;
     }
 
@@ -109,7 +113,11 @@
         width: 160%;
         font-size: 0.9em;
         height: 35px;
-    }
+	}
+	
+	.current-weather .right-col .right-bottom {
+		margin-bottom: 0.25em;
+	}
     /* Current weather section styles - end */
 
 

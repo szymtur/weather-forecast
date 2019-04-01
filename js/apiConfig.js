@@ -8,9 +8,9 @@ const apiConfig = {
 export default apiConfig;
 
 // Units format
-//     For temperature in Fahrenheit use units: "imperial"
-//     For temperature in Celsius use units: "metric"
-//     For temperature in Kelvin use units: "scientific"
+//     metric		->	Celcius		m/s		mm
+//     scientific	->	Kelvin		m/s		mm
+//     imperial		->	Fahrenheit	mph		in
 
 // Multilingual support
 //     Arabic - ar 

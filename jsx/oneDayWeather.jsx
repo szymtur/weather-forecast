@@ -10,15 +10,14 @@ class OneDayWeather extends React.Component {
 
         //Function that adds the right temperature unit
         let tempWithUnit = (units, temp) => {
-            let data;
-            if (units == 'metric'){
-                return data = `${temp} \u00b0C`
+            if (units == 'metric') {
+                return `${temp} \u00b0C`
             }
             else if (units == 'imperial') {
-                return data = `${temp} \u00b0F`
+                return `${temp} \u00b0F`
             }
             else {
-                return data = `${temp} \u00b0K`
+                return `${temp} \u00b0K`
             }
         } 
         

@@ -3,7 +3,7 @@ import ReactDOM from 'react-dom';
 import Promise from 'promise-polyfill';
 import 'isomorphic-fetch';
 
-import CurrentDate from '../jsx/currentDate.jsx';
+import CurrentDateHeader from '../jsx/currentDate.jsx';
 import CurrentWeather from '../jsx/currentWeather.jsx';
 import NextDaysWeather from '../jsx/nextDaysWeather.jsx';
 
@@ -14,6 +14,7 @@ import locationNameChooser from '../js/nameChooser.js';
 import '../css/styles.css';
 import '../css/responsive.css';
 import '../jsx/mobileStyles.jsx';
+import { type } from 'os';
 
 if (!window.Promise) { window.Promise = Promise };
 
@@ -183,7 +184,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .then( weather_data => {
-                let data = weather_data.data[0];
+				let data = weather_data.data[0];
+				console.log(data)
                 if(!this.state.location.city) {
                     this.setState({
                         location: {
@@ -196,7 +198,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     currentDayWeatherData: {
                         temp: `${Math.round(data.app_temp)}`, 
                         pressure: `${Math.round(data.pres)} hPa`, 
-                        humidity: `${data.rh} %`, 
+						humidity: `${data.rh} %`,
+						wind: `${Number(data.wind_spd).toFixed(2)} ${this.state.units.indexOf('imperial') > -1 ? 'mph' : 'm/s'}`,
                         description: data.weather.description, 
                         icon: data.weather.icon,
                         id: Number(data.weather.code)
@@ -304,10 +307,7 @@ document.addEventListener('DOMContentLoaded', function() {
         render() {
             return(
                 <div>
-                    <div className="header">
-                        <CurrentDate />
-                        <div className="caption"><h2>Weather Forecast</h2></div>
-                    </div>
+					<CurrentDateHeader />
 
                     <div  className="search">
                         <form onSubmit={this.handleSubmit}>
