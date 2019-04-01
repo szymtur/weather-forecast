@@ -185,7 +185,6 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then( weather_data => {
 				let data = weather_data.data[0];
-				console.log(data)
                 if(!this.state.location.city) {
                     this.setState({
                         location: {
