@@ -4,7 +4,7 @@
 @import url('https://use.fontawesome.com/releases/v5.3.1/css/all.css');
 
 * {
-    box-sizing: border-box;
+	box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
@@ -22,8 +22,8 @@ body {
     width: 550px;
     min-height: 600px;
     background: #d3d3d3;
-    margin-top: 20px;
-    border-radius: 6px;
+    margin-top: 2%;
+    border-radius: 5px;
 }
 /* Main styles - end */
 
@@ -43,14 +43,14 @@ body {
     height: 30px;
     width: 100%;
     text-align: right;
-    margin-top: -10px;
+    margin-top: -0.75em;
 }
 
 .header .current-date {
     height: 20px;
     width: 100%;
     font-size: 0.9em;
-    margin: 20px 0 5px 3px;
+    margin: 1em 0 0.25em 0.1em;
 }
 /* Header styles - end */
 
@@ -58,7 +58,7 @@ body {
 /* Search section styles - start */
 .search {
     width: 95%;
-    height: 70px;
+    height: 65px;
     margin: 0 auto;
     padding: 1.5%;
 }
@@ -85,7 +85,7 @@ body {
     margin-right: 10px;
     height: 12px;
     width: 12px;
-    border-radius:10px;
+    border-radius: 10px;
     background: red;
 
     -webkit-appearance: none;
@@ -135,7 +135,7 @@ body {
     margin: 0 auto;
     background: #ffffff;
     border-radius: 5px;
-    margin-bottom: 10px;
+    margin-bottom: 0.75em;
     color: #800080;
     display: flex;
     overflow: hidden;
@@ -144,7 +144,7 @@ body {
 
 .current-weather .local-info {
     width: 100%;
-    margin-bottom: 5px;
+    margin-bottom: 0.15em;
     display: flex;
     justify-content: space-between;
 }
@@ -215,7 +215,7 @@ body {
 
 .current-weather .left-col .left-rows p .wi {
     font-size: 1.4em;
-    color: #000000;
+	color: #000000;
 }
 
 .current-weather .left-col .left-rows p .wi.wi-strong-wind {
@@ -237,22 +237,22 @@ body {
 }
 
 .current-weather .right-col .col-60 h5 {
-    margin-top: 10%;
+    margin-top: 15.5%;
     font-weight: 600;
-    font-size: 1em;
+    font-size: 1.1em;
     width: 95%;
 }
 
 .current-weather .right-col .col-40 {
     width: 40%;
     height: 85px;
-    text-align: right;
+    text-align: center;
 }
 
 .current-weather .right-col .col-40 .current-icon {
-    margin-right: 10px;
+    margin: -0.2em 0.2em 0 0;
     color: #000000;
-    font-size: 3.4em;
+    font-size: 3.5em;
 }
 
 .current-weather .right-col .right-bottom {
@@ -285,9 +285,9 @@ body {
 /* Next five days section styles - start */
 .next-days-weather {
     width: 93%;
-    height: 220px;
+    height: 230px;
     margin: 0 auto;
-    margin-bottom: 20px;    
+    margin-bottom: 15px;    
     display: flex;
     justify-content: space-between;
 }
@@ -296,7 +296,7 @@ body {
     width: 19.5%;
     height: 100%;
     background: #f5f5f5;
-    padding-bottom: 10px;
+    padding-bottom: 7px;
     padding-top: 5px;
     display: flex;
     flex-direction: column;
@@ -315,7 +315,7 @@ body {
 
 .next-days-weather .day-container .row {
     width: 100%;
-    padding: 2px;
+    padding: 2px 2px 2px 1px;
 }
 
 .next-days-weather .day-container .row.date,
@@ -325,37 +325,39 @@ body {
     text-align: center;
 }
 
-.next-days-weather .day-container .row.description h6,
-.next-days-weather .day-container .row.description h6 {
-    width: 95%;
-    margin: 0 auto;
-}
-
 .next-days-weather .day-container .row.date h5 {
     font-weight: 600;
     font-size: 0.8em;
 }
 
 .next-days-weather .day-container .row.icon {
-    font-size: 2em;
+	font-size: 2em;
+	padding: 0.1em;
+}
+
+.next-days-weather .day-container .row.icon .wi.wi-day-cloudy-high {
+	font-size: 1.25em;
 }
 
 .next-days-weather .day-container .row.description {
-    height: 30px;
+    height: 35px;
 }
 
 .next-days-weather .day-container .row.description h6 {
-    font-weight: 600;
+    width: 95%;
+	margin: 0 auto;
+	font-weight: 600;
+	font-size: 0.7em
 }
 
 .next-days-weather .day-container .row p {
     display: inline-block;
-    width: 30px;
+    width: 35px;
 }
 .next-days-weather .day-container .row h5 {
     display: inline-block;
     font-weight: 500;
-    font-size: 0.8em;
+    font-size: 0.75em;
 }
 
 .next-days-weather .day-container .row p .wi {

@@ -1,11 +1,13 @@
-//adds background color and margin for '.current-date' container on mobile devices
-//changes padding-top for '.main-preloader' container on mobile devices
+/*
+adds background color and margin for '.current-date' container on mobile devices
+changes padding-top for '.main-preloader' container on mobile devices
+*/
 
-import isMobile from '../js/isMobile.js'
+import {isMobile} from '../jsx/appHandler.jsx';
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    if (isMobile.any()) {
+    if (isMobile()) {
 
         //changes the background color
         document.querySelector("body").style.background = "#d3d3d3";
@@ -28,7 +30,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 document.querySelector('.current-date').style.marginTop ='0';
             } 
             else {
-                document.querySelector('.current-date').style.marginTop ='10px';
+                document.querySelector('.current-date').style.marginTop ='0.75em';
             }
         }
 

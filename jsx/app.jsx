@@ -3,20 +3,19 @@ import ReactDOM from 'react-dom';
 import Promise from 'promise-polyfill';
 import 'isomorphic-fetch';
 
+import apiConfig from '../js/apiConfig.js';
+import SearchSection from './searchSection.jsx';
 import CurrentDateHeader from '../jsx/currentDate.jsx';
 import CurrentWeather from '../jsx/currentWeather.jsx';
 import NextDaysWeather from '../jsx/nextDaysWeather.jsx';
-
-import isMobile from '../js/isMobile.js'
-import apiConfig from '../js/apiConfig.js';
-import locationNameChooser from '../js/nameChooser.js';
+import {unitsChanger, nameChooser, isMobile} from '../jsx/appHandler.jsx';
 
 import '../css/styles.css';
 import '../css/responsive.css';
 import '../jsx/mobileStyles.jsx';
-import { type } from 'os';
 
 if (!window.Promise) { window.Promise = Promise };
+
 
 document.addEventListener('DOMContentLoaded', function() {
 
@@ -27,7 +26,11 @@ document.addEventListener('DOMContentLoaded', function() {
             loading_data: 'loading data...',
             enter_manually: 'enter your location manually',
             wrong_city: 'wrong city name',
-            connection_error: 'connection error'
+			connection_error: 'connection error',
+			temperature: 'temperature',
+			pressure: 'pressure',
+			humidity: 'humidity',
+			wind: 'wind'
         }
 
         state = {
@@ -145,7 +148,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         latitude: parseFloat(data[0].lat).toFixed(4),
                         longitude: parseFloat(data[0].lon).toFixed(4),
                         location: {
-							city: locationNameChooser.call(data),
+							city: nameChooser(data),
                             country: data[0].address.country_code.toUpperCase()
                         }
                     });
@@ -195,10 +198,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 this.setState({
                     currentDayWeatherData: {
-                        temp: `${Math.round(data.app_temp)}`, 
-                        pressure: `${Math.round(data.pres)} hPa`, 
-						humidity: `${data.rh} %`,
-						wind: `${Number(data.wind_spd).toFixed(2)} ${this.state.units.indexOf('imperial') > -1 ? 'mph' : 'm/s'}`,
+						temp: unitsChanger(this.state.units, this.strings.temperature, data.app_temp),
+                        pressure: unitsChanger(this.state.units, this.strings.pressure, data.pres), 
+						humidity: unitsChanger(this.state.units, this.strings.humidity, data.rh),
+						wind: unitsChanger(this.state.units, this.strings.wind, data.wind_spd),
                         description: data.weather.description, 
                         icon: data.weather.icon,
                         id: Number(data.weather.code)
@@ -222,7 +225,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-        /* getting next days weather info from weatherbit.io */
+        /* getting next five days weather info from weatherbit.io */
         getNextDaysData() {
             fetch(`https://api.weatherbit.io/v2.0/forecast/daily?days=6&&lat=${this.state.latitude}&lon=${this.state.longitude}&units=${this.state.units.charAt(0)}&lang=${this.state.lang}&key=${this.state.wbitAppid}`)
             .then( resp => {
@@ -242,12 +245,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 for (let i=1; i<data.length; i++){
                     nextDays[i-1] = {
-                        temp: `${Math.round(data[i].temp)}`,
-                        date: `${data[i].valid_date.split('-').reverse().join('-')}`,
-                        pressure: `${Math.round(data[i].pres)} hPa`,
-                        humidity: `${data[i].rh} %`,
+						temp: unitsChanger(this.state.units, this.strings.temperature, data[i].temp),
+                        pressure: unitsChanger(this.state.units, this.strings.pressure, data[i].pres), 
+						humidity: unitsChanger(this.state.units, this.strings.humidity, data[i].rh),
+						wind: unitsChanger(this.state.units, this.strings.wind, data[i].wind_spd),
                         description: data[i].weather.description.toLowerCase(),
-                        icon: data[i].weather.icon,
+                        date: `${data[i].valid_date.split('-').reverse().join('-')}`,
+						icon: data[i].weather.icon,
                         id: data[i].weather.code
                     }
                 }
@@ -297,37 +301,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
         componentDidMount() {
             /* adding blur event on search input on mobile devices */ 
-            if (isMobile.any()) {
+            if (isMobile()) {
                 ReactDOM.findDOMNode(this).querySelector('input[type="search"]').blur();
             }
         }
 
 
         render() {
-            return(
+            return (
                 <div>
 					<CurrentDateHeader />
-
-                    <div  className="search">
-                        <form onSubmit={this.handleSubmit}>
-                                <input 
-                                    type="search" 
-                                    onChange={this.handleInput} 
-                                    value={this.state.input} 
-                                    placeholder="city" 
-                                    className="normal"
-                                    autoFocus="true"
-                                />
-                                <input 
-                                    type="submit" 
-                                    value="get weather" 
-                                    disabled={!this.state.input}
-                                />
-                        </form>
-                    </div>
-                    
+					<SearchSection 
+						handleInput = {this.handleInput}
+						handleSubmit = {this.handleSubmit}
+						input = {this.state.input}
+					/>
                     <CurrentWeather
-                        units = {this.state.units}
                         localTime = {this.state.localTime}
                         location = {this.state.location}
                         currentDay = {this.state.currentDayWeatherData}
@@ -337,9 +326,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         preloaderInfo = {this.state.preloaderInfo}
                         preloaderAlert = {this.state.preloaderAlert}
                     />
-
                     <NextDaysWeather
-                        units = {this.state.units}
                         display = {this.state.displayNextDaysWeather}
                         nextDays = {this.state.nextDaysWeatherData}
                     />
@@ -350,14 +337,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
     
     class App extends React.Component {
-        render(){
+        render() {
             return <Main />
         }
     }
     
 
-    ReactDOM.render(
-        <App />,
-        document.getElementById('app')
-    );
+    ReactDOM.render (
+		<App />, document.getElementById('app')
+	);
 });

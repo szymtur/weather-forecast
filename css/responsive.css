@@ -6,14 +6,14 @@
     }
 
     #app {
-        margin-top: 10px;
+        margin-top: 0.75em;
     }
     /* Main styles - end */
 
 
     /* Header styles - start */
     .header .current-date {
-        margin-top: 10px;
+        margin-top: 0.75em;
     }
 
     .header .current-date h4 {
@@ -21,8 +21,8 @@
     }
 
     .header .caption {
-        padding-top: 3px;
-        margin-top: -5px;
+        padding-top: 0.25em;
+        margin-top: -0.25em;
     }
 
     .header .caption h2 {
@@ -75,8 +75,10 @@
     }
 
     .current-weather .local-info .city {
-		width: 83;
+		width: 83%;
 		height: fit-content;
+		max-height: 2.5em;
+
     }
 
     .current-weather .local-info .city h3 {
@@ -92,27 +94,28 @@
     }
 
     .current-weather .right-col {
-        margin-top: 0;
-        height: 130px;
+		margin-top: 0;
+		height: fit-content;
     }
 
     .current-weather .right-col .col-60,
     .current-weather .right-col .col-40 {
         width: 50%;
-        height: 99px;
+		height: fit-content;
     }
 
     .current-weather .right-col .col-40 .current-icon {
         font-size: 3em;
-        text-align: center;
+		text-align: center;
+		margin: 0.1em 0 0 0;
     }
 
     .current-weather .right-col .col-60 h5 {
-        margin-top: 64px;
-        margin-left: -5px;
+        margin-top: 65%;
+        margin-left: 0.5em;
         width: 160%;
         font-size: 0.9em;
-        height: 35px;
+        height: 2.35em;
 	}
 	
 	.current-weather .right-col .right-bottom {
@@ -124,11 +127,7 @@
     /* Next five days section styles - start */
     .next-days-weather {
         width: 93%;
-        height: 220px;
         margin: 0 auto;
-        margin-bottom: 20px;    
-        display: -webkit-box;    
-        display: -ms-flexbox;    
         display: flex;
 		justify-content: space-between;
 		flex-wrap: wrap;
@@ -148,7 +147,7 @@
     .next-days-weather .day-container:nth-child(4),
     .next-days-weather .day-container:nth-child(5) {
         width: 32%;
-        margin-bottom: 30px;
+        margin-bottom: 1em;
     }
     
     .next-days-weather .day-container:nth-child(1) .row p,

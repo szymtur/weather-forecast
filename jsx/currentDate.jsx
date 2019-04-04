@@ -1,14 +1,17 @@
 import React from 'react';
 
 class CurrentDateHeader extends React.Component {
-    state = {
-        timezone: new Date().getTimezoneOffset() < 0 ? ` (GMT+${new Date().getTimezoneOffset()/-60}) ` : ` (GMT${new Date().getTimezoneOffset()/-60}) `,
-        hours:    new Date().getHours().toString().length == 1 ? `0${new Date().getHours()}` : `${new Date().getHours()}`,
-        minutes:  new Date().getMinutes().toString().length == 1 ? `:0${new Date().getMinutes()}` : `:${new Date().getMinutes()}`,
-        seconds:  new Date().getSeconds().toString().length == 1 ? `:0${new Date().getSeconds()}` : `:${new Date().getSeconds()}`,
-        day:      new Date().getDate().toString().length == 1 ? `0${new Date().getDate()}` : `${new Date().getDate()}`,
-        month:    new Date().getMonth().toString().length == 1 ? `-0${new Date().getMonth()+1}-` : `-${new Date().getMonth()+1}-`,
-        year:     new Date().getFullYear(),
+	
+	date = new Date();
+	
+	state = {
+        timezone: this.date.getTimezoneOffset() < 0 ? ` (GMT+${this.date.getTimezoneOffset()/-60}) ` : ` (GMT${this.date.getTimezoneOffset()/-60}) `,
+        hours:    this.date.getHours().toString().length == 1 ? `0${this.date.getHours()}` : `${this.date.getHours()}`,
+        minutes:  this.date.getMinutes().toString().length == 1 ? `:0${this.date.getMinutes()}` : `:${this.date.getMinutes()}`,
+        seconds:  this.date.getSeconds().toString().length == 1 ? `:0${this.date.getSeconds()}` : `:${this.date.getSeconds()}`,
+        day:      this.date.getDate().toString().length == 1 ? `0${this.date.getDate()}` : `${this.date.getDate()}`,
+        month:    this.date.getMonth().toString().length == 1 ? `-0${this.date.getMonth()+1}-` : `-${this.date.getMonth()+1}-`,
+        year:     this.date.getFullYear(),
     }
 
     currentTime = () => {

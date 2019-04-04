@@ -11,20 +11,6 @@ class CurrentWeather extends React.Component {
         let {time, date, gmt} = this.props.localTime;
 		let {city, country} = this.props.location;
 
-        //Function that adds the right temperature unit
-        const tempWithUnit = (units) => {
-            let data;
-            if (units == 'metric'){
-                return data = `${temp} \u00b0C`
-            }
-            else if (units == 'imperial') {
-                return data = `${temp} \u00b0F`
-            }
-            else {
-                return data = `${temp} \u00b0K`
-            }
-        }
-
         const dotsPreloader = ( 
             <DotsPreloader /> 
         )
@@ -57,7 +43,7 @@ class CurrentWeather extends React.Component {
 
                     <div className = "left-col">
                         <div className="left-rows">
-                            <p><i className="wi wi-thermometer"></i></p><h3>{tempWithUnit(this.props.units)}</h3>
+                            <p><i className="wi wi-thermometer"></i></p><h3>{temp}</h3>
                         </div>
                         <div className="left-rows">
                             <p><i className="wi wi-barometer"></i></p><h3>{pressure}</h3>
