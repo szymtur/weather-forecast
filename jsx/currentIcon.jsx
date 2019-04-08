@@ -1,11 +1,11 @@
 import React from 'react';
 
 class CurrentIcon extends React.Component {
-    render() {
 
+    render() {
         //function for selecting icons based on weather id and icon id
         const selectIcon = (id, icon) => {
-    
+
             if(id == 800 && icon[3] == 'd') {
                 return <i className="wi wi-day-sunny" />
             }

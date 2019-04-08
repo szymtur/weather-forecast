@@ -1,6 +1,6 @@
 const path = require("path");
 const autoprefixer = require("autoprefixer");
- 
+
 module.exports = {
     entry:"./jsx/app.jsx",
     output: { filename: "out.js", path: path.resolve(__dirname, "js") },
@@ -9,20 +9,20 @@ module.exports = {
         rules: [
         {
             test: /\.css$/,
-			use: [ 
-				'style-loader', 
-				'css-loader',
-				{
-					loader: "postcss-loader",
-					options: {
-						plugins: () => [
-							autoprefixer({
-								browsers: ["> 3%", "last 2 versions"]
-							})
-						]
-					}
-				}
-			]
+            use: [ 
+                'style-loader', 
+                'css-loader',
+                {
+                    loader: "postcss-loader",
+                    options: {
+                        plugins: () => [
+                            autoprefixer({
+                                browsers: ["> 3%", "last 2 versions"]
+                            })
+                        ]
+                    }
+                }
+            ]
         },
         {
             test: /\.(eot|ttf|woff|woff2)$/,

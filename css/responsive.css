@@ -1,7 +1,7 @@
 @media (max-width: 420px) { 
-    
+
     /* Main styles - start */
-        body{
+    body {
         background: #d3d3d3;
     }
 
@@ -29,7 +29,7 @@
         font-size: 1.2em;
     }
     /* Header styles - end */
-    
+
 
     /* Search section styles - start */
     .search {
@@ -38,47 +38,46 @@
     /* Search section styles - end */
 
 
-	/* Current weather section styles - start */
-	.current-weather {
-		height: fit-content;
-		padding: 2% 3% 1.5% 2%;
-	}
-
-    .current-weather .local-info {
-		height: 100%;
-		margin-top: -0.25em;
-		margin-bottom: 0.25em;
-		display: flex;
-		flex-direction: column-reverse;
+    /* Current weather section styles - start */
+    .current-weather {
+        height: fit-content;
+        padding: 2% 3% 1.5% 2%;
     }
 
-	.current-weather .local-info .date-time,
-	.current-weather .local-info .dots-preloader {
-		width: 100%;
-		height: 1.2em;
-        margin: 0 0 0.35em 0;
-	}
+    .current-weather .local-info {
+        height: 100%;
+        margin-top: -0.25em;
+        margin-bottom: 0.25em;
+        display: flex;
+        flex-direction: column-reverse;
+    }
 
-	.current-weather .local-info .dots-preloader {
-		text-align: right;
-		padding-right: 15%;
-	}
-	
-	.current-weather .local-info .dots-preloader .dots-loading {
+    .current-weather .local-info .date-time,
+    .current-weather .local-info .dots-preloader {
+        width: 100%;
+        height: 1.2em;
+        margin: 0 0 0.35em 0;
+    }
+
+    .current-weather .local-info .dots-preloader {
+        text-align: right;
+        padding-right: 15%;
+    }
+    
+    .current-weather .local-info .dots-preloader .dots-loading {
         width: 60px;
         height: 10px;
     }
 
     .current-weather .local-info .date-time h6 {
         font-size: 0.75em;
-		line-height: 2em;
+        line-height: 2em;
     }
 
     .current-weather .local-info .city {
-		width: 83%;
-		height: fit-content;
-		max-height: 2.5em;
-
+        width: 83%;
+        height: fit-content;
+        max-height: 2.5em;
     }
 
     .current-weather .local-info .city h3 {
@@ -94,20 +93,20 @@
     }
 
     .current-weather .right-col {
-		margin-top: 0;
-		height: fit-content;
+        margin-top: 0;
+        height: fit-content;
     }
 
     .current-weather .right-col .col-60,
     .current-weather .right-col .col-40 {
         width: 50%;
-		height: fit-content;
+        height: fit-content;
     }
 
     .current-weather .right-col .col-40 .current-icon {
         font-size: 3em;
-		text-align: center;
-		margin: 0.1em 0 0 0;
+        text-align: center;
+        margin: 0.1em 0 0 0;
     }
 
     .current-weather .right-col .col-60 h5 {
@@ -116,11 +115,11 @@
         width: 160%;
         font-size: 0.9em;
         height: 2.35em;
-	}
-	
-	.current-weather .right-col .right-bottom {
-		margin-bottom: 0.25em;
-	}
+    }
+
+    .current-weather .right-col .right-bottom {
+        margin-bottom: 0.25em;
+    }
     /* Current weather section styles - end */
 
 
@@ -129,8 +128,8 @@
         width: 93%;
         margin: 0 auto;
         display: flex;
-		justify-content: space-between;
-		flex-wrap: wrap;
+        justify-content: space-between;
+        flex-wrap: wrap;
     }
 
     .next-days-weather .day-container {
@@ -149,7 +148,7 @@
         width: 32%;
         margin-bottom: 1em;
     }
-    
+
     .next-days-weather .day-container:nth-child(1) .row p,
     .next-days-weather .day-container:nth-child(2) .row p {
         margin-left: 15%;

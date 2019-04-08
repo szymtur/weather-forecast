@@ -1,6 +1,7 @@
 import React from 'react';
 
 class DotsPreloader extends React.Component {
+
     render() {
         return (
             <div className="dots-preloader">

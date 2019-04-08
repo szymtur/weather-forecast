@@ -1,10 +1,10 @@
 import React from 'react';
 
 class CurrentDateHeader extends React.Component {
-	
-	date = new Date();
-	
-	state = {
+
+    date = new Date();
+
+    state = {
         timezone: this.date.getTimezoneOffset() < 0 ? ` (GMT+${this.date.getTimezoneOffset()/-60}) ` : ` (GMT${this.date.getTimezoneOffset()/-60}) `,
         hours:    this.date.getHours().toString().length == 1 ? `0${this.date.getHours()}` : `${this.date.getHours()}`,
         minutes:  this.date.getMinutes().toString().length == 1 ? `:0${this.date.getMinutes()}` : `:${this.date.getMinutes()}`,
@@ -39,15 +39,15 @@ class CurrentDateHeader extends React.Component {
 
     render() {
         return(
-			<div className="header">
-	            <div className="current-date">
-    	            <h4>
-        	            {this.state.day}{this.state.month}{this.state.year}
-            	        {this.state.timezone}{this.state.hours}{this.state.minutes}{this.state.seconds}
-                	</h4>
-            	</div>
-				<div className="caption"><h2>Weather Forecast</h2></div>
-			</div>		
+            <div className="header">
+                <div className="current-date">
+                    <h4>
+                        {this.state.day}{this.state.month}{this.state.year}
+                        {this.state.timezone}{this.state.hours}{this.state.minutes}{this.state.seconds}
+                    </h4>
+                </div>
+                <div className="caption"><h2>Weather Forecast</h2></div>
+            </div>
         )
     }
 }

@@ -4,25 +4,25 @@
 @import url('https://use.fontawesome.com/releases/v5.3.1/css/all.css');
 
 * {
-	box-sizing: border-box;
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
 }
 
 body {
+    width: 100%;
+    height: 100vh;
     display: flex;
-    user-select: none;
     justify-content: center;
     align-items: center;
+    user-select: none;
     font-family: 'Montserrat', sans-serif;
-    width: 100%;
 }
 
 #app {
     width: 550px;
     min-height: 600px;
     background: #d3d3d3;
-    margin-top: 2%;
     border-radius: 5px;
 }
 /* Main styles - end */
@@ -31,7 +31,7 @@ body {
 /* Header styles - start */
 .header {
     width: 96%;
-    height:15%;
+    height: 15%;
     display: flex;
     flex-wrap: wrap;
     margin: 0 auto;
@@ -114,8 +114,8 @@ body {
     font-size: 0.9em;
     font-weight: 600;
     letter-spacing: 0.5px;
-	transition: all 0.5s;
-	
+    transition: all 0.5s;
+    
     -webkit-appearance: none;
         -moz-appearance: none;
 }
@@ -125,7 +125,6 @@ body {
     color: #ffffff;
 }
 /* Search section styles - end */
-
 
 
 /* Current weather section styles - start */
@@ -158,7 +157,7 @@ body {
 .current-weather .local-info .city h3 {
     font-weight: 600;
     margin-left: 0.25em;
-	font-size: 1.3em;
+    font-size: 1.3em;
 }
 
 .current-weather .local-info .dots-preloader,
@@ -215,17 +214,17 @@ body {
 
 .current-weather .left-col .left-rows p .wi {
     font-size: 1.4em;
-	color: #000000;
+    color: #000000;
 }
 
 .current-weather .left-col .left-rows p .wi.wi-strong-wind {
-	margin-left: 0.2em;
+    margin-left: 0.2em;
 }
 
 .current-weather .right-col {
     width: 62%;
-	height: 120px;
-	margin-top: 1em;
+    height: 120px;
+    margin-top: 1em;
     display: flex;
     flex-wrap: wrap;
 }
@@ -258,8 +257,8 @@ body {
 .current-weather .right-col .right-bottom {
     width: 100%;
     height: 30px;
-	text-align: right;
-	margin-bottom: -0.25em
+    text-align: right;
+    margin-bottom: -0.25em
 }
 
 .current-weather .right-col .right-bottom button {
@@ -331,12 +330,12 @@ body {
 }
 
 .next-days-weather .day-container .row.icon {
-	font-size: 2em;
-	padding: 0.1em;
+    font-size: 2em;
+    padding: 0.1em;
 }
 
 .next-days-weather .day-container .row.icon .wi.wi-day-cloudy-high {
-	font-size: 1.25em;
+    font-size: 1.25em;
 }
 
 .next-days-weather .day-container .row.description {
@@ -345,9 +344,9 @@ body {
 
 .next-days-weather .day-container .row.description h6 {
     width: 95%;
-	margin: 0 auto;
-	font-weight: 600;
-	font-size: 0.7em
+    margin: 0 auto;
+    font-weight: 600;
+    font-size: 0.7em
 }
 
 .next-days-weather .day-container .row p {

@@ -4,12 +4,12 @@ import MainPreloader from './mainPreloader.jsx';
 import DotsPreloader from './dotsPreloader.jsx';
 
 class CurrentWeather extends React.Component {
-    render() {
 
+    render() {
         //Destructuring object with weather data
-        let {temp, pressure, humidity, wind, description, icon, id} = this.props.currentDay;
-        let {time, date, gmt} = this.props.localTime;
-		let {city, country} = this.props.location;
+        const {temp, pressure, humidity, wind, description, icon, id} = this.props.currentDay;
+        const {time, date, gmt} = this.props.localTime;
+        const {city, country} = this.props.location;
 
         const dotsPreloader = ( 
             <DotsPreloader /> 
@@ -38,7 +38,7 @@ class CurrentWeather extends React.Component {
                                 {city} {country}
                             </h3>
                         </div>
-						{Object.keys(this.props.localTime).length ? localTime : dotsPreloader}
+                        {Object.keys(this.props.localTime).length ? localTime : dotsPreloader}
                     </div>
 
                     <div className = "left-col">
@@ -51,7 +51,7 @@ class CurrentWeather extends React.Component {
                         <div className="left-rows">
                             <p><i className="wi wi-humidity"></i></p><h3>{humidity}</h3>
                         </div>
-						<div className="left-rows">
+                        <div className="left-rows">
                             <p><i className="wi wi-strong-wind"></i></p><h3>{wind}</h3>
                         </div>
                     </div>
@@ -72,7 +72,6 @@ class CurrentWeather extends React.Component {
                             </button>
                         </div>
                     </div>
-                    
                 </div>
             )
         }

@@ -2,12 +2,12 @@ import React from 'react';
 import CurrentIcon from './currentIcon.jsx';
 
 class OneDayWeather extends React.Component {
+
     render() {
-
         //Destructuring object with weather data
-        let {date, temp, pressure, humidity, wind, description, icon, id} = this.props.nextDay;
+        const {date, temp, pressure, humidity, wind, description, icon, id} = this.props.nextDay;
 
-		return (
+        return (
             <div className="day-container">
                 <div className="row date">
                     <h5>{date}</h5>
@@ -27,9 +27,9 @@ class OneDayWeather extends React.Component {
                 <div className="row">
                     <p><i className="wi wi-humidity"></i></p><h5>{humidity}</h5>
                 </div>
-				<div className="row">
+                <div className="row">
                     <p><i className="wi wi-strong-wind"></i></p><h5>{wind}</h5>
-                </div>   
+                </div>
             </div>
         )
     }

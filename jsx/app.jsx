@@ -5,10 +5,10 @@ import 'isomorphic-fetch';
 
 import apiConfig from '../js/apiConfig.js';
 import SearchSection from './searchSection.jsx';
-import CurrentDateHeader from '../jsx/currentDate.jsx';
-import CurrentWeather from '../jsx/currentWeather.jsx';
-import NextDaysWeather from '../jsx/nextDaysWeather.jsx';
-import {unitsChanger, nameChooser, isMobile} from '../jsx/appHandler.jsx';
+import CurrentDateHeader from './currentDate.jsx';
+import CurrentWeather from './currentWeather.jsx';
+import NextDaysWeather from './nextDaysWeather.jsx';
+import {unitsChanger, nameChooser, isMobile} from './appHandler.jsx';
 
 import '../css/styles.css';
 import '../css/responsive.css';
@@ -26,11 +26,11 @@ document.addEventListener('DOMContentLoaded', function() {
             loading_data: 'loading data...',
             enter_manually: 'enter your location manually',
             wrong_city: 'wrong city name',
-			connection_error: 'connection error',
-			temperature: 'temperature',
-			pressure: 'pressure',
-			humidity: 'humidity',
-			wind: 'wind'
+            connection_error: 'connection error',
+            temperature: 'temperature',
+            pressure: 'pressure',
+            humidity: 'humidity',
+            wind: 'wind'
         }
 
         state = {
@@ -148,7 +148,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         latitude: parseFloat(data[0].lat).toFixed(4),
                         longitude: parseFloat(data[0].lon).toFixed(4),
                         location: {
-							city: nameChooser(data),
+                            city: nameChooser(data),
                             country: data[0].address.country_code.toUpperCase()
                         }
                     });
@@ -187,7 +187,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .then( weather_data => {
-				let data = weather_data.data[0];
+                let data = weather_data.data[0];
                 if(!this.state.location.city) {
                     this.setState({
                         location: {
@@ -198,10 +198,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 this.setState({
                     currentDayWeatherData: {
-						temp: unitsChanger(this.state.units, this.strings.temperature, data.app_temp),
+                        temp: unitsChanger(this.state.units, this.strings.temperature, data.app_temp),
                         pressure: unitsChanger(this.state.units, this.strings.pressure, data.pres), 
-						humidity: unitsChanger(this.state.units, this.strings.humidity, data.rh),
-						wind: unitsChanger(this.state.units, this.strings.wind, data.wind_spd),
+                        humidity: unitsChanger(this.state.units, this.strings.humidity, data.rh),
+                        wind: unitsChanger(this.state.units, this.strings.wind, data.wind_spd),
                         description: data.weather.description, 
                         icon: data.weather.icon,
                         id: Number(data.weather.code)
@@ -213,7 +213,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.getLocalTime();
             })
             .then( () => {
-                this.getNextDaysData();            
+                this.getNextDaysData();
             })
             .catch( error => {
                 this.setState({
@@ -245,13 +245,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 for (let i=1; i<data.length; i++){
                     nextDays[i-1] = {
-						temp: unitsChanger(this.state.units, this.strings.temperature, data[i].temp),
+                        temp: unitsChanger(this.state.units, this.strings.temperature, data[i].temp),
                         pressure: unitsChanger(this.state.units, this.strings.pressure, data[i].pres), 
-						humidity: unitsChanger(this.state.units, this.strings.humidity, data[i].rh),
-						wind: unitsChanger(this.state.units, this.strings.wind, data[i].wind_spd),
+                        humidity: unitsChanger(this.state.units, this.strings.humidity, data[i].rh),
+                        wind: unitsChanger(this.state.units, this.strings.wind, data[i].wind_spd),
                         description: data[i].weather.description.toLowerCase(),
                         date: `${data[i].valid_date.split('-').reverse().join('-')}`,
-						icon: data[i].weather.icon,
+                        icon: data[i].weather.icon,
                         id: data[i].weather.code
                     }
                 }
@@ -310,12 +310,12 @@ document.addEventListener('DOMContentLoaded', function() {
         render() {
             return (
                 <div>
-					<CurrentDateHeader />
-					<SearchSection 
-						handleInput = {this.handleInput}
-						handleSubmit = {this.handleSubmit}
-						input = {this.state.input}
-					/>
+                    <CurrentDateHeader />
+                    <SearchSection 
+                        handleInput = {this.handleInput}
+                        handleSubmit = {this.handleSubmit}
+                        input = {this.state.input}
+                    />
                     <CurrentWeather
                         localTime = {this.state.localTime}
                         location = {this.state.location}
@@ -330,20 +330,20 @@ document.addEventListener('DOMContentLoaded', function() {
                         display = {this.state.displayNextDaysWeather}
                         nextDays = {this.state.nextDaysWeatherData}
                     />
-                </div>    
+                </div>
             )
         }
     }
 
-    
+
     class App extends React.Component {
         render() {
             return <Main />
         }
     }
-    
+
 
     ReactDOM.render (
-		<App />, document.getElementById('app')
-	);
+        <App />, document.getElementById('app')
+    );
 });

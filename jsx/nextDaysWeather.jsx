@@ -3,12 +3,12 @@ import OneDayWeather from './oneDayWeather.jsx';
 
 class NextDaysWeather extends React.Component {
 
-    render(){
-        let nexDaysComponentsArray = this.props.nextDays.map( (element, index) => {
+    render() {
+        const nexDaysComponentsArray = this.props.nextDays.map( (element, index) => {
             return (
                 <OneDayWeather 
-                    nextDay = {element} 
-                    key = {index}  
+                    nextDay = {element}
+                    key = {index}
                 />
             )
         });

@@ -1,12 +1,12 @@
 import React from 'react';
 
 class MainPreloader extends React.Component {
-    render() {
 
+    render() {
         const classes = !this.props.preloaderAlert ? "main-loading animation" : "main-loading";
         const styles = {color: !this.props.preloaderAlert ? "#000000" : "#444444"};
-            
-        return ( 
+
+        return (
             <div className="main-preloader" style={styles}> 
                 <svg className={classes} xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" >
                     <path 
@@ -16,7 +16,7 @@ class MainPreloader extends React.Component {
                 </svg>
                 <p className="info">{this.props.preloaderInfo}</p>
             </div>
-        ) 
+        )
     }
 }
 
