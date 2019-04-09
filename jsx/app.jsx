@@ -34,8 +34,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         state = {
-            wbitAppid: apiConfig.wbitAppid,
-            tzdbAppid: apiConfig.tzdbAppid,
+            ipInfoDbApiKey: apiConfig.ipInfoDb,
+            weatherBitApiKey: apiConfig.weatherBit,
+            timeZoneDbApiKey: apiConfig.timeZoneDb,
             units: apiConfig.units,
             lang: apiConfig.lang,
             input: this.strings.input,
@@ -94,9 +95,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-        /* geolocation - getting current position by ip address from ipapi.co */
+        /* geolocation - getting current position by ip address from ipinfodb.com */
         getCurrentPosition() {
-            fetch(`https://ipapi.co/json`)
+            fetch(`https://api.ipinfodb.com/v3/ip-city/?format=json&key=${this.state.ipInfoDbApiKey}`)
             .then( resp => {
                 if(resp.ok) {
                     return resp.json();
@@ -110,8 +111,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     latitude: data.latitude,
                     longitude: data.longitude,
                     location: {
-                        city: data.city, 
-                        country: data.country.toUpperCase()
+                        city: data.cityName,
+                        country: data.countryCode.toUpperCase()
                     }
                 });
             })
@@ -177,11 +178,14 @@ document.addEventListener('DOMContentLoaded', function() {
 
         /* getting weather forecast from weatherbit.io and local time from timezonedb.com */
         getData() {
-            fetch(`https://api.weatherbit.io/v2.0/current?lat=${this.state.latitude}&lon=${this.state.longitude}&units=${this.state.units.charAt(0)}&lang=${this.state.lang}&key=${this.state.wbitAppid}`)
+            fetch(`https://api.weatherbit.io/v2.0/current/` +
+                  `?lat=${this.state.latitude}&lon=${this.state.longitude}` +
+                  `&units=${this.state.units.charAt(0)}&lang=${this.state.lang}` +
+                  `&key=${this.state.weatherBitApiKey}`)
             .then( resp => {
                 if(resp.ok) {
                     return resp.json();
-                } 
+                }
                 else {
                     throw new Error(resp.statusText);
                 }
@@ -191,7 +195,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 if(!this.state.location.city) {
                     this.setState({
                         location: {
-                            city: data.city_name, 
+                            city: data.city_name,
                             country: data.country_code.toUpperCase()
                         }
                     });
@@ -227,7 +231,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
         /* getting next five days weather info from weatherbit.io */
         getNextDaysData() {
-            fetch(`https://api.weatherbit.io/v2.0/forecast/daily?days=6&&lat=${this.state.latitude}&lon=${this.state.longitude}&units=${this.state.units.charAt(0)}&lang=${this.state.lang}&key=${this.state.wbitAppid}`)
+            fetch(`https://api.weatherbit.io/v2.0/forecast/daily/?days=6` +
+                  `&lat=${this.state.latitude}&lon=${this.state.longitude}` +
+                  `&units=${this.state.units.charAt(0)}&lang=${this.state.lang}` +
+                  `&key=${this.state.weatherBitApiKey}`)
             .then( resp => {
                 if( resp.ok) {
                     this.setState({
@@ -267,7 +274,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
         /* getting local time for schearched city from timezonedb.com */
         getLocalTime() {
-            fetch(`https://api.timezonedb.com/v2.1/get-time-zone?format=json&by=position&lat=${this.state.latitude}&lng=${this.state.longitude}&key=${this.state.tzdbAppid}`)
+            fetch(`https://api.timezonedb.com/v2.1/get-time-zone/?format=json&by=position` +
+                  `&lat=${this.state.latitude}&lng=${this.state.longitude}&key=${this.state.timeZoneDbApiKey}`)
             .then( resp => {
                 if( resp.ok) {
                     return resp.json();

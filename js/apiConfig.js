@@ -1,6 +1,7 @@
-const apiConfig = { 
-    wbitAppid: "2ed3773b146049209c0965f94c1f9d8c",
-    tzdbAppid: "MB4JWXQU14Q0",
+const apiConfig = {
+    ipInfoDb: "6f8bd8aff74c6b5af302984e849f2c193c543eb1617f17b00d74ce0d4ab4a5a8",
+    weatherBit: "2ed3773b146049209c0965f94c1f9d8c",
+    timeZoneDb: "MB4JWXQU14Q0",
     units: "metric",
     lang: "en"
 };
