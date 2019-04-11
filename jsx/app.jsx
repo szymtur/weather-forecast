@@ -96,7 +96,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         /* geolocation - getting current position by ip address from ip-api.com */
         getCurrentPosition() {
-            fetch(`http://ip-api.com/json/`)
+            fetch(`https://geoip-db.com/json/188.146.26.195`)
             .then( resp => {
                 if(resp.ok) {
                     return resp.json();
@@ -107,11 +107,11 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then( data => {
                 this.setState({
-                    latitude: data.lat,
-                    longitude: data.lon,
+                    latitude: data.latitude,
+                    longitude: data.longitude,
                     location: {
                         city: data.city,
-                        country: data.countryCode.toUpperCase()
+                        country: data.country_code.toUpperCase()
                     }
                 });
             })
