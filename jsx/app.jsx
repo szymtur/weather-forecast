@@ -34,7 +34,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         state = {
-            ip2locationApiKey: apiConfig.ip2location,
             weatherBitApiKey: apiConfig.weatherBit,
             timeZoneDbApiKey: apiConfig.timeZoneDb,
             units: apiConfig.units,
@@ -95,9 +94,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-        /* geolocation - getting current position by ip address from ip2location.com */
+        /* geolocation - getting current position by ip address from ip-api.com */
         getCurrentPosition() {
-            fetch(`https://api.ip2location.com/v2/?package=ws5&lang=en&key=${this.state.ip2locationApiKey}`)
+            fetch(`http://ip-api.com/json/`)
             .then( resp => {
                 if(resp.ok) {
                     return resp.json();
@@ -108,11 +107,11 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then( data => {
                 this.setState({
-                    latitude: data.latitude,
-                    longitude: data.longitude,
+                    latitude: data.lat,
+                    longitude: data.lon,
                     location: {
-                        city: data.city_name,
-                        country: data.country_code.toUpperCase()
+                        city: data.city,
+                        country: data.countryCode.toUpperCase()
                     }
                 });
             })
@@ -131,7 +130,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         /* geocoding - getting latitude and longitude from city name using openstreetmap.org */
         getCoordinates() {
-            fetch(`https://nominatim.openstreetmap.org/?format=json&limit=1&addressdetails=1&q=${this.state.input.trim()}`)
+            fetch(`https://nominatim.openstreetmap.org?format=json&limit=1&addressdetails=1&q=${this.state.input.trim()}`)
             .then( resp => {
                 if(resp.ok) {
                     return resp.json();
@@ -178,7 +177,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         /* getting weather forecast from weatherbit.io and local time from timezonedb.com */
         getData() {
-            fetch(`https://api.weatherbit.io/v2.0/current/` +
+            fetch(`https://api.weatherbit.io/v2.0/current` +
                   `?lat=${this.state.latitude}&lon=${this.state.longitude}` +
                   `&units=${this.state.units.charAt(0)}&lang=${this.state.lang}` +
                   `&key=${this.state.weatherBitApiKey}`)
@@ -231,7 +230,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         /* getting next five days weather info from weatherbit.io */
         getNextDaysData() {
-            fetch(`https://api.weatherbit.io/v2.0/forecast/daily/?days=6` +
+            fetch(`https://api.weatherbit.io/v2.0/forecast/daily?days=6` +
                   `&lat=${this.state.latitude}&lon=${this.state.longitude}` +
                   `&units=${this.state.units.charAt(0)}&lang=${this.state.lang}` +
                   `&key=${this.state.weatherBitApiKey}`)
@@ -274,7 +273,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         /* getting local time for schearched city from timezonedb.com */
         getLocalTime() {
-            fetch(`https://api.timezonedb.com/v2.1/get-time-zone/?format=json&by=position` +
+            fetch(`https://api.timezonedb.com/v2.1/get-time-zone?format=json&by=position` +
                   `&lat=${this.state.latitude}&lng=${this.state.longitude}&key=${this.state.timeZoneDbApiKey}`)
             .then( resp => {
                 if( resp.ok) {

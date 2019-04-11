@@ -14,7 +14,7 @@ Forward geocoding is the process of converting a city name or place name into co
 IP Geolocation is the identification of the geographic location of a device, by using an IP address.
 
 ### Services used:
-- IP Geolocation: ip2location.com
+- IP Geolocation: ip-api.com
 - Forward Geocoding: openstreetmap.org
 - Weather forecast: weatherbit.io
 - Timezone: timezonedb.com

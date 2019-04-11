@@ -1,5 +1,4 @@
 const apiConfig = {
-    ip2location: "EXB8YPHVCP",
     weatherBit: "2ed3773b146049209c0965f94c1f9d8c",
     timeZoneDb: "MB4JWXQU14Q0",
     units: "metric",
