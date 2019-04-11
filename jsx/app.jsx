@@ -34,7 +34,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         state = {
-            ipInfoDbApiKey: apiConfig.ipInfoDb,
+            ip2locationApiKey: apiConfig.ip2location,
             weatherBitApiKey: apiConfig.weatherBit,
             timeZoneDbApiKey: apiConfig.timeZoneDb,
             units: apiConfig.units,
@@ -95,9 +95,9 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-        /* geolocation - getting current position by ip address from ipinfodb.com */
+        /* geolocation - getting current position by ip address from ip2location.com */
         getCurrentPosition() {
-            fetch(`https://api.ipinfodb.com/v3/ip-city/?format=json&key=${this.state.ipInfoDbApiKey}`)
+            fetch(`https://api.ip2location.com/v2/?package=ws5&lang=en&key=${this.state.ip2locationApiKey}`)
             .then( resp => {
                 if(resp.ok) {
                     return resp.json();
@@ -111,8 +111,8 @@ document.addEventListener('DOMContentLoaded', function() {
                     latitude: data.latitude,
                     longitude: data.longitude,
                     location: {
-                        city: data.cityName,
-                        country: data.countryCode.toUpperCase()
+                        city: data.city_name,
+                        country: data.country_code.toUpperCase()
                     }
                 });
             })
