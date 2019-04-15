@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-        /* geolocation - getting current position by ip address from ip-api.com */
+        /* geolocation - getting current position by ip address from geoip-db.com */
         getCurrentPosition() {
             fetch(`https://geoip-db.com/json/`)
             .then( resp => {

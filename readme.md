@@ -18,6 +18,7 @@ IP Geolocation is the identification of the geographic location of a device, by 
 - Forward Geocoding: openstreetmap.org
 - Weather forecast: weatherbit.io
 - Timezone: timezonedb.com
+- Weather icons: weathericons.io
 
 ### Technologies used:
 - HTML5
