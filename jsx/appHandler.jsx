@@ -105,7 +105,7 @@ class appHandler {
         }
 
         for (let i=0; i<placeAndAreaNames.length; i++) {
-            if(placeAndAreaNames[i] != undefined) {
+            if(placeAndAreaNames[i] != undefined && placeAndAreaNames[i].length > 3) {
                 resultArray.push(placeAndAreaNames[i]);
 
                 for (let i=0; i<cityNames.length; i++) {
