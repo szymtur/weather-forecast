@@ -94,6 +94,7 @@ class appHandler {
         ];
 
         const resultArray = [];
+        const romanNumeral = new RegExp('^(?:M*(?:LD|LM|CM|CD|D?C{0,3})(?:VL|VC|XC|XL|L?X{0,3})(?:IX|IV|V?I{0,3}))$', 'i');
 
         function removeDuplicates(array) {
             if(array[0].indexOf(array[array.length-1]) != -1) {
@@ -105,7 +106,7 @@ class appHandler {
         }
 
         for (let i=0; i<placeAndAreaNames.length; i++) {
-            if(placeAndAreaNames[i] != undefined && placeAndAreaNames[i].length > 3) {
+            if(placeAndAreaNames[i] != undefined && romanNumeral.test(placeAndAreaNames[i]) == false) {
                 resultArray.push(placeAndAreaNames[i]);
 
                 for (let i=0; i<cityNames.length; i++) {
