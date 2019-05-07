@@ -116,7 +116,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 });
             })
             .then( () => {
-                this.getData();
+                this.getWeatherData();
             })
             .catch( error => {
                 this.setState({
@@ -155,7 +155,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .then( () => {
-                this.getData();
+                this.getWeatherData();
             })
             .catch( error => {
                 if(error == 'Error: NO_DATA') {
@@ -176,7 +176,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         /* getting weather forecast from weatherbit.io and local time from timezonedb.com */
-        getData() {
+        getWeatherData() {
             fetch(`https://api.weatherbit.io/v2.0/current` +
                   `?lat=${this.state.latitude}&lon=${this.state.longitude}` +
                   `&units=${this.state.units.charAt(0)}&lang=${this.state.lang}` +
