@@ -6,7 +6,7 @@ import DotsPreloader from './dotsPreloader.jsx';
 class CurrentWeather extends React.Component {
 
     render() {
-        //Destructuring object with weather data
+        /* Destructuring object with weather data */
         const {temp, pressure, humidity, wind, description, icon, id} = this.props.currentDay;
         const {time, date, gmt} = this.props.localTime;
         const {city, country} = this.props.location;
@@ -68,7 +68,7 @@ class CurrentWeather extends React.Component {
                                 onClick={this.props.displayNextDays}
                                 disabled={this.props.btnDisabled}
                             >
-                                5 day forecast
+                                next days forecast
                             </button>
                         </div>
                     </div>

@@ -3,7 +3,7 @@ import React from 'react';
 class CurrentIcon extends React.Component {
 
     render() {
-        //function for selecting icons based on weather id and icon id
+        /* function for selecting icons based on weather id and icon id */
         const selectIcon = (id, icon) => {
 
             if(id == 800 && icon[3] == 'd') {

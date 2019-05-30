@@ -261,7 +261,7 @@ body {
 }
 
 .current-weather .right-col .right-bottom button {
-    width: 120px;
+    width: 150px;
     height: 30px;
     border: 1px solid gray;
     border-radius: 4px; 
@@ -285,7 +285,7 @@ body {
     width: 93%;
     height: 230px;
     margin: 0 auto;
-    margin-bottom: 15px;    
+    margin-bottom: 15px;
     display: flex;
     justify-content: space-between;
 }
@@ -299,6 +299,8 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
+    align-items: center;
+    overflow: hidden;
 }
 
 .next-days-weather .day-container:first-child {
@@ -306,9 +308,13 @@ body {
     border-bottom-left-radius: 5px; 
 }
 
-.next-days-weather .day-container:last-child {
+.next-days-weather .day-container:nth-child(5) {
     border-top-right-radius: 5px;
     border-bottom-right-radius: 5px; 
+}
+
+.next-days-weather .day-container:nth-child(6) {
+    display: none;
 }
 
 .next-days-weather .day-container .row {
@@ -321,6 +327,11 @@ body {
 .next-days-weather .day-container .row.description,
 .next-days-weather .day-container .row p {
     text-align: center;
+}
+
+.next-days-weather .day-container .row.weather-data {
+    width: fit-content;
+    margin-left: -10px;
 }
 
 .next-days-weather .day-container .row.date h5 {
@@ -350,7 +361,7 @@ body {
 
 .next-days-weather .day-container .row p {
     display: inline-block;
-    width: 35px;
+    width: 40px;
 }
 .next-days-weather .day-container .row h5 {
     display: inline-block;

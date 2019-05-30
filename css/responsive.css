@@ -1,4 +1,4 @@
-@media (max-width: 420px) { 
+@media (orientation: portrait) {
 
     /* Main styles - start */
     body {
@@ -63,7 +63,7 @@
         text-align: right;
         padding-right: 15%;
     }
-    
+
     .current-weather .local-info .dots-preloader .dots-loading {
         width: 60px;
         height: 10px;
@@ -111,7 +111,7 @@
 
     .current-weather .right-col .col-60 h5 {
         margin-top: 65%;
-        margin-left: 0.5em;
+        margin-left: -0.5em;
         width: 160%;
         font-size: 0.9em;
         height: 2.35em;
@@ -134,35 +134,17 @@
 
     .next-days-weather .day-container {
         border-radius: 5px;
-    }
-
-    .next-days-weather .day-container:nth-child(1),
-    .next-days-weather .day-container:nth-child(2) {
-        width: 49%;
-        margin-bottom: 2%;
-    }
-
-    .next-days-weather .day-container:nth-child(3),
-    .next-days-weather .day-container:nth-child(4),
-    .next-days-weather .day-container:nth-child(5) {
         width: 32%;
-        margin-bottom: 1em;
+        margin-bottom: 0.75em;
     }
 
-    .next-days-weather .day-container:nth-child(1) .row p,
-    .next-days-weather .day-container:nth-child(2) .row p {
-        margin-left: 15%;
+    .next-days-weather .day-container:last-child {
+        display: flex;
     }
 
     .next-days-weather .day-container .row.description h6,
     .next-days-weather .day-container .row.description h6 {
         width: 95%;
-        margin: 0 auto;
-    }
-
-    .next-days-weather .day-container:nth-child(1) .row.description h6,
-    .next-days-weather .day-container:nth-child(2) .row.description h6 {
-        width: 75%;
         margin: 0 auto;
     }
     /* Next five days section styles - end */

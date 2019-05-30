@@ -4,7 +4,7 @@ import CurrentIcon from './currentIcon.jsx';
 class OneDayWeather extends React.Component {
 
     render() {
-        //Destructuring object with weather data
+        /* Destructuring object with weather data */
         const {date, temp, pressure, humidity, wind, description, icon, id} = this.props.nextDay;
 
         return (
@@ -18,17 +18,19 @@ class OneDayWeather extends React.Component {
                 <div className="row description">
                     <h6>{description}</h6>
                 </div>
-                <div className="row">
-                    <p><i className="wi wi-thermometer"></i></p><h5>{temp}</h5>
-                </div>
-                <div className="row">
-                    <p><i className="wi wi-barometer"></i></p><h5>{pressure}</h5>
-                </div>
-                <div className="row">
-                    <p><i className="wi wi-humidity"></i></p><h5>{humidity}</h5>
-                </div>
-                <div className="row">
-                    <p><i className="wi wi-strong-wind"></i></p><h5>{wind}</h5>
+                <div className="row weather-data">
+                    <div className="row">
+                        <p><i className="wi wi-thermometer"></i></p><h5>{temp}</h5>
+                    </div>
+                    <div className="row">
+                        <p><i className="wi wi-barometer"></i></p><h5>{pressure}</h5>
+                    </div>
+                    <div className="row">
+                        <p><i className="wi wi-humidity"></i></p><h5>{humidity}</h5>
+                    </div>
+                    <div className="row">
+                        <p><i className="wi wi-strong-wind"></i></p><h5>{wind}</h5>
+                    </div>
                 </div>
             </div>
         )

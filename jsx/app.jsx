@@ -230,7 +230,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         /* getting next five days weather info from weatherbit.io */
         getNextDaysData() {
-            fetch(`https://api.weatherbit.io/v2.0/forecast/daily?days=6` +
+            fetch(`https://api.weatherbit.io/v2.0/forecast/daily?days=7` +
                   `&lat=${this.state.latitude}&lon=${this.state.longitude}` +
                   `&units=${this.state.units.charAt(0)}&lang=${this.state.lang}` +
                   `&key=${this.state.weatherBitApiKey}`)
@@ -301,7 +301,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-        componentWillMount(){
+        componentWillMount() {
             this.getCurrentPosition()
         }
 

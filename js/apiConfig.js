@@ -8,9 +8,9 @@ const apiConfig = {
 export default apiConfig;
 
 // Units format
-//     metric       ->  Celcius     m/s     mm
-//     scientific   ->  Kelvin      m/s     mm
-//     imperial     ->  Fahrenheit  mph     in
+//     metric       =>  Celcius     m/s     mm
+//     scientific   =>  Kelvin      m/s     mm
+//     imperial     =>  Fahrenheit  mph     in
 
 // Multilingual support
 //     Arabic - ar 

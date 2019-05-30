@@ -1,21 +1,21 @@
 {
-    "name": "project",
-    "version": "1.0.0",
+    "name": "weather-forecast",
+    "version": "2.0.0",
     "description": "",
+    "repository": "",
     "main": "webpack.config.js",
     "scripts": {
         "test": "echo \"Error: no test specified\" && exit 1",
-        "webpack": "webpack"
+        "start": "webpack"
     },
     "keywords": [],
-    "author": "",
+    "author": "sZymTuR",
     "license": "ISC",
     "dependencies": {
         "isomorphic-fetch": "^2.2.1",
         "promise-polyfill": "^8.1.0",
         "react": "^15.4.0",
-        "react-dom": "^15.4.0",
-        "react-font-face": "^0.2.1"
+        "react-dom": "^15.4.0"
     },
     "devDependencies": {
         "autoprefixer": "^9.5.0",
