@@ -1,5 +1,5 @@
 /* @media (orientation: portrait) { */
-@media (max-aspect-ratio: 1/1) {
+@media (orientation: portrait), (max-width: 420px) {
     /* Main styles - start */
     body {
         background: #d3d3d3;
