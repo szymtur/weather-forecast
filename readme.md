@@ -6,7 +6,7 @@
 [https://szymtur.github.io/weather-forecast](https://szymtur.github.io/weather-forecast)
 
 ### Description:
-Application used to check the current weather in the selected location
+Application used to check the current weather in the selected location.
 
 
 Forward geocoding is the process of converting a city name or place name into correct address with its latitude and longitude values.
