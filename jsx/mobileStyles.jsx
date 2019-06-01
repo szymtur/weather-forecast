@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.onload = () => {
             changeCurrentDateMargin();
             mainPreloaderPosition();
+            lock();
         };
 
         /* starts the function when the window is resized */
@@ -46,5 +47,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         }
+
+        function lock() {
+            document.querySelector('input[type="search"]').addEventListener("focus", function() {
+                console.log('click')
+
+            if(window.innerHeight > window.innerWidth) {
+                document.querySelector('#app').style.height = '810px';
+                document.querySelector('#app').style.color = 'pink';
+
+
+            }
+            // else {
+                // window.screen.lockOrientation('landscape')
+            // }
+
+
+            });
+        }
+
     }
 });
