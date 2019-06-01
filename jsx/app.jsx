@@ -97,10 +97,13 @@ document.addEventListener('DOMContentLoaded', function() {
         lockScreenPosition = () => {
             if (isMobile()) {
                 if(window.innerHeight > window.innerWidth) {
-                    window.screen.lockOrientation('portrait')
+                    ReactDOM.findDOMNode(this).querySelector('#app').style.height = '810px';
+                    ReactDOM.findDOMNode(this).querySelector('#app').style.color = 'pink';
+
+                    // window.screen.lockOrientation('portrait')
                 }
                 else {
-                    window.screen.lockOrientation('landscape')
+                    // window.screen.lockOrientation('landscape')
                 }
             }
         }
