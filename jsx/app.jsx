@@ -97,10 +97,10 @@ document.addEventListener('DOMContentLoaded', function() {
         lockScreenPosition = () => {
             if (isMobile()) {
                 if(window.innerHeight > window.innerWidth) {
-                    window.screen.orientation.lock('portrait')
+                    window.screen.lockOrientation('portrait')
                 }
                 else {
-                    window.screen.orientation.lock('landscape')
+                    window.screen.lockOrientation('landscape')
                 }
             }
         }
