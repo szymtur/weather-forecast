@@ -94,6 +94,18 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
+        lockScreenPosition = () => {
+            if (isMobile()) {
+                if(window.innerHeight > window.innerWidth) {
+                    window.screen.orientation.lock('portrait')
+                }
+                else {
+                    window.screen.orientation.lock('landscape')
+                }
+            }
+        }
+
+
         /* geolocation - getting current position by ip address from geoip-db.com */
         getCurrentPosition() {
             fetch(`https://geoip-db.com/json/`)
@@ -316,12 +328,13 @@ document.addEventListener('DOMContentLoaded', function() {
 
         render() {
             return (
-                <div>
+                <div className='app-wrapper'>
                     <CurrentDateHeader />
                     <SearchSection 
                         handleInput = {this.handleInput}
                         handleSubmit = {this.handleSubmit}
                         input = {this.state.input}
+                        lockScreenPosition = {this.lockScreenPosition}
                     />
                     <CurrentWeather
                         localTime = {this.state.localTime}

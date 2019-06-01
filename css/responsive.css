@@ -1,12 +1,17 @@
 /* @media (orientation: portrait) { */
-@media (orientation: portrait), (max-width: 420px) {
+/* @media (orientation: portrait), (max-width: 420px) { */
+
+    @media (orientation: portrait) {
+
     /* Main styles - start */
     body {
-        background: #d3d3d3;
+        /* background: #d3d3d3; */
     }
 
     #app {
-        margin-top: 0.75em;
+        /* margin-top: 0.75em; */
+        min-height: 860px;
+
     }
     /* Main styles - end */
 
@@ -126,6 +131,7 @@
     /* Next five days section styles - start */
     .next-days-weather {
         width: 93%;
+        height: 100%;
         margin: 0 auto;
         display: flex;
         justify-content: space-between;
@@ -148,4 +154,20 @@
         margin: 0 auto;
     }
     /* Next five days section styles - end */
+}
+
+
+@media (orientation: landscape) and (max-height: 600px) {
+    body {
+        height: fit-content;
+        background: #d3d3d3;
+
+    }
+}
+
+@media (orientation: portrait) and (max-height: 810px) {
+    body {
+        height: fit-content;
+        background: #d3d3d3;
+    }
 }

@@ -11,8 +11,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         /* changes the background color and body height */
         const body = document.querySelector("body")
-        body.style.background = "#d3d3d3";
-        body.style.height = "fit-content";
+        // body.style.background = "#d3d3d3";
+        // body.style.height = "fit-content";
 
         /* starts the function on window loading */
         window.onload = () => {

@@ -9,6 +9,7 @@ class SearchSection extends React.Component {
                         <input 
                             type="search"
                             onChange={this.props.handleInput}
+                            onFocus={this.props.lockScreenPosition}
                             value={this.props.input}
                             placeholder="city"
                             className="normal"
