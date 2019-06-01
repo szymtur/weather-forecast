@@ -53,8 +53,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 console.log('click')
 
             if(window.innerHeight > window.innerWidth) {
-                document.querySelector('#app').style.height = '810px';
+                // document.querySelector('#app').style.height = '810px';
                 document.querySelector('#app').style.color = 'pink';
+                window.screen.orientation.lock('portrait');
 
 
             }
