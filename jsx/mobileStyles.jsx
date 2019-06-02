@@ -35,6 +35,16 @@ document.addEventListener('DOMContentLoaded', () => {
             changeCurrentDateMargin();
             mainPreloaderPosition();
             viewportHigh();
+
+
+            const input = document.querySelector('input[type="search"]');
+
+            input.addEventListener("focus", function() {
+                viewportHigh();
+                console.log('click')
+            });
+
+
         };
 
         /* changes the size of the 'current-date' container margin depending on the device's orientation */
