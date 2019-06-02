@@ -36,13 +36,12 @@ document.addEventListener('DOMContentLoaded', () => {
             mainPreloaderPosition();
             viewportHigh();
 
-
-            document.querySelector('input[type="search"]').blur();
-
-                console.log(document.querySelector('input[type="search"]'))
-
-
         };
+
+        window.addEventListener("orientationchange", function() {
+            document.querySelector('input[type="search"]').blur();
+            console.log(document.querySelector('input[type="search"]'))
+        }, false);
 
         /* changes the size of the 'current-date' container margin depending on the device's orientation */
         let changeCurrentDateMargin = () => {
