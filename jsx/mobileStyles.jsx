@@ -8,6 +8,7 @@ import {isMobile} from './appHandler.jsx';
 document.addEventListener('DOMContentLoaded', () => {
 
     if (isMobile()) {
+        // lock();
 
         /* changes the background color and body height */
         const body = document.querySelector("body")
@@ -18,7 +19,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.onload = () => {
             changeCurrentDateMargin();
             mainPreloaderPosition();
-            lock();
         };
 
         /* starts the function when the window is resized */
@@ -48,24 +48,27 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        function lock() {
-            document.querySelector('input[type="search"]').addEventListener("focus", function() {
-                console.log('click')
+        // function lock() {
+            // document.querySelector('input[type="search"]').addEventListener("focus", function() {
+                // console.log('click')
 
-            if(window.innerHeight > window.innerWidth) {
+            // if(window.innerHeight > window.innerWidth) {
+            //     viewport = document.querySelector("meta[name=viewport]");
+            //     viewport.setAttribute('content', 'height=810px');
+
                 // document.querySelector('#app').style.height = '810px';
-                document.querySelector('#app').style.color = 'pink';
-                window.screen.orientation.lock('portrait');
+                // document.querySelector('#app').style.color = 'pink';
+            
 
 
-            }
+            // }
             // else {
                 // window.screen.lockOrientation('landscape')
             // }
 
 
-            });
-        }
+            // });
+        // }
 
     }
 });

@@ -95,7 +95,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         lockScreenPosition = () => {
-            
+            if(window.innerHeight > window.innerWidth) {
+                let viewport = document.querySelector("meta[name=viewport]");
+                viewport.setAttribute('content', 'width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');    
+            }
         }
 
 
