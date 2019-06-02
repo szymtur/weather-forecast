@@ -77,6 +77,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
+        handleInputOnFocus = () => {
+            let viewport = document.querySelector("meta[name=viewport]");
+            if(window.innerHeight > window.innerWidth) {
+                viewport.setAttribute('content', 'width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
+            }
+            else {
+                viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
+            }
+        }
+
+
+        handleInputOnBlur = () => {
+            let viewport = document.querySelector("meta[name=viewport]");
+            viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
+        }
+
+
         /* '5 days forecast' button function to showing or hiding 'nextDaysWeather' component */
         displayNextDays = () => {
             if(this.state.displayNextDaysWeather) {
@@ -91,14 +108,6 @@ document.addEventListener('DOMContentLoaded', function() {
         /* removing focus from search field */
         blurSearchField = () => {
             ReactDOM.findDOMNode(this).querySelector('input[type="search"]').blur();
-        }
-
-
-        lockScreenPosition = () => {
-            if(window.innerHeight > window.innerWidth) {
-                let viewport = document.querySelector("meta[name=viewport]");
-                viewport.setAttribute('content', 'width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');    
-            }
         }
 
 
@@ -330,7 +339,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         handleInput = {this.handleInput}
                         handleSubmit = {this.handleSubmit}
                         input = {this.state.input}
-                        lockScreenPosition = {this.lockScreenPosition}
+                        inputOnFocus = {this.handleInputOnFocus}
+                        inputOnBlur = {this.handleInputOnBlur}
                     />
                     <CurrentWeather
                         localTime = {this.state.localTime}

@@ -7,9 +7,8 @@ import {isMobile} from './appHandler.jsx';
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    if (isMobile()) {
-        // lock();
 
+    if (isMobile()) {
         /* changes the background color and body height */
         const body = document.querySelector("body")
         // body.style.background = "#d3d3d3";
@@ -17,19 +16,35 @@ document.addEventListener('DOMContentLoaded', () => {
 
         /* starts the function on window loading */
         window.onload = () => {
+
             changeCurrentDateMargin();
             mainPreloaderPosition();
-        };
 
-        /* starts the function when the window is resized */
+
+            const input = document.querySelector('input[type="search"]');
+
+            input.addEventListener("focus", function() {
+                viewportHigh();
+                console.log('click')
+            });
+
+
+
+                    /* starts the function when the window is resized */
         window.onresize = () => {
             changeCurrentDateMargin();
             mainPreloaderPosition();
-        }
+            viewportHigh();
+        };
+
+        };
+
+
+ 
 
         /* changes the size of the 'current-date' container margin depending on the device's orientation */
         let changeCurrentDateMargin = () => {
-            if (Math.abs(window.orientation) === 90) {
+            if (window.innerHeight > window.innerWidth) {
                 document.querySelector('.current-date').style.marginTop ='0.75em';
             }
             else {
@@ -39,13 +54,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let mainPreloaderPosition = () => {
             if(!document.querySelector('.current-weather')) {
-                if (Math.abs(window.orientation) === 90) {
+                if (window.innerHeight > window.innerWidth) {
                     document.querySelector('.main-preloader').style.paddingTop ='1em';
                 }
                 else {
                     document.querySelector('.main-preloader').style.paddingTop ='5em';
                 }
             }
+        }
+
+        let viewportHigh = () => {
+            const viewport = document.querySelector("meta[name=viewport]");
+            if(window.innerHeight > window.innerWidth) {
+                viewport.setAttribute('content', 'width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
+            }
+            else {
+                viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
+            }
+
+
+             console.log(document.querySelector("meta[name=viewport]"))
+
         }
 
         // function lock() {
