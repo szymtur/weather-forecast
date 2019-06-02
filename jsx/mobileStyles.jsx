@@ -37,12 +37,9 @@ document.addEventListener('DOMContentLoaded', () => {
             viewportHigh();
 
 
-            const input = document.querySelector('input[type="search"]');
+            document.querySelector('input[type="search"]').blur();
 
-            input.addEventListener("focus", function() {
-                viewportHigh();
-                console.log('click')
-            });
+                console.log(document.querySelector('input[type="search"]'))
 
 
         };

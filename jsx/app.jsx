@@ -107,7 +107,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         /* removing focus from search field */
         blurSearchField = () => {
-            // ReactDOM.findDOMNode(this).querySelector('input[type="search"]').blur();
+            ReactDOM.findDOMNode(this).querySelector('input[type="search"]').blur();
         }
 
 
