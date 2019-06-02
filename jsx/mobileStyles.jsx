@@ -27,20 +27,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 viewportHigh();
                 console.log('click')
             });
+        };
 
 
-
-                    /* starts the function when the window is resized */
+        /* starts the function when the window is resized */
         window.onresize = () => {
             changeCurrentDateMargin();
             mainPreloaderPosition();
             viewportHigh();
         };
-
-        };
-
-
- 
 
         /* changes the size of the 'current-date' container margin depending on the device's orientation */
         let changeCurrentDateMargin = () => {
@@ -71,10 +66,6 @@ document.addEventListener('DOMContentLoaded', () => {
             else {
                 viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
             }
-
-
-             console.log(document.querySelector("meta[name=viewport]"))
-
         }
 
         // function lock() {
