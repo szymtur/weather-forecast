@@ -55,7 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         let mainPreloaderPosition = () => {
             if(!document.querySelector('.current-weather')) {
-                if (window.innerHeight > window.innerWidth) {
+                if (window.innerHeight < window.innerWidth) {
                     document.querySelector('.main-preloader').style.paddingTop ='1em';
                 }
                 else {
