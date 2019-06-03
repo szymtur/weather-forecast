@@ -6,6 +6,7 @@
 import {isMobile} from './appHandler.jsx';
 
 document.addEventListener('DOMContentLoaded', () => {
+    // console.log(document.querySelector('input[type="search"]'))
 
 
     if (isMobile()) {
@@ -21,12 +22,12 @@ document.addEventListener('DOMContentLoaded', () => {
             mainPreloaderPosition();
 
 
-            const input = document.querySelector('input[type="search"]');
+            // const input = document.querySelector('input[type="search"]');
 
-            input.addEventListener("focus", function() {
-                viewportHigh();
-                console.log('click')
-            });
+            // input.addEventListener("focus", function() {
+            //     viewportHigh();
+            //     console.log('click')
+            // });
         };
 
 
@@ -34,14 +35,13 @@ document.addEventListener('DOMContentLoaded', () => {
         window.onresize = () => {
             changeCurrentDateMargin();
             mainPreloaderPosition();
-            viewportHigh();
+            // viewportHigh();
 
         };
 
-        window.addEventListener("orientationchange", function() {
-            document.querySelector('input[type="search"]').blur();
-            console.log(document.querySelector('input[type="search"]'))
-        }, false);
+        // window.addEventListener("orientationchange", function() {
+            // document.querySelector('input[type="search"]').blur();
+        // }, false);
 
         /* changes the size of the 'current-date' container margin depending on the device's orientation */
         let changeCurrentDateMargin = () => {
@@ -64,15 +64,15 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         }
 
-        let viewportHigh = () => {
-            const viewport = document.querySelector("meta[name=viewport]");
-            if(window.innerHeight > window.innerWidth) {
-                viewport.setAttribute('content', 'width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
-            }
-            else {
-                viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
-            }
-        }
+        // let viewportHigh = () => {
+        //     const viewport = document.querySelector("meta[name=viewport]");
+        //     if(window.innerHeight > window.innerWidth) {
+        //         viewport.setAttribute('content', 'width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
+        //     }
+        //     else {
+        //         viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
+        //     }
+        // }
 
         // function lock() {
             // document.querySelector('input[type="search"]').addEventListener("focus", function() {
