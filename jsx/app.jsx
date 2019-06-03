@@ -76,16 +76,17 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
+        viewport = document.querySelector("meta[name=viewport]");
+
 
         handleInputOnFocus = () => {
-            let viewport = document.querySelector("meta[name=viewport]");
             let input =  document.querySelector('input[type="search"]');
 
             if(window.innerHeight > window.innerWidth) {
-                viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
+                this.viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
             }
             else {
-                viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
+                this.viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
             }
         }
 
