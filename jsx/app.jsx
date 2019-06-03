@@ -79,24 +79,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
         handleInputOnFocus = () => {
             // let input =  ReactDOM.findDOMNode(this).querySelector('input[type="search"]');
-            let viewport = document.querySelector("meta[name=viewport]");
+            // let viewport = document.querySelector("meta[name=viewport]");
             
 
-            if(window.innerHeight > window.innerWidth) {
-                viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
-            }
-            else if (window.innerHeight < window.innerWidth && document.activeElement === input){
-                viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
-            }
-            else {
-                viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
-            }
+            // if(window.innerHeight > window.innerWidth) {
+                // viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
+            // }
+            // else if (window.innerHeight < window.innerWidth && document.activeElement === input){
+                // viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
+            // }
+            // else {
+                // viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
+            // }
         }
 
 
         handleInputOnBlur = () => {
-            let viewport = document.querySelector("meta[name=viewport]");
-            viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
+            // let viewport = document.querySelector("meta[name=viewport]");
+            // viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
         }
 
         detectPosition = () => {
