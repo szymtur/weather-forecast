@@ -38,10 +38,10 @@ document.addEventListener('DOMContentLoaded', () => {
         /* changes the size of the 'current-date' container margin depending on the device's orientation */
         let changeCurrentDateMargin = () => {
             if (window.innerHeight > window.innerWidth) {
-                document.querySelector('.current-date').style.marginTop ='0.75em';
+                // document.querySelector('.current-date').style.marginTop ='0.75em';
             }
             else {
-                document.querySelector('.current-date').style.marginTop ='0.25em';
+                // document.querySelector('.current-date').style.marginTop ='0.25em';
             }
         }
 
