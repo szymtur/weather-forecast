@@ -100,17 +100,19 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
         detectPosition = () => {
-            let viewport = document.querySelector("meta[name=viewport]");
 
-            window.onorientationchange = function(){
-                if(window.innerHeight > window.innerWidth) {
-                    viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
-                }
-                else{
-                    viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
-                }
+            // window.onorientationchange = function(){
+            // let viewport = document.querySelector("meta[name=viewport]");
 
-            }
+                // if(window.innerHeight > window.innerWidth) {
+
+                    // viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
+                // }
+                // else{
+                    // viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
+                // }
+
+            // }
 
 
         }
