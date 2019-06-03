@@ -78,7 +78,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         handleInputOnFocus = () => {
-            let input =  ReactDOM.findDOMNode(this).querySelector('input[type="search"]');
+            // let input =  ReactDOM.findDOMNode(this).querySelector('input[type="search"]');
             let viewport = document.querySelector("meta[name=viewport]");
             
 
@@ -97,6 +97,22 @@ document.addEventListener('DOMContentLoaded', function() {
         handleInputOnBlur = () => {
             let viewport = document.querySelector("meta[name=viewport]");
             viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
+        }
+
+        detectPosition = () => {
+            let viewport = document.querySelector("meta[name=viewport]");
+
+            window.onorientationchange = function(){
+                if(window.innerHeight < window.innerWidth) {
+                    viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
+                }
+                else{
+                    viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
+                }
+
+            }
+
+
         }
 
 
@@ -325,7 +341,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         componentWillMount() {
-            this.getCurrentPosition()
+            this.getCurrentPosition();
+            this.detectPosition();
         }
 
 
