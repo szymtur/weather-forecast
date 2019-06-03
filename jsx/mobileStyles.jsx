@@ -6,9 +6,6 @@
 import {isMobile} from './appHandler.jsx';
 
 document.addEventListener('DOMContentLoaded', () => {
-    // console.log(document.querySelector('input[type="search"]'))
-
-
     if (isMobile()) {
         /* changes the background color and body height */
         const body = document.querySelector("body")
@@ -17,13 +14,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
         /* starts the function on window loading */
         window.onload = () => {
-
             changeCurrentDateMargin();
             mainPreloaderPosition();
 
-
             // const input = document.querySelector('input[type="search"]');
-
             // input.addEventListener("focus", function() {
             //     viewportHigh();
             //     console.log('click')
@@ -35,8 +29,6 @@ document.addEventListener('DOMContentLoaded', () => {
         window.onresize = () => {
             changeCurrentDateMargin();
             mainPreloaderPosition();
-            // viewportHigh();
-
         };
 
         // window.addEventListener("orientationchange", function() {

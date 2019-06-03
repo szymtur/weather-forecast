@@ -76,17 +76,20 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         }
 
-        viewport = document.querySelector("meta[name=viewport]");
-
 
         handleInputOnFocus = () => {
-            let input =  document.querySelector('input[type="search"]');
+            let input =  ReactDOM.findDOMNode(this).querySelector('input[type="search"]');
+            let viewport = document.querySelector("meta[name=viewport]");
+            
 
             if(window.innerHeight > window.innerWidth) {
-                this.viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
+                viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
+            }
+            else if (window.innerHeight < window.innerWidth && document.activeElement === input){
+                viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
             }
             else {
-                this.viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
+                viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
             }
         }
 
