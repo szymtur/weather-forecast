@@ -356,18 +356,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         render() {
-            
+
             window.onorientationchange = function(){
                 let viewport = document.querySelector("meta[name=viewport]");
 
-                    if(window.innerHeight < window.innerWidth) {
+                    if(window.innerHeight < window.innerWidth || this.state.inputOnFocus) {
                         console.log('pionowo')
-    
                         viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
+                    }
+                    else if (window.innerHeight > window.innerWidth || this.state.inputOnFocus) {
+                        console.log('poziomo')
+                        viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
+
                     }
                     else {
                         console.log('poziomo')
-    
                         viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
                     }
                 }
