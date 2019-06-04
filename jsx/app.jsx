@@ -350,27 +350,39 @@ document.addEventListener('DOMContentLoaded', function() {
         componentDidMount() {
             /* adding blur event on search input on mobile devices */ 
             if (isMobile()) {
-                ReactDOM.findDOMNode(this).querySelector('input[type="search"]').blur();
+                // ReactDOM.findDOMNode(this).querySelector('input[type="search"]').blur();
             }
+            let viewport = document.querySelector("meta[name=viewport]");
+
+            if(window.innerHeight > window.innerWidth) {
+                console.log('pionowo ' + focus)
+                viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
+            }
+
         }
 
 
         render() {
 
-            window.onorientationchange = function(){
-                let viewport = document.querySelector("meta[name=viewport]");
+            console.log(this.state.inputOnFocus)
+            let focus = this.state.inputOnFocus;
 
-                    if(window.innerHeight < window.innerWidth || this.state.inputOnFocus) {
-                        console.log('pionowo')
+            window.onorientationchange = () => {
+                console.log(this.state.inputOnFocus)
+                let viewport = document.querySelector("meta[name=viewport]");
+                
+
+                    if(window.innerHeight < window.innerWidth || focus) {
+                        console.log('pionowo ' + focus)
                         viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
                     }
-                    else if (window.innerHeight > window.innerWidth || this.state.inputOnFocus) {
-                        console.log('poziomo')
+                    else if (window.innerHeight > window.innerWidth && focus) {
+                        console.log('poziomo + focus ' + focus)
                         viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
 
                     }
                     else {
-                        console.log('poziomo')
+                        console.log('poziomo' + focus)
                         viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
                     }
                 }
