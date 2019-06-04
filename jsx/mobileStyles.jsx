@@ -31,36 +31,23 @@ document.addEventListener('DOMContentLoaded', () => {
             mainPreloaderPosition();
         };
 
-        window.addEventListener("orientationchange", function() {
-            // document.querySelector('input[type="search"]').blur();
-            const viewport = document.querySelector("meta[name=viewport]");
-            if(window.innerHeight > window.innerWidth) {
-                viewport.setAttribute('content', 'width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
-            }
-            else {
-                viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
-            }
-
-
-        }, false);
-
         /* changes the size of the 'current-date' container margin depending on the device's orientation */
         let changeCurrentDateMargin = () => {
             if (window.innerHeight > window.innerWidth) {
-                // document.querySelector('.current-date').style.marginTop ='0.75em';
+                document.querySelector('.current-date').style.marginTop ='0.75em';
             }
             else {
-                // document.querySelector('.current-date').style.marginTop ='0.25em';
+                document.querySelector('.current-date').style.marginTop ='0.25em';
             }
         }
 
         let mainPreloaderPosition = () => {
             if(!document.querySelector('.current-weather')) {
-                if (window.innerHeight < window.innerWidth) {
-                    document.querySelector('.main-preloader').style.paddingTop ='1em';
+                if (window.innerHeight > window.innerWidth) {
+                    document.querySelector('.main-preloader').style.paddingTop ='5em';
                 }
                 else {
-                    document.querySelector('.main-preloader').style.paddingTop ='5em';
+                    document.querySelector('.main-preloader').style.paddingTop ='1em';
                 }
             }
         }
@@ -99,3 +86,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     }
 });
+
+
+
+        // window.addEventListener("orientationchange", function() {
+            // document.querySelector('input[type="search"]').blur();
+            // const viewport = document.querySelector("meta[name=viewport]");
+            // if(window.innerHeight > window.innerWidth) {
+                // viewport.setAttribute('content', 'width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
+            // }
+            // else {
+                // viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
+            // }
+
+
+        // }, false);

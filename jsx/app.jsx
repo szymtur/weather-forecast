@@ -12,7 +12,7 @@ import {unitsChanger, nameChooser, isMobile} from './appHandler.jsx';
 
 import '../css/styles.css';
 import '../css/responsive.css';
-import '../jsx/mobileStyles.jsx';
+// import '../jsx/mobileStyles.jsx';
 
 if (!window.Promise) { window.Promise = Promise };
 
@@ -50,6 +50,16 @@ document.addEventListener('DOMContentLoaded', function() {
             localTime: {},
             currentDayWeatherData: {},
             nextDaysWeatherData: [],
+            inputOnFocus: false,
+            inputOnBlur: true
+        }
+
+
+        /* input field handling */
+        handleInput = (event) => {
+            this.setState({
+                input: event.target.value,
+            });
         }
 
 
@@ -69,15 +79,13 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-        /* input field handling */
-        handleInput = (event) => {
-            this.setState({
-                input: event.target.value,
-            });
-        }
-
-
         handleInputOnFocus = () => {
+            this.setState({
+                inputOnFocus: true,
+                inputOnBlur: false
+            })
+
+
             // let input =  ReactDOM.findDOMNode(this).querySelector('input[type="search"]');
             // let viewport = document.querySelector("meta[name=viewport]");
             
@@ -95,24 +103,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         handleInputOnBlur = () => {
+            this.setState({
+                inputOnFocus: false,
+                inputOnBlur: true
+            })
+
             // let viewport = document.querySelector("meta[name=viewport]");
             // viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
         }
 
         detectPosition = () => {
-
-            // window.onorientationchange = function(){
-            // let viewport = document.querySelector("meta[name=viewport]");
-
-                // if(window.innerHeight > window.innerWidth) {
-
-                    // viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
-                // }
-                // else{
-                    // viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
-                // }
-
-            // }
 
 
         }
@@ -344,7 +344,6 @@ document.addEventListener('DOMContentLoaded', function() {
 
         componentWillMount() {
             this.getCurrentPosition();
-            this.detectPosition();
         }
 
 
@@ -357,6 +356,29 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         render() {
+            
+            window.onorientationchange = function(){
+                let viewport = document.querySelector("meta[name=viewport]");
+
+                    if(window.innerHeight < window.innerWidth) {
+                        console.log('pionowo')
+    
+                        viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
+                    }
+                    else {
+                        console.log('poziomo')
+    
+                        viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
+                    }
+                }
+
+
+
+
+
+
+
+
             return (
                 <div className='app-wrapper'>
                     <CurrentDateHeader />

@@ -19,6 +19,7 @@ body {
 }
 
 #app {
+    min-width: 550px;
     width: 550px;
     min-height: 600px;
     background: #d3d3d3;
