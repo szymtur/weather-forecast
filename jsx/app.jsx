@@ -86,9 +86,9 @@ document.addEventListener('DOMContentLoaded', function() {
             })
 
 
-            let input =  ReactDOM.findDOMNode(this).querySelector('input[type="search"]');
+            // let input =  ReactDOM.findDOMNode(this).querySelector('input[type="search"]');
             let viewport = document.querySelector("meta[name=viewport]");
-            
+
 
             if(window.innerHeight > window.innerWidth) {
                 viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
@@ -112,10 +112,17 @@ document.addEventListener('DOMContentLoaded', function() {
             // viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
         }
 
-        detectPosition = () => {
-
+        detectActive = () => {
+            let input =  ReactDOM.findDOMNode(this).querySelector('input[type="search"]');
+            console.log(document.activeElement === input)
 
         }
+
+
+
+
+
+
 
 
         /* '5 days forecast' button function to showing or hiding 'nextDaysWeather' component */
@@ -355,29 +362,38 @@ document.addEventListener('DOMContentLoaded', function() {
             let viewport = document.querySelector("meta[name=viewport]");
 
             if(window.innerHeight > window.innerWidth) {
-                console.log('pionowo ' + focus)
                 viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
             }
+
+
 
         }
 
 
         render() {
-
-            console.log(this.state.inputOnFocus)
+            
             let focus = this.state.inputOnFocus;
 
             window.onorientationchange = () => {
-                console.log(this.state.inputOnFocus)
+            console.log(this.state.inputOnBlur)
+                
+                // console.log(this.state.inputOnFocus)
                 let viewport = document.querySelector("meta[name=viewport]");
                 
 
-                    if(window.innerHeight < window.innerWidth || focus) {
-                        console.log('pionowo ' + focus)
+                    if(window.innerHeight < window.innerWidth && this.state.inputOnFocus) {
+                        // console.log('pionowo ' + focus)
+                        this.setState({
+                            input: 'pion + focus'
+                        })
+
                         viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
                     }
-                    else if (window.innerHeight > window.innerWidth && focus) {
-                        console.log('poziomo + focus ' + focus)
+                    else if (window.innerHeight > window.innerWidth && this.state.inputOnFocus) {
+                        // console.log('poziomo + focus ' + focus)
+                        this.setState({
+                            input: 'poziom + focus'
+                        })
                         viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
 
                     }
