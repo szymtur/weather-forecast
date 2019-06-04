@@ -86,7 +86,7 @@ document.addEventListener('DOMContentLoaded', function() {
             })
 
 
-            // let input =  ReactDOM.findDOMNode(this).querySelector('input[type="search"]');
+            let input =  ReactDOM.findDOMNode(this).querySelector('input[type="search"]');
             let viewport = document.querySelector("meta[name=viewport]");
             
 
