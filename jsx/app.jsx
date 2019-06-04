@@ -94,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 console.log('pion')
                 viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
             }
-            else if (window.innerHeight < window.innerWidth){
+            if (window.innerHeight < window.innerWidth){
                 console.log('poziom')
                 viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
             }
@@ -105,7 +105,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     console.log('pion pion')
                     viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
                 }
-                else if (window.innerHeight > window.innerWidth) {
+                if (window.innerHeight > window.innerWidth) {
                     console.log('poziom poziom')
                     viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
                 }
