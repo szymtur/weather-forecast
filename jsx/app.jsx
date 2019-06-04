@@ -91,14 +91,26 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
             if(window.innerHeight > window.innerWidth) {
+                console.log('pion')
                 viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
             }
-            else if (window.innerHeight < window.innerWidth && this.state.inputOnFocus){
+            else if (window.innerHeight < window.innerWidth){
+                console.log('poziom')
                 viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
             }
-            else {
-                viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
+
+            window.onorientationchange = () => {
+
+                if(window.innerHeight < window.innerWidth) {
+                    console.log('pion pion')
+                    viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
+                }
+                else if (window.innerHeight > window.innerWidth) {
+                    console.log('poziom poziom')
+                    viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
+                }
             }
+
         }
 
 
@@ -371,37 +383,35 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         render() {
-            
-            let focus = this.state.inputOnFocus;
 
-            window.onorientationchange = () => {
-            console.log(this.state.inputOnBlur)
+            // let focus = this.state.inputOnFocus;
+
+            // window.onorientationchange = () => {
+            // console.log(this.state.inputOnBlur)
                 
-                // console.log(this.state.inputOnFocus)
-                let viewport = document.querySelector("meta[name=viewport]");
+            //     // console.log(this.state.inputOnFocus)
+            //     let viewport = document.querySelector("meta[name=viewport]");
                 
 
-                    if(window.innerHeight < window.innerWidth && this.state.inputOnFocus) {
-                        // console.log('pionowo ' + focus)
-                        this.setState({
-                            input: 'pion + focus'
-                        })
+            //         if(window.innerHeight < window.innerWidth && this.state.inputOnFocus) {
+            //             this.setState({
+            //                 input: 'pion + focus'
+            //             })
 
-                        viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
-                    }
-                    else if (window.innerHeight > window.innerWidth && this.state.inputOnFocus) {
-                        // console.log('poziomo + focus ' + focus)
-                        this.setState({
-                            input: 'poziom + focus'
-                        })
-                        viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
+            //             viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
+            //         }
+            //         else if (window.innerHeight > window.innerWidth && this.state.inputOnFocus) {
+            //             this.setState({
+            //                 input: 'poziom + focus'
+            //             })
+            //             viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
 
-                    }
-                    else {
-                        console.log('poziomo' + focus)
-                        viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
-                    }
-                }
+            //         }
+            //         else {
+            //             console.log('poziomo' + focus)
+            //             viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
+            //         }
+            //     }
 
 
 
