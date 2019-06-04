@@ -101,11 +101,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
             window.onorientationchange = () => {
 
-                if(window.innerHeight < window.innerWidth) {
+                if(window.innerHeight > window.innerWidth) {
                     console.log('pion pion')
                     viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
                 }
-                if (window.innerHeight > window.innerWidth) {
+                if (window.innerHeight < window.innerWidth) {
                     console.log('poziom poziom')
                     viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
                 }
@@ -135,7 +135,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
 
-
+// ================================================================
 
         /* '5 days forecast' button function to showing or hiding 'nextDaysWeather' component */
         displayNextDays = () => {
@@ -366,19 +366,24 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
+
+// ===============================================================
         componentDidMount() {
             /* adding blur event on search input on mobile devices */ 
             if (isMobile()) {
-                // ReactDOM.findDOMNode(this).querySelector('input[type="search"]').blur();
+                ReactDOM.findDOMNode(this).querySelector('input[type="search"]').blur();
             }
+
+
             let viewport = document.querySelector("meta[name=viewport]");
 
             if(window.innerHeight > window.innerWidth) {
                 viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
             }
 
-
-
+            if(window.innerHeight < window.innerWidth) {
+                viewport.setAttribute('content', `width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
+            }
         }
 
 
