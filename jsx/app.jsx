@@ -50,6 +50,7 @@ document.addEventListener('DOMContentLoaded', function() {
             localTime: {},
             currentDayWeatherData: {},
             nextDaysWeatherData: [],
+            screenOrientation: null,
             inputOnFocus: false,
             inputOnBlur: true
         }
@@ -85,32 +86,27 @@ document.addEventListener('DOMContentLoaded', function() {
                 inputOnBlur: false
             })
 
+            // this.screenOrientationChecker();
 
             // let input =  ReactDOM.findDOMNode(this).querySelector('input[type="search"]');
             let viewport = document.querySelector("meta[name=viewport]");
 
 
-            if(window.innerHeight > window.innerWidth) {
-                console.log('pion')
+            if(this.state.screenOrientation == 'portrait') {
                 viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
             }
-            if (window.innerHeight < window.innerWidth){
-                console.log('poziom')
+            else {
                 viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
             }
 
-            window.onorientationchange = () => {
-
-                if(window.innerHeight < window.innerWidth) {
-                    console.log('pion pion')
-                    viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
-                }
-                if (window.innerHeight > window.innerWidth) {
-                    console.log('poziom poziom')
-                    viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
-                }
-            }
-
+            // window.onorientationchange = () => {
+            //     if(this.state.screenOrientation == 'portrait') {
+            //         viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
+            //     }
+            //     else {
+            //         viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
+            //     }
+            // }
         }
 
 
@@ -120,13 +116,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 inputOnBlur: true
             })
 
+            // this.screenOrientationChecker();
+
+
             // let viewport = document.querySelector("meta[name=viewport]");
             // viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
         }
 
         detectActive = () => {
-            let input =  ReactDOM.findDOMNode(this).querySelector('input[type="search"]');
-            console.log(document.activeElement === input)
+            // let input =  ReactDOM.findDOMNode(this).querySelector('input[type="search"]');
+            // console.log(document.activeElement === input)
 
         }
 
@@ -374,21 +373,56 @@ document.addEventListener('DOMContentLoaded', function() {
                 ReactDOM.findDOMNode(this).querySelector('input[type="search"]').blur();
             }
 
+            this.screenOrientationChecker();
 
-            let viewport = document.querySelector("meta[name=viewport]");
+            // let viewport = document.querySelector("meta[name=viewport]");
 
-            if(window.innerHeight > window.innerWidth) {
-                viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
+            // if(window.innerHeight > window.innerWidth) {
+            //     viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
+            // }
+
+            // if(window.innerHeight < window.innerWidth) {
+            //     viewport.setAttribute('content', `width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
+            // }
+        }
+
+        screenOrientationChecker = () => {
+            if (window.matchMedia('(orientation: portrait)').matches) {
+                this.setState({
+                    screenOrientation: 'portrait'
+                });
             }
-
-            if(window.innerHeight < window.innerWidth) {
-                viewport.setAttribute('content', `width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
+            else if (window.matchMedia('(orientation: landscape)').matches) {
+                this.setState({
+                    screenOrientation: 'landscape'
+                });
             }
         }
 
 
         render() {
 
+            window.onorientationchange = () => {
+            let viewport = document.querySelector("meta[name=viewport]");
+
+                if(this.state.screenOrientation == 'portrait') {
+                    this.setState({
+                        screenOrientation: 'landscape'
+                    });
+                    viewport.setAttribute('content', `width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
+
+                }
+                else {
+                    this.setState({
+                        screenOrientation: 'portrait'
+                    });
+                    viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
+
+                }
+            }
+
+
+            console.log(this.state.screenOrientation);
             // let focus = this.state.inputOnFocus;
 
             // window.onorientationchange = () => {
