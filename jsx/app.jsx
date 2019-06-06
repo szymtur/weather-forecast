@@ -54,23 +54,6 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-        /* '5 days forecast' button function to showing or hiding 'nextDaysWeather' component */
-        displayNextDays = () => {
-            if(this.state.displayNextDaysWeather) {
-                this.setState({ displayNextDaysWeather: false });
-            }
-            else {
-                this.setState({ displayNextDaysWeather: true });
-            }
-        }
-
-
-        /* removing focus from search field */
-        blurSearchField = () => {
-            ReactDOM.findDOMNode(this).querySelector('input[type="search"]').blur();
-        }
-
-
         /* geolocation - getting current position by ip address from geoip-db.com */
         getCurrentPosition() {
             fetch(`https://geoip-db.com/json/`)
@@ -278,6 +261,23 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
+        /* removing focus from search field */
+        blurSearchField = () => {
+            ReactDOM.findDOMNode(this).querySelector('input[type="search"]').blur();
+        }
+
+
+        /* 'next days forecast' button handling */
+        displayNextDays = () => {
+            if(this.state.displayNextDaysWeather) {
+                this.setState({ displayNextDaysWeather: false });
+            }
+            else {
+                this.setState({ displayNextDaysWeather: true });
+            }
+        }
+
+
         /* 'get weather' button handling */
         handleSubmit = (event) => {
             event.preventDefault();
@@ -304,7 +304,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         /* input field on focus handling */
         handleInputOnFocus = () => {
-            this.setVievportSeetings();
+            this.changeVievportSeetings();
         }
 
 
@@ -322,16 +322,14 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-        setVievportSeetings = () => {
+        changeVievportSeetings = () => {
             let viewport = document.querySelector("meta[name=viewport]");
 
             if(this.state.screenOrientation == 'portrait') {
                 viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
-                console.log(this.state.screenOrientation);
             }
             else {
                 viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
-                console.log(this.state.screenOrientation)
             }
         }
 
@@ -343,29 +341,24 @@ document.addEventListener('DOMContentLoaded', function() {
 
         componentDidMount() {
             this.screenOrientationChecker();
-        }
 
-
-        render() {
             window.onorientationchange = () => {
-                // let viewport = document.querySelector("meta[name=viewport]");
-
                 if(this.state.screenOrientation == 'portrait') {
                     this.setState({
                         screenOrientation: 'landscape'
                     });
-                    // viewport.setAttribute('content', `width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
-
                 }
                 else {
                     this.setState({
                         screenOrientation: 'portrait'
                     });
-                    // viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
                 }
-                this.setVievportSeetings();
+                this.changeVievportSeetings();
             }
+        }
 
+
+        render() {
             return (
                 <div className='app-wrapper'>
                     <CurrentDateHeader />
