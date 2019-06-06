@@ -19,8 +19,8 @@ body {
 }
 
 #app {
-    min-width: 550px;
-    width: 550px;
+    /* min-width: 550px; */
+    width: 600px;
     min-height: 600px;
     background: #d3d3d3;
     border-radius: 5px;

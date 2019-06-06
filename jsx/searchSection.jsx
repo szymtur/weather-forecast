@@ -1,6 +1,14 @@
 import React from 'react';
+import ReactDOM from 'react-dom';
+import {isMobile} from './appHandler.jsx';
 
 class SearchSection extends React.Component {
+
+    componentDidMount() {
+        if (isMobile()) {
+            ReactDOM.findDOMNode(this).querySelector('input[type="search"]').blur();
+        }
+    }
 
     render() {
         return (
@@ -8,13 +16,12 @@ class SearchSection extends React.Component {
                 <form onSubmit={this.props.handleSubmit}>
                         <input 
                             type="search"
-                            onChange={this.props.handleInput}
-                            onFocus={this.props.inputOnFocus}
-                            onBlur={this.props.inputOnBlur}
-                            value={this.props.input}
-                            placeholder="city"
-                            className="normal"
                             autoFocus="true"
+                            className="normal"
+                            placeholder="city"
+                            value={this.props.input}
+                            onChange={this.props.handleInputOnChange}
+                            onFocus={this.props.handleInputOnFocus}
                         />
                         <input
                             type="submit"

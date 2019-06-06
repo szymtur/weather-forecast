@@ -16,14 +16,7 @@ document.addEventListener('DOMContentLoaded', () => {
         window.onload = () => {
             changeCurrentDateMargin();
             mainPreloaderPosition();
-
-            // const input = document.querySelector('input[type="search"]');
-            // input.addEventListener("focus", function() {
-            //     viewportHigh();
-            //     console.log('click')
-            // });
         };
-
 
         /* starts the function when the window is resized */
         window.onresize = () => {
@@ -51,53 +44,5 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             }
         }
-
-        // let viewportHigh = () => {
-            // const viewport = document.querySelector("meta[name=viewport]");
-            // if(window.innerHeight > window.innerWidth) {
-            //     viewport.setAttribute('content', 'width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
-            // }
-            // else {
-            //     viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
-            // }
-        // }
-
-        // function lock() {
-            // document.querySelector('input[type="search"]').addEventListener("focus", function() {
-                // console.log('click')
-
-            // if(window.innerHeight > window.innerWidth) {
-            //     viewport = document.querySelector("meta[name=viewport]");
-            //     viewport.setAttribute('content', 'height=810px');
-
-                // document.querySelector('#app').style.height = '810px';
-                // document.querySelector('#app').style.color = 'pink';
-            
-
-
-            // }
-            // else {
-                // window.screen.lockOrientation('landscape')
-            // }
-
-
-            // });
-        // }
-
     }
 });
-
-
-
-        // window.addEventListener("orientationchange", function() {
-            // document.querySelector('input[type="search"]').blur();
-            // const viewport = document.querySelector("meta[name=viewport]");
-            // if(window.innerHeight > window.innerWidth) {
-                // viewport.setAttribute('content', 'width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
-            // }
-            // else {
-                // viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
-            // }
-
-
-        // }, false);

@@ -50,91 +50,9 @@ document.addEventListener('DOMContentLoaded', function() {
             localTime: {},
             currentDayWeatherData: {},
             nextDaysWeatherData: [],
-            screenOrientation: null,
-            inputOnFocus: false,
-            inputOnBlur: true
+            screenOrientation: null
         }
 
-
-        /* input field handling */
-        handleInput = (event) => {
-            this.setState({
-                input: event.target.value,
-            });
-        }
-
-
-        /* 'get weather' button handling */
-        handleSubmit = (event) => {
-            event.preventDefault();
-            this.getCoordinates();
-            this.blurSearchField();
-            this.setState({
-                input: "",
-                localTime: {},
-                displayNextDaysWeather: false,
-                displayCurrentDayWeather: false,
-                preloaderAlert: false,
-                preloaderInfo: this.strings.loading_data
-            });
-        }
-
-
-        handleInputOnFocus = () => {
-            this.setState({
-                inputOnFocus: true,
-                inputOnBlur: false
-            })
-
-            // this.screenOrientationChecker();
-
-            // let input =  ReactDOM.findDOMNode(this).querySelector('input[type="search"]');
-            let viewport = document.querySelector("meta[name=viewport]");
-
-
-            if(this.state.screenOrientation == 'portrait') {
-                viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
-            }
-            else {
-                viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
-            }
-
-            // window.onorientationchange = () => {
-            //     if(this.state.screenOrientation == 'portrait') {
-            //         viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
-            //     }
-            //     else {
-            //         viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
-            //     }
-            // }
-        }
-
-
-        handleInputOnBlur = () => {
-            this.setState({
-                inputOnFocus: false,
-                inputOnBlur: true
-            })
-
-            // this.screenOrientationChecker();
-
-
-            // let viewport = document.querySelector("meta[name=viewport]");
-            // viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
-        }
-
-        detectActive = () => {
-            // let input =  ReactDOM.findDOMNode(this).querySelector('input[type="search"]');
-            // console.log(document.activeElement === input)
-
-        }
-
-
-
-
-
-
-// ================================================================
 
         /* '5 days forecast' button function to showing or hiding 'nextDaysWeather' component */
         displayNextDays = () => {
@@ -360,31 +278,35 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-        componentWillMount() {
-            this.getCurrentPosition();
+        /* 'get weather' button handling */
+        handleSubmit = (event) => {
+            event.preventDefault();
+            this.getCoordinates();
+            this.blurSearchField();
+            this.setState({
+                input: "",
+                localTime: {},
+                displayNextDaysWeather: false,
+                displayCurrentDayWeather: false,
+                preloaderAlert: false,
+                preloaderInfo: this.strings.loading_data
+            });
         }
 
 
-
-// ===============================================================
-        componentDidMount() {
-            /* adding blur event on search input on mobile devices */ 
-            if (isMobile()) {
-                ReactDOM.findDOMNode(this).querySelector('input[type="search"]').blur();
-            }
-
-            this.screenOrientationChecker();
-
-            // let viewport = document.querySelector("meta[name=viewport]");
-
-            // if(window.innerHeight > window.innerWidth) {
-            //     viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
-            // }
-
-            // if(window.innerHeight < window.innerWidth) {
-            //     viewport.setAttribute('content', `width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
-            // }
+        /* input field handling */
+        handleInputOnChange = (event) => {
+            this.setState({
+                input: event.target.value,
+            });
         }
+
+
+        /* input field on focus handling */
+        handleInputOnFocus = () => {
+            this.setVievportSeetings();
+        }
+
 
         screenOrientationChecker = () => {
             if (window.matchMedia('(orientation: portrait)').matches) {
@@ -400,74 +322,58 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-        render() {
-
-            window.onorientationchange = () => {
+        setVievportSeetings = () => {
             let viewport = document.querySelector("meta[name=viewport]");
+
+            if(this.state.screenOrientation == 'portrait') {
+                viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
+                console.log(this.state.screenOrientation);
+            }
+            else {
+                viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
+                console.log(this.state.screenOrientation)
+            }
+        }
+
+
+        componentWillMount() {
+            this.getCurrentPosition();
+        }
+
+
+        componentDidMount() {
+            this.screenOrientationChecker();
+        }
+
+
+        render() {
+            window.onorientationchange = () => {
+                // let viewport = document.querySelector("meta[name=viewport]");
 
                 if(this.state.screenOrientation == 'portrait') {
                     this.setState({
                         screenOrientation: 'landscape'
                     });
-                    viewport.setAttribute('content', `width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
+                    // viewport.setAttribute('content', `width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
 
                 }
                 else {
                     this.setState({
                         screenOrientation: 'portrait'
                     });
-                    viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
-
+                    // viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
                 }
+                this.setVievportSeetings();
             }
-
-
-            console.log(this.state.screenOrientation);
-            // let focus = this.state.inputOnFocus;
-
-            // window.onorientationchange = () => {
-            // console.log(this.state.inputOnBlur)
-                
-            //     // console.log(this.state.inputOnFocus)
-            //     let viewport = document.querySelector("meta[name=viewport]");
-                
-
-            //         if(window.innerHeight < window.innerWidth && this.state.inputOnFocus) {
-            //             this.setState({
-            //                 input: 'pion + focus'
-            //             })
-
-            //             viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
-            //         }
-            //         else if (window.innerHeight > window.innerWidth && this.state.inputOnFocus) {
-            //             this.setState({
-            //                 input: 'poziom + focus'
-            //             })
-            //             viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
-
-            //         }
-            //         else {
-            //             console.log('poziomo' + focus)
-            //             viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
-            //         }
-            //     }
-
-
-
-
-
-
-
 
             return (
                 <div className='app-wrapper'>
                     <CurrentDateHeader />
-                    <SearchSection 
-                        handleInput = {this.handleInput}
-                        handleSubmit = {this.handleSubmit}
+                    <SearchSection
                         input = {this.state.input}
-                        inputOnFocus = {this.handleInputOnFocus}
-                        inputOnBlur = {this.handleInputOnBlur}
+                        handleSubmit = {this.handleSubmit}
+                        handleInputOnFocus = {this.handleInputOnFocus}
+                        handleInputOnChange = {this.handleInputOnChange}
                     />
                     <CurrentWeather
                         localTime = {this.state.localTime}
@@ -500,3 +406,13 @@ document.addEventListener('DOMContentLoaded', function() {
         <App />, document.getElementById('app')
     );
 });
+
+
+
+
+// const node = ReactDOM.findDOMNode(this);
+
+// Get child nodes
+// if (node instanceof HTMLElement) {
+    // const child = node.querySelector('.someClass');
+// }
