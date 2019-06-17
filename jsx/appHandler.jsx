@@ -106,7 +106,7 @@ class appHandler {
         }
 
         for (let i=0; i<placeAndAreaNames.length; i++) {
-            if(placeAndAreaNames[i] != undefined && romanNumeral.test(placeAndAreaNames[i]) == false) {
+            if(placeAndAreaNames[i] != undefined && romanNumeral.test(placeAndAreaNames[i]) === false) {
                 resultArray.push(placeAndAreaNames[i]);
 
                 for (let i=0; i<cityNames.length; i++) {
@@ -127,7 +127,7 @@ class appHandler {
 
 
     isMobile() {
-        const mobileCheck = [
+        const mobileDevices = [
             (/Android/i).test(navigator.userAgent),
             (/BlackBerry|RIM|BB|PlayBook/i).test(navigator.userAgent),
             (/iPhone|iPad|iPod/i).test(navigator.userAgent),
@@ -137,9 +137,7 @@ class appHandler {
             (/Kindle|Silk|KFAPW|KFARWI|KFASWI|KFFOWI|KFJW|KFMEWI|KFOT|KFSAW|KFSOWI|KFTBW|KFTHW|KFTT|WFFOWI/i).test(navigator.userAgent)
         ];
 
-        return (
-            mobileCheck.indexOf(true) != -1
-        )
+        return mobileDevices.some(isMobileDevice => isMobileDevice);
     }
 }
 

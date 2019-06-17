@@ -1,7 +1,7 @@
-/* Main styles - start */
 @import url('https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700');
 @import url('https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/weather-icons.min.css');
 
+/* Main styles - start */
 * {
     box-sizing: border-box;
     margin: 0;
@@ -19,9 +19,9 @@ body {
 }
 
 #app {
-    /* min-width: 550px; */
-    width: 600px;
-    min-height: 600px;
+    width: 575px;
+    min-width: 575px;
+    height: 600px;
     background: #d3d3d3;
     border-radius: 5px;
 }
@@ -130,6 +130,7 @@ body {
 /* Current weather section styles - start */
 .current-weather {
     width: 93%;
+    height: 200px;
     padding: 2%;
     margin: 0 auto;
     background: #ffffff;
@@ -143,15 +144,18 @@ body {
 
 .current-weather .local-info {
     width: 100%;
-    margin-bottom: 0.15em;
+    margin-bottom: 0.3em;
     display: flex;
     justify-content: space-between;
+    /* border: 1px solid red; */
 }
 
 .current-weather .local-info .city {
     width: 110%;
     height: 2.4em;
     overflow: hidden;
+    /* border: 1px solid red; */
+
 }
 
 .current-weather .local-info .city h3 {
@@ -163,6 +167,7 @@ body {
 .current-weather .local-info .dots-preloader,
 .current-weather .local-info .date-time {
     overflow: hidden;
+    /* border: 1px solid red; */
 }
 
 .current-weather .local-info .dots-preloader {
@@ -184,17 +189,21 @@ body {
     font-size: 0.8em;
 }
 
-.current-weather .left-col {
-    width: 38%;
+.current-weather .left-col,
+.current-weather .right-col {
     height: 130px;
-    margin-top: 0.15em;
+    /* border: 1px solid red; */
+}
+
+.current-weather .left-col {
+    width: 40%;
 }
 
 .current-weather .left-col .left-rows {
     width: 100%;
     height: 25%;
     overflow: hidden;
-} 
+}
 
 .current-weather .left-col h3 {
     font-weight: 600;
@@ -216,22 +225,24 @@ body {
     font-size: 1.4em;
     color: #000000;
 }
-
 .current-weather .left-col .left-rows p .wi.wi-strong-wind {
     margin-left: 0.2em;
 }
 
 .current-weather .right-col {
-    width: 62%;
-    height: 120px;
-    margin-top: 1em;
+    width: 60%;
     display: flex;
     flex-wrap: wrap;
 }
 
+.current-weather .right-col .col-60,
+.current-weather .right-col .col-40 {
+    height: 100px;
+    /* border: 1px solid red; */
+}
+
 .current-weather .right-col .col-60 {
-    width: 59%;
-    height: 85px;
+    width: 60%;
     text-align: center;
 }
 
@@ -244,21 +255,24 @@ body {
 
 .current-weather .right-col .col-40 {
     width: 40%;
-    height: 85px;
     text-align: center;
 }
 
 .current-weather .right-col .col-40 .current-icon {
-    margin: -0.2em 0.2em 0 0;
+    margin: 0.1em -0.1em 0 0;
     color: #000000;
     font-size: 3.5em;
 }
 
+.current-weather .right-col .col-40 .current-icon .wi.wi-day-cloudy-high {
+    font-size: 1.2em;
+}
+
 .current-weather .right-col .right-bottom {
     width: 100%;
-    height: 30px;
     text-align: right;
-    margin-bottom: -0.25em
+    padding-top: 0.1em;
+    /* border: 1px solid red; */
 }
 
 .current-weather .right-col .right-bottom button {

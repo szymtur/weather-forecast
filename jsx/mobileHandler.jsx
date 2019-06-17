@@ -7,6 +7,7 @@ import {isMobile} from './appHandler.jsx';
 
 document.addEventListener('DOMContentLoaded', () => {
     if (isMobile()) {
+
         /* changes the background color and body height */
         const body = document.querySelector("body")
         // body.style.background = "#d3d3d3";

@@ -8,11 +8,11 @@ import SearchSection from './searchSection.jsx';
 import CurrentDateHeader from './currentDate.jsx';
 import CurrentWeather from './currentWeather.jsx';
 import NextDaysWeather from './nextDaysWeather.jsx';
-import {unitsChanger, nameChooser, isMobile} from './appHandler.jsx';
+import {unitsChanger, nameChooser} from './appHandler.jsx';
 
 import '../css/styles.css';
 import '../css/responsive.css';
-// import '../jsx/mobileStyles.jsx';
+import '../jsx/mobileHandler.jsx';
 
 if (!window.Promise) { window.Promise = Promise };
 
@@ -326,7 +326,7 @@ document.addEventListener('DOMContentLoaded', function() {
             let viewport = document.querySelector("meta[name=viewport]");
 
             if(this.state.screenOrientation == 'portrait') {
-                viewport.setAttribute('content', `width=device-width, height=810, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
+                viewport.setAttribute('content', `width=device-width, height=820, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
             }
             else {
                 viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
