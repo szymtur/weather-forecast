@@ -139,25 +139,25 @@
 }
 
 
-@media (orientation: portrait) and (max-height: 820px) {
+@media (orientation: portrait) and (max-height: 850px) {
     body {
         height: inherit;
-    }
-
-    #app {
-        margin: 0;
-    }
-}
-
-@media (orientation: portrait) and (max-width: 420px) {
-    body {
-        background: #d3d3d3;
     }
 
     #app {
         /* margin: 0; */
     }
 }
+
+/* @media (orientation: portrait) and (max-width: 420px) { */
+    /* body { */
+        /* background: #d3d3d3; */
+    /* } */
+
+    /* #app { */
+        /* margin: 0; */
+    /* } */
+/* } */
 
 
 
