@@ -326,7 +326,7 @@ document.addEventListener('DOMContentLoaded', function() {
             let viewport = document.querySelector("meta[name=viewport]");
 
             if(this.state.screenOrientation == 'portrait') {
-                viewport.setAttribute('content', `width=device-width, height=820, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
+                viewport.setAttribute('content', `width=device-width, height=850, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
             }
             else {
                 viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');

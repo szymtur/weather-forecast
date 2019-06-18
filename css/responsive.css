@@ -163,7 +163,7 @@
 
 @media (orientation: landscape) and (max-height: 575px) {
     body {
-        /* height: inherit; */
+        height: inherit;
         /* background: #d3d3d3; */
 
     }
