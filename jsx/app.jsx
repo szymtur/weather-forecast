@@ -12,7 +12,7 @@ import {unitsChanger, nameChooser} from './appHandler.jsx';
 
 import '../css/styles.css';
 import '../css/responsive.css';
-import '../jsx/mobileHandler.jsx';
+// import '../jsx/mobileHandler.jsx';
 
 if (!window.Promise) { window.Promise = Promise };
 
