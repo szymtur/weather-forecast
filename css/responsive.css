@@ -1,10 +1,7 @@
-/* @media (orientation: portrait), (max-width: 550px) { */
-
 @media (orientation: portrait) {
 
     /* Main styles - start */
     #app {
-        /* margin: 1em 0; */
         width: 420px;
         min-width: 320px;
         height: 850px;
@@ -38,7 +35,7 @@
     /* Current weather section styles - start */
     .current-weather {
         height: 215px;
-        padding: 2% 2% 1% 1%;
+        padding: 2% 2.5% 1.5% 2%;
     }
 
     .current-weather .local-info {
@@ -73,10 +70,6 @@
         height: 2.5em;
     }
 
-    .current-weather .local-info .city h3 {
-        font-size: 1.2em;
-    }
-
     .current-weather .left-col {
         padding-top: 0.25em;
     }
@@ -93,15 +86,14 @@
     .current-weather .right-col .col-40 .current-icon {
         font-size: 3em;
         text-align: center;
-        margin: -0.1em 0.25em 0 0;
+        margin: -0.25em -0.25em 0 0;
     }
 
     .current-weather .right-col .col-60 h5 {
-        margin-top: 4em;
+        margin-top: 3.5em;
         margin-left: 0.5em;
-        width: 190%;
-        font-size: 1em;
-        height: 1.6em;
+        width: 130%;
+        font-size: 0.95em;
     }
 
     .current-weather .right-col .right-bottom {
@@ -138,38 +130,34 @@
     /* Next five days section styles - end */
 }
 
-
-@media (orientation: portrait) and (max-height: 850px) {
+@media(orientation: portrait) and (max-height: 850px) {
     body {
         height: inherit;
     }
-
-    #app {
-        /* margin: 0; */
-    }
 }
-
-/* @media (orientation: portrait) and (max-width: 420px) { */
-    /* body { */
-        /* background: #d3d3d3; */
-    /* } */
-
-    /* #app { */
-        /* margin: 0; */
-    /* } */
-/* } */
-
-
 
 @media (orientation: landscape) and (max-height: 575px) {
     body {
         height: inherit;
-        /* background: #d3d3d3; */
+    }
+}
 
+@media (orientation: landscape) and (min-width: 650px) and (min-height: 650px) {
+    body {
+        background: #d3d3d3;
     }
 
     #app {
-        /* width: 600px; */
-        /* min-width: 550px; */
+        box-shadow: 0px 0px 4px black;
+    }
+}
+
+@media (orientation: portrait) and (min-width: 500px) and (min-height: 900px) {
+    body {
+        background: #d3d3d3;
+    }
+
+    #app {
+        box-shadow: 0px 0px 4px black;
     }
 }

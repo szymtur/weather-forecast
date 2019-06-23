@@ -15,6 +15,7 @@ body {
     justify-content: center;
     align-items: center;
     user-select: none;
+    overflow-x: hidden;
     font-family: 'Montserrat', sans-serif;
 }
 
@@ -247,7 +248,7 @@ body {
 }
 
 .current-weather .right-col .col-60 h5 {
-    margin-top: 15.5%;
+    margin-top: 2.4em;
     font-weight: 600;
     font-size: 1.1em;
     width: 95%;
@@ -359,6 +360,10 @@ body {
     padding: 0.1em;
 }
 
+.next-days-weather .day-container .row.icon .current-icon {
+    height: 45px;
+}
+
 .next-days-weather .day-container .row.icon .wi.wi-day-cloudy-high {
     font-size: 1.25em;
 }
@@ -368,7 +373,7 @@ body {
 }
 
 .next-days-weather .day-container .row.description h6 {
-    width: 95%;
+    width: 90%;
     margin: 0 auto;
     font-weight: 600;
     font-size: 0.7em

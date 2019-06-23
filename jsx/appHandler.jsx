@@ -1,4 +1,4 @@
-class appHandler {
+class AppHandler {
 
     unitsChanger(unitsSystem, category, value) {
         const strings = {
@@ -124,27 +124,11 @@ class appHandler {
             }
         }
     }
-
-
-    isMobile() {
-        const mobileDevices = [
-            (/Android/i).test(navigator.userAgent),
-            (/BlackBerry|RIM|BB|PlayBook/i).test(navigator.userAgent),
-            (/iPhone|iPad|iPod/i).test(navigator.userAgent),
-            (/Opera Mini/i).test(navigator.userAgent),
-            (/IEMobile|WPDesktop|Nokia|Windows Phones/i).test(navigator.userAgent),
-            (/webOS/i).test(navigator.userAgent),
-            (/Kindle|Silk|KFAPW|KFARWI|KFASWI|KFFOWI|KFJW|KFMEWI|KFOT|KFSAW|KFSOWI|KFTBW|KFTHW|KFTT|WFFOWI/i).test(navigator.userAgent)
-        ];
-
-        return mobileDevices.some(isMobileDevice => isMobileDevice);
-    }
 }
 
-const handler = new appHandler();
+const handler = new AppHandler();
 
-const isMobile = handler.isMobile;
 const unitsChanger = handler.unitsChanger;
 const nameChooser = handler.nameChooser;
 
-export {unitsChanger, nameChooser, isMobile};
+export {unitsChanger, nameChooser};

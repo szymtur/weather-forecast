@@ -1,5 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import MetaTags from 'react-meta-tags';
 import Promise from 'promise-polyfill';
 import 'isomorphic-fetch';
 
@@ -8,11 +9,13 @@ import SearchSection from './searchSection.jsx';
 import CurrentDateHeader from './currentDate.jsx';
 import CurrentWeather from './currentWeather.jsx';
 import NextDaysWeather from './nextDaysWeather.jsx';
+
 import {unitsChanger, nameChooser} from './appHandler.jsx';
+import {viewportSettingsChanger, mobileStyles, isMobile} from'./mobileHandler.jsx';
+import {screenOrientationChecker, screenOrientationUpdater} from'./mobileHandler.jsx';
 
 import '../css/styles.css';
 import '../css/responsive.css';
-// import '../jsx/mobileHandler.jsx';
 
 if (!window.Promise) { window.Promise = Promise };
 
@@ -50,7 +53,8 @@ document.addEventListener('DOMContentLoaded', function() {
             localTime: {},
             currentDayWeatherData: {},
             nextDaysWeatherData: [],
-            screenOrientation: null
+            landscapeOrientation: null,
+            viewportSettings: 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes'
         }
 
 
@@ -284,7 +288,7 @@ document.addEventListener('DOMContentLoaded', function() {
             this.getCoordinates();
             this.blurSearchField();
             this.setState({
-                input: "",
+                input: '',
                 localTime: {},
                 displayNextDaysWeather: false,
                 displayCurrentDayWeather: false,
@@ -294,7 +298,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-        /* input field handling */
+        /* input field on change handling */
         handleInputOnChange = (event) => {
             this.setState({
                 input: event.target.value,
@@ -304,63 +308,44 @@ document.addEventListener('DOMContentLoaded', function() {
 
         /* input field on focus handling */
         handleInputOnFocus = () => {
-            this.changeVievportSeetings();
-        }
-
-
-        screenOrientationChecker = () => {
-            if (window.matchMedia('(orientation: portrait)').matches) {
-                this.setState({
-                    screenOrientation: 'portrait'
-                });
-            }
-            else if (window.matchMedia('(orientation: landscape)').matches) {
-                this.setState({
-                    screenOrientation: 'landscape'
-                });
-            }
-        }
-
-
-        changeVievportSeetings = () => {
-            let viewport = document.querySelector("meta[name=viewport]");
-
-            if(this.state.screenOrientation == 'portrait') {
-                viewport.setAttribute('content', `width=device-width, height=850, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
-            }
-            else {
-                viewport.setAttribute('content', 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');
-            }
+            viewportSettingsChanger.call(this);
         }
 
 
         componentWillMount() {
-            this.getCurrentPosition();
+            // this.getCurrentPosition();
         }
 
 
         componentDidMount() {
-            this.screenOrientationChecker();
-
-            window.onorientationchange = () => {
-                if(this.state.screenOrientation == 'portrait') {
-                    this.setState({
-                        screenOrientation: 'landscape'
-                    });
+            if (isMobile()) {
+                window.onload = () => {
+                    screenOrientationChecker.call(this)
+                    mobileStyles.call(this);
                 }
-                else {
-                    this.setState({
-                        screenOrientation: 'portrait'
-                    });
+                window.onresize = () => {
+                    // checkScreenOrientationOnLoad.call(this)
+                    // screenOrientationChecker.call(this);
+                    // mobileStyles.call(this);
                 }
-                this.changeVievportSeetings();
+                window.onorientationchange = () => {
+                    screenOrientationUpdater.call(this);
+                    mobileStyles.call(this);
+                    viewportSettingsChanger.call(this);
+                }
             }
         }
 
+        componentWillUnmount() {
+            removeEventListener('orientationchange', screenOrientationUpdater.call(this));
+        }
 
         render() {
             return (
                 <div className='app-wrapper'>
+                    <MetaTags>
+                        <meta name='viewport' content={this.state.viewportSettings} />
+                    </MetaTags>
                     <CurrentDateHeader />
                     <SearchSection
                         input = {this.state.input}
@@ -409,3 +394,11 @@ document.addEventListener('DOMContentLoaded', function() {
 // if (node instanceof HTMLElement) {
     // const child = node.querySelector('.someClass');
 // }
+
+
+
+
+
+        // let viewport = document.querySelector("meta[name=viewport]");
+        // viewport.setAttribute('content', `width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
+        // viewport.setAttribute('content', 'width=device-width, height=850, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');

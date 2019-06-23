@@ -1,6 +1,6 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import {isMobile} from './appHandler.jsx';
+import {isMobile} from './mobileHandler.jsx';
 
 class SearchSection extends React.Component {
 
