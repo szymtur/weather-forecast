@@ -313,7 +313,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         componentWillMount() {
-            // this.getCurrentPosition();
+            this.getCurrentPosition();
         }
 
 
