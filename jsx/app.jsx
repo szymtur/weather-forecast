@@ -314,21 +314,28 @@ document.addEventListener('DOMContentLoaded', function() {
 
         componentWillMount() {
             this.getCurrentPosition();
+
+            if (isMobile()) {
+                screenOrientationChecker.call(this);
+            }
         }
 
 
         componentDidMount() {
-            if (isMobile()) {
-                window.onload = () => {
-                    screenOrientationChecker.call(this)
+
+            window.onload = () => {
+                if (isMobile()) {
                     mobileStyles.call(this);
                 }
-                window.onresize = () => {
-                    // checkScreenOrientationOnLoad.call(this)
-                    // screenOrientationChecker.call(this);
-                    // mobileStyles.call(this);
+            }
+            window.onresize = () => {
+                if (isMobile()) {
+                    screenOrientationChecker.call(this);
+                    mobileStyles.call(this);
                 }
-                window.onorientationchange = () => {
+            }
+            window.onorientationchange = () => {
+                if (isMobile()) {
                     screenOrientationUpdater.call(this);
                     mobileStyles.call(this);
                     viewportSettingsChanger.call(this);
@@ -336,11 +343,9 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
 
-        componentWillUnmount() {
-            removeEventListener('orientationchange', screenOrientationUpdater.call(this));
-        }
 
         render() {
+            console.log(this.state.landscapeOrientation)
             return (
                 <div className='app-wrapper'>
                     <MetaTags>
