@@ -136,28 +136,8 @@
     }
 }
 
-@media (orientation: landscape) and (max-height: 575px) {
+@media (orientation: landscape) and (max-height: 580px) {
     body {
         height: inherit;
-    }
-}
-
-@media (orientation: landscape) and (min-width: 650px) and (min-height: 650px) {
-    body {
-        background: #d3d3d3;
-    }
-
-    #app {
-        box-shadow: 0px 0px 4px black;
-    }
-}
-
-@media (orientation: portrait) and (min-width: 500px) and (min-height: 900px) {
-    body {
-        background: #d3d3d3;
-    }
-
-    #app {
-        box-shadow: 0px 0px 4px black;
     }
 }

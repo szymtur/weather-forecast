@@ -11,8 +11,7 @@ import CurrentWeather from './currentWeather.jsx';
 import NextDaysWeather from './nextDaysWeather.jsx';
 
 import {unitsChanger, nameChooser} from './appHandler.jsx';
-import {viewportSettingsChanger, mobileStyles, isMobile} from'./mobileHandler.jsx';
-import {screenOrientationChecker, screenOrientationUpdater} from'./mobileHandler.jsx';
+import {isMobile, screenOrientationChecker, viewportSettingsChanger, mobileStyles} from'./mobileHandler.jsx';
 
 import '../css/styles.css';
 import '../css/responsive.css';
@@ -49,11 +48,11 @@ document.addEventListener('DOMContentLoaded', function() {
             fiveDaysBtnDisabled: true,
             displayNextDaysWeather: false,
             displayCurrentDayWeather: false,
+            screenLandscapeOrientation: null,
             location: {},
             localTime: {},
             currentDayWeatherData: {},
             nextDaysWeatherData: [],
-            landscapeOrientation: null,
             viewportSettings: 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes'
         }
 
@@ -308,44 +307,31 @@ document.addEventListener('DOMContentLoaded', function() {
 
         /* input field on focus handling */
         handleInputOnFocus = () => {
-            viewportSettingsChanger.call(this);
+            if(isMobile()) {
+                viewportSettingsChanger.call(this);
+            }
         }
 
 
         componentWillMount() {
             this.getCurrentPosition();
-
-            if (isMobile()) {
-                screenOrientationChecker.call(this);
-            }
+            screenOrientationChecker.call(this);
         }
 
 
         componentDidMount() {
-
             window.onload = () => {
-                if (isMobile()) {
-                    mobileStyles.call(this);
-                }
-            }
+                isMobile() ? mobileStyles.call(this) : null;
+            };
+
             window.onresize = () => {
-                if (isMobile()) {
-                    screenOrientationChecker.call(this);
-                    mobileStyles.call(this);
-                }
-            }
-            window.onorientationchange = () => {
-                if (isMobile()) {
-                    screenOrientationUpdater.call(this);
-                    mobileStyles.call(this);
-                    viewportSettingsChanger.call(this);
-                }
-            }
+                screenOrientationChecker.call(this);
+                isMobile() ? [mobileStyles.call(this), viewportSettingsChanger.call(this)] : null;
+            };
         }
 
 
         render() {
-            console.log(this.state.landscapeOrientation)
             return (
                 <div className='app-wrapper'>
                     <MetaTags>
@@ -389,21 +375,3 @@ document.addEventListener('DOMContentLoaded', function() {
         <App />, document.getElementById('app')
     );
 });
-
-
-
-
-// const node = ReactDOM.findDOMNode(this);
-
-// Get child nodes
-// if (node instanceof HTMLElement) {
-    // const child = node.querySelector('.someClass');
-// }
-
-
-
-
-
-        // let viewport = document.querySelector("meta[name=viewport]");
-        // viewport.setAttribute('content', `width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`);
-        // viewport.setAttribute('content', 'width=device-width, height=850, initial-scale=1, maximum-scale=1, shrink-to-fit=yes');

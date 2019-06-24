@@ -20,8 +20,8 @@ body {
 }
 
 #app {
-    width: 575px;
-    min-width: 575px;
+    width: 580px;
+    min-width: 580px;
     height: 600px;
     background: #d3d3d3;
     border-radius: 5px;

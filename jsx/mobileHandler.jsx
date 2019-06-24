@@ -11,41 +11,19 @@ class MobileHandler {
             (/webOS/i).test(navigator.userAgent),
             (/Kindle|Silk|KFAPW|KFARWI|KFASWI|KFFOWI|KFJW|KFMEWI|KFOT|KFSAW|KFSOWI|KFTBW|KFTHW|KFTT|WFFOWI/i).test(navigator.userAgent)
         ];
-
         return mobileDevices.some(isMobileDevice => isMobileDevice);
     }
 
-    /* function to check screen orientation on document load */
+    /* function to check screen orientation */
     screenOrientationChecker() {
-        if (window.matchMedia('(orientation: portrait)').matches) {
-            this.setState({
-                landscapeOrientation: false
-            });
-        }
-        if (window.matchMedia('(orientation: landscape)').matches) {
-            this.setState({
-                landscapeOrientation: true
-            });
-        }
-    }
-
-    /* function to updete screen orientation on screen orientation change */
-    screenOrientationUpdater() {
-        if(this.state.landscapeOrientation) {
-            this.setState({
-                landscapeOrientation: false
-            });
-        }
-        else {
-            this.setState({
-                landscapeOrientation: true
-            }); 
-        }
+        this.setState({
+            screenLandscapeOrientation: window.innerHeight > window.innerWidth ? false : true
+        });
     }
 
     /* function to change viewport settings */
     viewportSettingsChanger() {
-        if(this.state.landscapeOrientation) {
+        if(this.state.screenLandscapeOrientation) {
             this.setState({
                 viewportSettings: 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes'
             })
@@ -59,17 +37,32 @@ class MobileHandler {
 
     /* function to add custom styles for mobile devices */
     mobileStyles() {
-        const body = document.querySelector("body")
+        const mainContainer = document.querySelector('#app');
         const mainPreloader = document.querySelector('.main-preloader');
-        body.style.background = "#d3d3d3";
+        const WeatherContainer = document.querySelector('.current-weather');
 
-        if(!document.querySelector('.current-weather')) {
-            if (this.state.landscapeOrientation) {
+        let mainContainerWidth = mainContainer.offsetWidth;
+        let mainContainerHeight = mainContainer.offsetHeight;
+
+        /* styles for body */
+        document.querySelector("body").style.background = "#d3d3d3";
+
+        /* styles for main preloader depending on the device's orientation */
+        if(!WeatherContainer) {
+            if (this.state.screenLandscapeOrientation && window.innerHeight <= mainContainerHeight / 1.65) {
                 mainPreloader.style.paddingTop ='1em';
             }
             else {
                 mainPreloader.style.paddingTop ='5em';
             }
+        }
+
+        /* styles for main container depending on screen resolution */
+        if(window.innerHeight > mainContainerHeight * 1.05 && window.innerWidth > mainContainerWidth * 1.05) {
+            mainContainer.style.boxShadow = '0 0 4px black';
+        }
+        else {
+            mainContainer.style.boxShadow = 'none';
         }
     }
 }
@@ -78,8 +71,7 @@ const handler = new MobileHandler();
 
 const isMobile = handler.isMobile;
 const screenOrientationChecker = handler.screenOrientationChecker;
-const screenOrientationUpdater = handler.screenOrientationUpdater;
 const viewportSettingsChanger = handler.viewportSettingsChanger;
 const mobileStyles = handler.mobileStyles;
 
-export {isMobile, screenOrientationChecker, screenOrientationUpdater, viewportSettingsChanger, mobileStyles};
+export {isMobile, screenOrientationChecker, viewportSettingsChanger, mobileStyles};
