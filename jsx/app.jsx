@@ -322,22 +322,25 @@ document.addEventListener('DOMContentLoaded', function() {
 
         componentDidMount() {
             window.onload = () => {
-                isMobile() ? mobileStyles.call(this) : null;
+                isMobile() && mobileStyles.call(this);
             };
 
             window.onresize = () => {
+
                 screenOrientationChecker.call(this);
                 isMobile() ? [mobileStyles.call(this), viewportSettingsChanger.call(this)] : null;
             };
 
             window.onorientationchange = () => {
                 screenOrientationChecker.call(this);
-                isMobile() ? viewportSettingsChanger.call(this) : null;
+
+                isMobile() ? [mobileStyles.call(this), viewportSettingsChanger.call(this)] : null;
             };
         }
 
 
         render() {
+            console.log(this.state.screenLandscapeOrientation)
             return (
                 <div className='app-wrapper'>
                     <MetaTags>

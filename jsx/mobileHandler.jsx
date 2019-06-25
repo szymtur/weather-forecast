@@ -16,6 +16,7 @@ class MobileHandler {
 
     /* function to check screen orientation */
     screenOrientationChecker() {
+        console.log(window.innerHeight + '  ' + window.innerWidth)
         this.setState({
             screenLandscapeOrientation: window.innerHeight > window.innerWidth ? false : true
         });
