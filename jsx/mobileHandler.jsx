@@ -14,14 +14,6 @@ class MobileHandler {
         return mobileDevices.some(isMobileDevice => isMobileDevice);
     }
 
-    /* function to check screen orientation */
-    screenOrientationChecker() {
-        console.log(window.innerHeight + '  ' + window.innerWidth)
-        this.setState({
-            screenLandscapeOrientation: window.innerHeight > window.innerWidth ? false : true
-        });
-    }
-
     /* function to change viewport settings */
     viewportSettingsChanger() {
         if(this.state.screenLandscapeOrientation) {
@@ -68,11 +60,10 @@ class MobileHandler {
     }
 }
 
-const handler = new MobileHandler();
+const handler = new MobileHandler('rwerwer');
 
 const isMobile = handler.isMobile;
-const screenOrientationChecker = handler.screenOrientationChecker;
 const viewportSettingsChanger = handler.viewportSettingsChanger;
 const mobileStyles = handler.mobileStyles;
 
-export {isMobile, screenOrientationChecker, viewportSettingsChanger, mobileStyles};
+export {isMobile, viewportSettingsChanger, mobileStyles};

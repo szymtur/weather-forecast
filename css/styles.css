@@ -148,15 +148,12 @@ body {
     margin-bottom: 0.3em;
     display: flex;
     justify-content: space-between;
-    /* border: 1px solid red; */
 }
 
 .current-weather .local-info .city {
     width: 110%;
     height: 2.4em;
     overflow: hidden;
-    /* border: 1px solid red; */
-
 }
 
 .current-weather .local-info .city h3 {
@@ -168,7 +165,6 @@ body {
 .current-weather .local-info .dots-preloader,
 .current-weather .local-info .date-time {
     overflow: hidden;
-    /* border: 1px solid red; */
 }
 
 .current-weather .local-info .dots-preloader {
@@ -193,7 +189,6 @@ body {
 .current-weather .left-col,
 .current-weather .right-col {
     height: 130px;
-    /* border: 1px solid red; */
 }
 
 .current-weather .left-col {
@@ -239,7 +234,6 @@ body {
 .current-weather .right-col .col-60,
 .current-weather .right-col .col-40 {
     height: 100px;
-    /* border: 1px solid red; */
 }
 
 .current-weather .right-col .col-60 {
@@ -273,7 +267,6 @@ body {
     width: 100%;
     text-align: right;
     padding-top: 0.1em;
-    /* border: 1px solid red; */
 }
 
 .current-weather .right-col .right-bottom button {
@@ -281,7 +274,7 @@ body {
     height: 30px;
     border: 1px solid gray;
     border-radius: 4px; 
-    background: #e0e0e0;
+    background: #ffffff;
     outline: none;
     color: #808080;
     font-size: 0.9em;
@@ -290,8 +283,8 @@ body {
 }
 
 .current-weather .right-col .right-bottom button:hover {
-    background: #ffffff;
-    color: #000000;
+    background: #ffffff !important;
+    color: #808080 !important;
 }
 /* Current weather section styles - end */
 

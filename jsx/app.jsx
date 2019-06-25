@@ -11,7 +11,7 @@ import CurrentWeather from './currentWeather.jsx';
 import NextDaysWeather from './nextDaysWeather.jsx';
 
 import {unitsChanger, nameChooser} from './appHandler.jsx';
-import {isMobile, screenOrientationChecker, viewportSettingsChanger, mobileStyles} from'./mobileHandler.jsx';
+import {isMobile, viewportSettingsChanger, mobileStyles} from'./mobileHandler.jsx';
 
 import '../css/styles.css';
 import '../css/responsive.css';
@@ -48,12 +48,12 @@ document.addEventListener('DOMContentLoaded', function() {
             fiveDaysBtnDisabled: true,
             displayNextDaysWeather: false,
             displayCurrentDayWeather: false,
-            screenLandscapeOrientation: null,
+            screenLandscapeOrientation: window.innerHeight > window.innerWidth ? false : true,
+            viewportSettings: document.querySelector('meta[name="viewport"]').getAttribute('content'),
             location: {},
             localTime: {},
             currentDayWeatherData: {},
-            nextDaysWeatherData: [],
-            viewportSettings: 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes'
+            nextDaysWeatherData: []
         }
 
 
@@ -272,12 +272,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         /* 'next days forecast' button handling */
         displayNextDays = () => {
-            if(this.state.displayNextDaysWeather) {
-                this.setState({ displayNextDaysWeather: false });
-            }
-            else {
-                this.setState({ displayNextDaysWeather: true });
-            }
+            this.setState({ displayNextDaysWeather: this.state.displayNextDaysWeather ? false : true })
         }
 
 
@@ -299,24 +294,18 @@ document.addEventListener('DOMContentLoaded', function() {
 
         /* input field on change handling */
         handleInputOnChange = (event) => {
-            this.setState({
-                input: event.target.value,
-            });
+            this.setState({ input: event.target.value });
         }
 
 
         /* input field on focus handling */
         handleInputOnFocus = () => {
-            console.log('focus')
-            if(isMobile()) {
-                viewportSettingsChanger.call(this);
-            }
+            isMobile() && viewportSettingsChanger.call(this);
         }
 
 
         componentWillMount() {
             this.getCurrentPosition();
-            screenOrientationChecker.call(this);
         }
 
 
@@ -326,31 +315,17 @@ document.addEventListener('DOMContentLoaded', function() {
             };
 
             window.onresize = () => {
-
-                // screenOrientationChecker.call(this);
                 isMobile() && mobileStyles.call(this);
             };
 
             window.onorientationchange = () => {
-                if(this.state.screenLandscapeOrientation) {
-                    this.setState({
-                        screenLandscapeOrientation: false
-                    })
-                }
-                else{
-                    this.setState({
-                        screenLandscapeOrientation: true
-                    })
-                }
-                // screenOrientationChecker.call(this);
-
-                isMobile() ? [mobileStyles.call(this), viewportSettingsChanger.call(this)] : null;
+                this.setState({screenLandscapeOrientation: !this.state.screenLandscapeOrientation});
+                isMobile() && [mobileStyles.call(this), viewportSettingsChanger.call(this)];
             };
         }
 
 
         render() {
-            console.log(this.state.screenLandscapeOrientation)
             return (
                 <div className='app-wrapper'>
                     <MetaTags>

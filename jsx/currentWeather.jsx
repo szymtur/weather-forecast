@@ -11,8 +11,8 @@ class CurrentWeather extends React.Component {
         const {time, date, gmt} = this.props.localTime;
         const {city, country} = this.props.location;
 
-        const dotsPreloader = ( 
-            <DotsPreloader /> 
+        const dotsPreloader = (
+            <DotsPreloader />
         )
 
         const localTime = (
@@ -20,6 +20,11 @@ class CurrentWeather extends React.Component {
                 <h6>{date} {gmt} {time}</h6>
             </div>
         )
+
+        const buttonStyles = {
+            background: this.props.btnDisabled ? '#ffffff' : '#e0e0e0',
+            color: this.props.btnDisabled ? '#808080' : '#000000'
+        }
 
         if(!this.props.displayComponent) {
             return (
@@ -67,8 +72,8 @@ class CurrentWeather extends React.Component {
                             <button
                                 onClick={this.props.displayNextDays}
                                 disabled={this.props.btnDisabled}
-                            >
-                                next days forecast
+                                style={buttonStyles}
+                                >next days forecast
                             </button>
                         </div>
                     </div>
