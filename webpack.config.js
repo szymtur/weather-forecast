@@ -17,7 +17,7 @@ module.exports = {
                     options: {
                         plugins: () => [
                             autoprefixer({
-                                browsers: ["> 3%", "last 2 versions"]
+                                overrideBrowserslist: ["> 3%", "last 2 versions"]
                             })
                         ]
                     }
