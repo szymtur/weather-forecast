@@ -307,6 +307,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         /* input field on focus handling */
         handleInputOnFocus = () => {
+            console.log('focus')
             if(isMobile()) {
                 viewportSettingsChanger.call(this);
             }
@@ -327,6 +328,11 @@ document.addEventListener('DOMContentLoaded', function() {
             window.onresize = () => {
                 screenOrientationChecker.call(this);
                 isMobile() ? [mobileStyles.call(this), viewportSettingsChanger.call(this)] : null;
+            };
+
+            window.onorientationchange = () => {
+                screenOrientationChecker.call(this);
+                isMobile() ? viewportSettingsChanger.call(this) : null;
             };
         }
 
