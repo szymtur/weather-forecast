@@ -327,12 +327,22 @@ document.addEventListener('DOMContentLoaded', function() {
 
             window.onresize = () => {
 
-                screenOrientationChecker.call(this);
-                isMobile() ? [mobileStyles.call(this), viewportSettingsChanger.call(this)] : null;
+                // screenOrientationChecker.call(this);
+                isMobile() && mobileStyles.call(this);
             };
 
             window.onorientationchange = () => {
-                screenOrientationChecker.call(this);
+                if(this.state.screenLandscapeOrientation) {
+                    this.setState({
+                        screenLandscapeOrientation: false
+                    })
+                }
+                else{
+                    this.setState({
+                        screenLandscapeOrientation: true
+                    })
+                }
+                // screenOrientationChecker.call(this);
 
                 isMobile() ? [mobileStyles.call(this), viewportSettingsChanger.call(this)] : null;
             };
