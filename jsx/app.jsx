@@ -1,6 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import MetaTags from 'react-meta-tags';
 import Promise from 'promise-polyfill';
 import 'isomorphic-fetch';
 
@@ -49,7 +48,6 @@ document.addEventListener('DOMContentLoaded', function() {
             displayNextDaysWeather: false,
             displayCurrentDayWeather: false,
             screenLandscapeOrientation: window.innerHeight > window.innerWidth ? false : true,
-            viewportSettings: document.querySelector('meta[name="viewport"]').getAttribute('content'),
             location: {},
             localTime: {},
             currentDayWeatherData: {},
@@ -72,11 +70,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.setState({
                     latitude: data.latitude,
                     longitude: data.longitude,
-                    location: {
-                        city: data.city,
-                        country: data.country_code.toUpperCase()
-                    }
                 });
+            })
+            .then( () => {
+                this.getLocationName();
             })
             .then( () => {
                 this.getWeatherData();
@@ -91,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-        /* geocoding - getting latitude and longitude from city name using openstreetmap.org */
+        /* forward geocoding - getting latitude and longitude from city name using openstreetmap.org */
         getCoordinates() {
             fetch(`https://nominatim.openstreetmap.org?format=json&limit=1&addressdetails=1&q=${this.state.input.trim()}`)
             .then( resp => {
@@ -111,7 +108,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         latitude: parseFloat(data[0].lat).toFixed(4),
                         longitude: parseFloat(data[0].lon).toFixed(4),
                         location: {
-                            city: nameChooser(data),
+                            city: nameChooser(data[0]),
                             country: data[0].address.country_code.toUpperCase()
                         }
                     });
@@ -133,6 +130,36 @@ document.addEventListener('DOMContentLoaded', function() {
                         preloaderInfo: this.strings.connection_error
                     });
                 }
+                console.error(error);
+            });
+        }
+
+
+        /* reverse geocoding - getting city name from latitude and longitude using openstreetmap.org */
+        getLocationName() {
+            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${this.state.latitude}&lon=${this.state.longitude}`)
+            .then( resp => {
+                if(resp.ok) {
+                    return resp.json();
+                }
+                else {
+                    throw new Error(resp.statusText);
+                }
+            })
+            .then( data => {
+                if(data.error) {
+                    throw new Error(data.error)
+                }
+                else {
+                    this.setState({
+                        location: {
+                            city: nameChooser(data),
+                            country: data.address.country_code.toUpperCase()
+                        }
+                    });
+                }
+            })
+            .catch( error => {
                 console.error(error);
             });
         }
@@ -328,9 +355,6 @@ document.addEventListener('DOMContentLoaded', function() {
         render() {
             return (
                 <div className='app-wrapper'>
-                    <MetaTags>
-                        <meta name='viewport' content={this.state.viewportSettings} />
-                    </MetaTags>
                     <CurrentDateHeader />
                     <SearchSection
                         input = {this.state.input}

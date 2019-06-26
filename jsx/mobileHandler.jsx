@@ -16,15 +16,13 @@ class MobileHandler {
 
     /* function to change viewport settings */
     viewportSettingsChanger() {
+        const viewport = document.querySelector('meta[name="viewport"]');
+
         if(this.state.screenLandscapeOrientation) {
-            this.setState({
-                viewportSettings: 'width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes'
-            })
+            viewport.setAttribute('content', `width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`)
         }
         else {
-            this.setState({
-                viewportSettings: 'width=device-width, height=850, initial-scale=1, maximum-scale=1, shrink-to-fit=yes'
-            })
+            viewport.setAttribute('content', `width=device-width, height=850, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`)
         }
     }
 
