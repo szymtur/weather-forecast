@@ -16,13 +16,17 @@ class MobileHandler {
 
     /* function to change viewport settings */
     viewportSettingsChanger() {
-        const viewport = document.querySelector('meta[name="viewport"]');
+        const viewportMeta = document.querySelector('meta[name="viewport"]');
+        const viewportSettings = {
+            landscape: `width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`,
+            portrait: `width=device-width, height=850, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`
+        }
 
         if(this.state.screenLandscapeOrientation) {
-            viewport.setAttribute('content', `width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`)
+            viewportMeta.setAttribute('content', viewportSettings.landscape);
         }
         else {
-            viewport.setAttribute('content', `width=device-width, height=850, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`)
+            viewportMeta.setAttribute('content', viewportSettings.portrait);
         }
     }
 
@@ -58,7 +62,7 @@ class MobileHandler {
     }
 }
 
-const handler = new MobileHandler('rwerwer');
+const handler = new MobileHandler();
 
 const isMobile = handler.isMobile;
 const viewportSettingsChanger = handler.viewportSettingsChanger;
