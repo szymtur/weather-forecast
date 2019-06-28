@@ -66,7 +66,6 @@ class AppHandler {
             data['address']['park'],
             data['address']['zoo'],
             data['address']['peak'],
-            data['address']['water'],
             data['address']['river'],
             data['address']['pedestrian'],
             data['address']['quarter'],
