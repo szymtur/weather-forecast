@@ -250,13 +250,13 @@ body {
 
 .current-weather .right-col .col-40 {
     width: 40%;
-    text-align: center;
 }
 
 .current-weather .right-col .col-40 .current-icon {
     margin: 0.1em -0.1em 0 0;
     color: #000000;
     font-size: 3.5em;
+    text-align: center;
 }
 
 .current-weather .right-col .col-40 .current-icon .wi.wi-day-cloudy-high {

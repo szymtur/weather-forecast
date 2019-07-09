@@ -78,26 +78,49 @@
         font-size: 0.9em;
     }
 
+    .current-weather .right-col {
+        flex-direction: column;
+        flex-wrap: nowrap;
+    }
+
+    .current-weather .right-col .col-40,
     .current-weather .right-col .col-60,
+    .current-weather .right-col .right-bottom {
+        width: 100%;
+    }
+
+    .current-weather .right-col .col-40,
+    .current-weather .right-col .col-60 {
+        height: 50px;
+    }
+
     .current-weather .right-col .col-40 {
-        width: 50%;
+        order: 0;
+    }
+
+    .current-weather .right-col .col-60 {
+        order: 1;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+    }
+
+    .current-weather .right-col .right-bottom {
+        order: 2;
+        padding-top: 0;
     }
 
     .current-weather .right-col .col-40 .current-icon {
         font-size: 3em;
-        text-align: center;
-        margin: -0.25em -0.25em 0 0;
+        text-align: right;
+        margin: -0.2em 0.1em 0 0;
     }
 
     .current-weather .right-col .col-60 h5 {
-        margin-top: 3.5em;
-        margin-left: 0.5em;
-        width: 130%;
+        width: 75%;
         font-size: 0.95em;
-    }
-
-    .current-weather .right-col .right-bottom {
-        padding-top: 0;
+        text-align: right;
+        margin: 0 0.1em 0 0;
     }
     /* Current weather section styles - end */
 
@@ -129,6 +152,7 @@
     }
     /* Next five days section styles - end */
 }
+
 
 @media(orientation: portrait) and (max-height: 850px) {
     body {
