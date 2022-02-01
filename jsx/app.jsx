@@ -37,6 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
         state = {
             weatherBitApiKey: apiConfig.weatherBit,
             timeZoneDbApiKey: apiConfig.timeZoneDb,
+            ipInfoApiKey: apiConfig.ipInfo,
             units: apiConfig.units,
             lang: apiConfig.lang,
             input: this.strings.input,
@@ -57,19 +58,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
         /* geolocation - getting current position by ip address from geoip-db.com */
         getCurrentPosition() {
-            fetch(`https://geoip-db.com/json/`)
+            fetch(`https://ipinfo.io/?token=${this.state.ipInfoApiKey}`)
             .then( resp => {
                 if(resp.ok) {
                     return resp.json();
                 }
                 else {
-                    throw new Error(resp.statusText);
+                    throw new Error(resp.status.toString());
                 }
             })
             .then( data => {
+                const [latitude, longitude]  = data.loc.split(',');
+
                 this.setState({
-                    latitude: data.latitude,
-                    longitude: data.longitude,
+                    latitude,
+                    longitude
                 });
             })
             .then( () => {

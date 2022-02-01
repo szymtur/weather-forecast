@@ -1,6 +1,7 @@
 const apiConfig = {
-    weatherBit: "2ed3773b146049209c0965f94c1f9d8c",
+    weatherBit: "20ddaf5dab21426e9cb7e65196209e61",
     timeZoneDb: "MB4JWXQU14Q0",
+    ipInfo: "6cbc555ebe18f2",
     units: "metric",
     lang: "en"
 };
