@@ -5,7 +5,7 @@ class OneDayWeather extends React.Component {
 
     render() {
         /* Destructuring object with weather data */
-        const {date, temp, pressure, humidity, wind, description, icon, id} = this.props.nextDay;
+        const {date, temp, temp_app, pressure, humidity, wind, description, icon, id} = this.props.nextDay;
 
         return (
             <div className="day-container">
@@ -20,16 +20,16 @@ class OneDayWeather extends React.Component {
                 </div>
                 <div className="row weather-data">
                     <div className="row">
-                        <p><i className="wi wi-thermometer"></i></p><h5>{temp}</h5>
+                        <p><i className="wi wi-thermometer"/></p><h5>{temp}</h5>
                     </div>
                     <div className="row">
-                        <p><i className="wi wi-barometer"></i></p><h5>{pressure}</h5>
+                        <p><i className="wi wi-barometer"/></p><h5>{pressure}</h5>
                     </div>
                     <div className="row">
-                        <p><i className="wi wi-humidity"></i></p><h5>{humidity}</h5>
+                        <p><i className="wi wi-humidity"/></p><h5>{humidity}</h5>
                     </div>
                     <div className="row">
-                        <p><i className="wi wi-strong-wind"></i></p><h5>{wind}</h5>
+                        <p><i className="wi wi-strong-wind"/></p><h5>{wind}</h5>
                     </div>
                 </div>
             </div>

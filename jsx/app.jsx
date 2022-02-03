@@ -1,7 +1,5 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import Promise from 'promise-polyfill';
-import 'isomorphic-fetch';
 
 import apiConfig from '../js/apiConfig.js';
 import SearchSection from './searchSection.jsx';
@@ -9,20 +7,19 @@ import CurrentDateHeader from './currentDate.jsx';
 import CurrentWeather from './currentWeather.jsx';
 import NextDaysWeather from './nextDaysWeather.jsx';
 
-import {unitsChanger, nameChooser} from './appHandler.jsx';
+import {unitsChanger, nameChooser} from './appHelpers.jsx';
 import {isMobile, viewportSettingsChanger, mobileStyles} from'./mobileHandler.jsx';
 
 import '../css/styles.css';
 import '../css/responsive.css';
 
-if (!window.Promise) { window.Promise = Promise };
+if (!window.Promise) { window.Promise = Promise }
 
 
 document.addEventListener('DOMContentLoaded', function() {
 
     class Main extends React.Component {
-
-        strings = {
+        CONSTS = {
             input: '',
             loading_data: 'loading data...',
             enter_manually: 'enter your location manually',
@@ -40,15 +37,15 @@ document.addEventListener('DOMContentLoaded', function() {
             ipInfoApiKey: apiConfig.ipInfo,
             units: apiConfig.units,
             lang: apiConfig.lang,
-            input: this.strings.input,
+            input: this.CONSTS.input.trim(),
             latitude: null,
             longitude: null,
-            preloaderInfo: this.strings.loading_data,
+            preloaderInfo: this.CONSTS.loading_data,
             preloaderAlert: false,
             fiveDaysBtnDisabled: true,
             displayNextDaysWeather: false,
             displayCurrentDayWeather: false,
-            screenLandscapeOrientation: window.innerHeight > window.innerWidth ? false : true,
+            screenLandscapeOrientation: window.innerHeight <= window.innerWidth,
             location: {},
             localTime: {},
             currentDayWeatherData: {},
@@ -56,8 +53,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-        /* geolocation - getting current position by ip address from geoip-db.com */
-        getCurrentPosition() {
+        /* geolocation - getting current position by ip address from ipinfo.io */
+        getCurrentPosition = () => {
             fetch(`https://ipinfo.io/?token=${this.state.ipInfoApiKey}`)
             .then( resp => {
                 if(resp.ok) {
@@ -84,7 +81,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch( error => {
                 this.setState({
                     preloaderAlert: true,
-                    preloaderInfo: this.strings.enter_manually
+                    preloaderInfo: this.CONSTS.enter_manually
                 });
                 console.error(error);
             });
@@ -92,8 +89,8 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         /* forward geocoding - getting latitude and longitude from city name using openstreetmap.org */
-        getCoordinates() {
-            fetch(`https://nominatim.openstreetmap.org?format=json&limit=1&addressdetails=1&q=${this.state.input.trim()}`)
+        getCoordinates = () => {
+            fetch(`https://nominatim.openstreetmap.org?format=json&limit=1&addressdetails=1&q=${this.state.input}`)
             .then( resp => {
                 if(resp.ok) {
                     return resp.json();
@@ -121,16 +118,16 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.getWeatherData();
             })
             .catch( error => {
-                if(error == 'Error: NO_DATA') {
+                if(error === 'Error: NO_DATA') {
                     this.setState({
                         preloaderAlert: true,
-                        preloaderInfo: this.strings.wrong_city
+                        preloaderInfo: this.CONSTS.wrong_city
                     });
                 }
                 else {
                     this.setState({
                         preloaderAlert: true,
-                        preloaderInfo: this.strings.connection_error
+                        preloaderInfo: this.CONSTS.connection_error
                     });
                 }
                 console.error(error);
@@ -139,7 +136,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         /* reverse geocoding - getting city name from latitude and longitude using openstreetmap.org */
-        getLocationName() {
+        getLocationName = () => {
             fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${this.state.latitude}&lon=${this.state.longitude}`)
             .then( resp => {
                 if(resp.ok) {
@@ -169,7 +166,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         /* getting weather forecast from weatherbit.io and local time from timezonedb.com */
-        getWeatherData() {
+        getWeatherData = () => {
             fetch(`https://api.weatherbit.io/v2.0/current` +
                   `?lat=${this.state.latitude}&lon=${this.state.longitude}` +
                   `&units=${this.state.units.charAt(0)}&lang=${this.state.lang}` +
@@ -194,11 +191,12 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 this.setState({
                     currentDayWeatherData: {
-                        temp: unitsChanger(this.state.units, this.strings.temperature, data.app_temp),
-                        pressure: unitsChanger(this.state.units, this.strings.pressure, data.pres), 
-                        humidity: unitsChanger(this.state.units, this.strings.humidity, data.rh),
-                        wind: unitsChanger(this.state.units, this.strings.wind, data.wind_spd),
-                        description: data.weather.description, 
+                        temp: unitsChanger(this.state.units, this.CONSTS.temperature, data.temp),
+                        temp_app: unitsChanger(this.state.units, this.CONSTS.temperature, data.app_temp),
+                        pressure: unitsChanger(this.state.units, this.CONSTS.pressure, data.pres),
+                        humidity: unitsChanger(this.state.units, this.CONSTS.humidity, data.rh),
+                        wind: unitsChanger(this.state.units, this.CONSTS.wind, data.wind_spd),
+                        description: data.weather.description,
                         icon: data.weather.icon,
                         id: Number(data.weather.code)
                     },
@@ -214,7 +212,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch( error => {
                 this.setState({
                     preloaderAlert: true,
-                    preloaderInfo: this.strings.connection_error
+                    preloaderInfo: this.CONSTS.connection_error
                 });
                 console.error(error)
             });
@@ -222,7 +220,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         /* getting next five days weather info from weatherbit.io */
-        getNextDaysData() {
+        getNextDaysData = () => {
             fetch(`https://api.weatherbit.io/v2.0/forecast/daily?days=7` +
                   `&lat=${this.state.latitude}&lon=${this.state.longitude}` +
                   `&units=${this.state.units.charAt(0)}&lang=${this.state.lang}` +
@@ -244,10 +242,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 for (let i=1; i<data.length; i++){
                     nextDays[i-1] = {
-                        temp: unitsChanger(this.state.units, this.strings.temperature, data[i].temp),
-                        pressure: unitsChanger(this.state.units, this.strings.pressure, data[i].pres), 
-                        humidity: unitsChanger(this.state.units, this.strings.humidity, data[i].rh),
-                        wind: unitsChanger(this.state.units, this.strings.wind, data[i].wind_spd),
+                        temp: unitsChanger(this.state.units, this.CONSTS.temperature, data[i].temp),
+                        pressure: unitsChanger(this.state.units, this.CONSTS.pressure, data[i].pres),
+                        humidity: unitsChanger(this.state.units, this.CONSTS.humidity, data[i].rh),
+                        wind: unitsChanger(this.state.units, this.CONSTS.wind, data[i].wind_spd),
                         description: data[i].weather.description.toLowerCase(),
                         date: `${data[i].valid_date.split('-').reverse().join('-')}`,
                         icon: data[i].weather.icon,
@@ -264,8 +262,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-        /* getting local time for schearched city from timezonedb.com */
-        getLocalTime() {
+        /* getting local time for searched city from timeZoneDb.com */
+        getLocalTime = () => {
             fetch(`https://api.timezonedb.com/v2.1/get-time-zone?format=json&by=position` +
                   `&lat=${this.state.latitude}&lng=${this.state.longitude}&key=${this.state.timeZoneDbApiKey}`)
             .then( resp => {
@@ -277,8 +275,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
             })
             .then( data => {
-                if (data.status === 'FAILED') return
-                else {
+                if (data.status.toString() === 'OK') {
                     this.setState({
                         localTime: {
                             time: data.formatted.substring(11,16),
@@ -302,7 +299,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         /* 'next days forecast' button handling */
         displayNextDays = () => {
-            this.setState({ displayNextDaysWeather: this.state.displayNextDaysWeather ? false : true })
+            this.setState({ displayNextDaysWeather: !this.state.displayNextDaysWeather })
         }
 
 
@@ -317,7 +314,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 displayNextDaysWeather: false,
                 displayCurrentDayWeather: false,
                 preloaderAlert: false,
-                preloaderInfo: this.strings.loading_data
+                preloaderInfo: this.CONSTS.loading_data
             });
         }
 
@@ -334,12 +331,12 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-        componentWillMount() {
+        UNSAFE_componentWillMount = () => {
             this.getCurrentPosition();
         }
 
 
-        componentDidMount() {
+        componentDidMount = () => {
             window.onload = () => {
                 isMobile() && mobileStyles.call(this);
             };
@@ -355,7 +352,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
 
 
-        render() {
+        render = () => {
             return (
                 <div className='app-wrapper'>
                     <CurrentDateHeader />

@@ -7,7 +7,7 @@ class CurrentWeather extends React.Component {
 
     render() {
         /* Destructuring object with weather data */
-        const {temp, pressure, humidity, wind, description, icon, id} = this.props.currentDay;
+        const {temp, temp_app, pressure, humidity, wind, description, icon, id} = this.props.currentDay;
         const {time, date, gmt} = this.props.localTime;
         const {city, country} = this.props.location;
 
@@ -48,16 +48,16 @@ class CurrentWeather extends React.Component {
 
                     <div className = "left-col">
                         <div className="left-rows">
-                            <p><i className="wi wi-thermometer"></i></p><h3>{temp}</h3>
+                            <p><i className="wi wi-thermometer"/></p><h3>{temp}<span> / {temp_app}</span></h3>
                         </div>
                         <div className="left-rows">
-                            <p><i className="wi wi-barometer"></i></p><h3>{pressure}</h3>
+                            <p><i className="wi wi-barometer"/></p><h3>{pressure}</h3>
                         </div>
                         <div className="left-rows">
-                            <p><i className="wi wi-humidity"></i></p><h3>{humidity}</h3>
+                            <p><i className="wi wi-humidity"/></p><h3>{humidity}</h3>
                         </div>
                         <div className="left-rows">
-                            <p><i className="wi wi-strong-wind"></i></p><h3>{wind}</h3>
+                            <p><i className="wi wi-strong-wind"/></p><h3>{wind}</h3>
                         </div>
                     </div>
 
@@ -65,7 +65,7 @@ class CurrentWeather extends React.Component {
                         <div className = "col-60">
                             <h5>{description}</h5>
                         </div>
-                        <div className = "col-40">    
+                        <div className = "col-40">
                             <CurrentIcon icon={icon} id={id}/>
                         </div>
                         <div className="right-bottom">

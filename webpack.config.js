@@ -10,16 +10,19 @@ module.exports = {
         {
             test: /\.css$/,
             use: [ 
-                'style-loader', 
+                'style-loader',
                 'css-loader',
                 {
                     loader: "postcss-loader",
                     options: {
-                        plugins: () => [
-                            autoprefixer({
-                                overrideBrowserslist: ["> 3%", "last 2 versions"]
-                            })
-                        ]
+                        postcssOptions: {
+                            plugins: [
+                                "postcss-preset-env",
+                                autoprefixer({
+                                    overrideBrowserslist: ["> 3%", "last 2 versions"]
+                                })
+                            ]
+                        }
                     }
                 }
             ]
@@ -29,7 +32,7 @@ module.exports = {
             use: {
                 loader: 'file-loader',
                 options: {
-                    name: '[name].[ext]', 
+                    name: '[name].[ext]',
                     publicPath: 'fonts',
                     outputPath: '../fonts'
                 }
@@ -41,7 +44,8 @@ module.exports = {
             use: {
                 loader: "babel-loader",
                 options: {
-                    presets: ["es2015", "stage-2", "react"]
+                    presets: ["@babel/react" , "@babel/env"],
+                    plugins: ["@babel/plugin-proposal-class-properties"]
                 }
             }
         }]

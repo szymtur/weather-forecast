@@ -95,7 +95,7 @@ body {
 
 .search input[type='search'].normal::placeholder {
     font-family: 'Montserrat', sans-serif;
-    font-weight: 500;    
+    font-weight: 500;
 }
 
 .search input[type='search'].warning::placeholder {
@@ -108,15 +108,15 @@ body {
     width: 37%;
     height: 30px;
     border-radius: 5px;
-    border: 1px solid black; 
+    border: 1px solid black;
     background: #808080;
-    outline: none;    
+    outline: none;
     color: #ffffff;
     font-size: 0.9em;
     font-weight: 600;
     letter-spacing: 0.5px;
     transition: all 0.5s;
-    
+
     -webkit-appearance: none;
         -moz-appearance: none;
 }
@@ -133,10 +133,9 @@ body {
     width: 93%;
     height: 200px;
     padding: 2%;
-    margin: 0 auto;
     background: #ffffff;
     border-radius: 5px;
-    margin-bottom: 0.75em;
+    margin: 0 auto 0.75em;
     color: #800080;
     display: flex;
     overflow: hidden;
@@ -217,6 +216,10 @@ body {
     display: inline-block;
 }
 
+.current-weather .left-col .left-rows h3 span {
+    font-size: 0.8em;
+}
+
 .current-weather .left-col .left-rows p .wi {
     font-size: 1.4em;
     color: #000000;
@@ -273,7 +276,7 @@ body {
     width: 150px;
     height: 30px;
     border: 1px solid gray;
-    border-radius: 4px; 
+    border-radius: 4px;
     background: #ffffff;
     outline: none;
     color: #808080;
@@ -314,12 +317,12 @@ body {
 
 .next-days-weather .day-container:first-child {
     border-top-left-radius: 5px;
-    border-bottom-left-radius: 5px; 
+    border-bottom-left-radius: 5px;
 }
 
 .next-days-weather .day-container:nth-child(5) {
     border-top-right-radius: 5px;
-    border-bottom-right-radius: 5px; 
+    border-bottom-right-radius: 5px;
 }
 
 .next-days-weather .day-container:nth-child(6) {
@@ -412,7 +415,7 @@ body {
 }
 
 @keyframes spin {
-    from { 
+    from {
         transform: rotate(0deg);
     }
     to {
