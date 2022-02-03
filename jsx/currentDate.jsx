@@ -19,7 +19,7 @@ class CurrentDateHeader extends React.Component {
         })
     }
 
-    componentWillMount() {
+    UNSAFE_componentWillMount() {
         this.currentTime();
     }
 
