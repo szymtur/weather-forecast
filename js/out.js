@@ -45484,8 +45484,7 @@ document.addEventListener('DOMContentLoaded', function () {
         }).then(function () {
           _this.getLocationName();
 
-          _this.getWeatherData(); // TODO ???????????
-
+          _this.getWeatherData();
         })["catch"](function (error) {
           _this.setState({
             preloaderAlert: true,
@@ -45504,12 +45503,7 @@ document.addEventListener('DOMContentLoaded', function () {
               country: data.address.country_code.toUpperCase()
             }
           });
-        }).then(function () {// this.getWeatherData();
         })["catch"](function (error) {
-          // this.setState({
-          //     preloaderAlert: true,
-          //     preloaderInfo: MESSAGE.connectionError
-          // });
           console.error(error);
         });
       });
