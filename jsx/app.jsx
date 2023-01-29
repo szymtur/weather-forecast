@@ -1,14 +1,20 @@
+'use strict';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import apiConfig from '../js/apiConfig.js';
 import SearchSection from './searchSection.jsx';
 import CurrentDateHeader from './currentDate.jsx';
 import CurrentWeather from './currentWeather.jsx';
+import WeatherChart from './weatherChart.jsx';
 import NextDaysWeather from './nextDaysWeather.jsx';
 
-import {unitsChanger, nameChooser} from './appHelpers.jsx';
-import {isMobile, viewportSettingsChanger, mobileStyles} from'./mobileHandler.jsx';
+import { config } from '../js/config.js';
+import { WEATHER, MESSAGE, BUTTON } from '../js/consts.js';
+
+import { isMobile, viewportSettingsChanger, mobileStyles } from '../js/mobile.js';
+import { capitalizeFirstLetter, placeNameChooser, prepareChartData, timestampToDate, unitsChanger } from '../js/helpers.js';
+import { ipInfoGeolocation, openStreetMapForwardGeocoding, openStreetMapReverseGeocoding, openWeatherMapGetData }  from '../js/providers.js';
 
 import '../css/styles.css';
 import '../css/responsive.css';
@@ -19,117 +25,46 @@ if (!window.Promise) { window.Promise = Promise }
 document.addEventListener('DOMContentLoaded', function() {
 
     class Main extends React.Component {
-        CONSTS = {
-            input: '',
-            loading_data: 'loading data...',
-            enter_manually: 'enter your location manually',
-            wrong_city: 'wrong city name',
-            connection_error: 'connection error',
-            temperature: 'temperature',
-            pressure: 'pressure',
-            humidity: 'humidity',
-            wind: 'wind'
-        }
-
         state = {
-            weatherBitApiKey: apiConfig.weatherBit,
-            timeZoneDbApiKey: apiConfig.timeZoneDb,
-            ipInfoApiKey: apiConfig.ipInfo,
-            units: apiConfig.units,
-            lang: apiConfig.lang,
-            input: this.CONSTS.input.trim(),
+            input: '',
             latitude: null,
             longitude: null,
-            preloaderInfo: this.CONSTS.loading_data,
+            preloaderInfo: MESSAGE.loadingData,
             preloaderAlert: false,
-            fiveDaysBtnDisabled: true,
-            displayNextDaysWeather: false,
             displayCurrentDayWeather: false,
+            displayNextDaysWeather: false,
             screenLandscapeOrientation: window.innerHeight <= window.innerWidth,
             location: {},
             localTime: {},
             currentDayWeatherData: {},
-            nextDaysWeatherData: []
+            currentDayChartData: {},
+            nextDaysWeatherData: [],
+            units: config.units
         }
 
 
         /* geolocation - getting current position by ip address from ipinfo.io */
         getCurrentPosition = () => {
-            fetch(`https://ipinfo.io/?token=${this.state.ipInfoApiKey}`)
-            .then( resp => {
-                if(resp.ok) {
-                    return resp.json();
-                }
-                else {
-                    throw new Error(resp.status.toString());
-                }
-            })
+            ipInfoGeolocation()
             .then( data => {
-                const [latitude, longitude]  = data.loc.split(',');
+                const [latitude, longitude] = data.loc.split(',');
 
                 this.setState({
                     latitude,
-                    longitude
+                    longitude,
+                    location: { city: data.city, country: data.country.toUpperCase() }
                 });
             })
-            .then( () => {
+            .then(() => {
                 this.getLocationName();
-            })
-            .then( () => {
-                this.getWeatherData();
+                this.getWeatherData();  // TODO ???????????
+
             })
             .catch( error => {
                 this.setState({
                     preloaderAlert: true,
-                    preloaderInfo: this.CONSTS.enter_manually
+                    preloaderInfo: MESSAGE.enterManually
                 });
-                console.error(error);
-            });
-        }
-
-
-        /* forward geocoding - getting latitude and longitude from city name using openstreetmap.org */
-        getCoordinates = () => {
-            fetch(`https://nominatim.openstreetmap.org?format=json&limit=1&addressdetails=1&q=${this.state.input}`)
-            .then( resp => {
-                if(resp.ok) {
-                    return resp.json();
-                }
-                else {
-                    throw new Error(resp.statusText);
-                }
-            })
-            .then( data => {
-                if(!data.length) {
-                    throw new Error('NO_DATA')
-                }
-                else {
-                    this.setState({
-                        latitude: parseFloat(data[0].lat).toFixed(4),
-                        longitude: parseFloat(data[0].lon).toFixed(4),
-                        location: {
-                            city: nameChooser(data[0]),
-                            country: data[0].address.country_code.toUpperCase()
-                        }
-                    });
-                }
-            })
-            .then( () => {
-                this.getWeatherData();
-            })
-            .catch( error => {
-                if(error === 'Error: NO_DATA') {
-                    this.setState({
-                        preloaderAlert: true,
-                        preloaderInfo: this.CONSTS.wrong_city
-                    });
-                }
-                else {
-                    this.setState({
-                        preloaderAlert: true,
-                        preloaderInfo: this.CONSTS.connection_error
-                    });
-                }
                 console.error(error);
             });
         }
@@ -137,155 +72,92 @@ document.addEventListener('DOMContentLoaded', function() {
 
         /* reverse geocoding - getting city name from latitude and longitude using openstreetmap.org */
         getLocationName = () => {
-            fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${this.state.latitude}&lon=${this.state.longitude}`)
-            .then( resp => {
-                if(resp.ok) {
-                    return resp.json();
-                }
-                else {
-                    throw new Error(resp.statusText);
-                }
-            })
-            .then( data => {
-                if(data.error) {
-                    throw new Error(data.error)
-                }
-                else {
-                    this.setState({
-                        location: {
-                            city: nameChooser(data),
-                            country: data.address.country_code.toUpperCase()
-                        }
-                    });
-                }
+            openStreetMapReverseGeocoding(this.state.latitude, this.state.longitude)
+            .then(data => {
+                this.setState({
+                    location: {
+                        city: placeNameChooser(data),
+                        country: data.address.country_code.toUpperCase()
+                    },
+                });
+            }).then(() => {
+                // this.getWeatherData();
             })
             .catch( error => {
+                // this.setState({
+                //     preloaderAlert: true,
+                //     preloaderInfo: MESSAGE.connectionError
+                // });
                 console.error(error);
             });
         }
 
 
-        /* getting weather forecast from weatherbit.io and local time from timezonedb.com */
-        getWeatherData = () => {
-            fetch(`https://api.weatherbit.io/v2.0/current` +
-                  `?lat=${this.state.latitude}&lon=${this.state.longitude}` +
-                  `&units=${this.state.units.charAt(0)}&lang=${this.state.lang}` +
-                  `&key=${this.state.weatherBitApiKey}`)
-            .then( resp => {
-                if(resp.ok) {
-                    return resp.json();
-                }
-                else {
-                    throw new Error(resp.statusText);
-                }
-            })
-            .then( weather_data => {
-                let data = weather_data.data[0];
-                if(!this.state.location.city) {
-                    this.setState({
-                        location: {
-                            city: data.city_name,
-                            country: data.country_code.toUpperCase()
-                        }
-                    });
-                }
+        /* forward geocoding - getting latitude and longitude from city name using openstreetmap.org */
+        getCoordinates = () => {
+            openStreetMapForwardGeocoding(this.state.input)
+            .then(data => {
                 this.setState({
-                    currentDayWeatherData: {
-                        temp: unitsChanger(this.state.units, this.CONSTS.temperature, data.temp),
-                        temp_app: unitsChanger(this.state.units, this.CONSTS.temperature, data.app_temp),
-                        pressure: unitsChanger(this.state.units, this.CONSTS.pressure, data.pres),
-                        humidity: unitsChanger(this.state.units, this.CONSTS.humidity, data.rh),
-                        wind: unitsChanger(this.state.units, this.CONSTS.wind, data.wind_spd),
-                        description: data.weather.description,
-                        icon: data.weather.icon,
-                        id: Number(data.weather.code)
-                    },
-                    displayCurrentDayWeather: true
+                    latitude: parseFloat(data[0].lat).toFixed(4),
+                    longitude: parseFloat(data[0].lon).toFixed(4),
+                    location: { city: placeNameChooser(data[0]), country: data[0].address.country_code.toUpperCase() }
                 });
             })
-            .then( () => {
-                this.getLocalTime();
+            .then(() => {
+                this.getWeatherData();
             })
-            .then( () => {
-                this.getNextDaysData();
+            .catch(error => {
+                if(error.message === 'NO_DATA') {
+                    this.setState({
+                        preloaderAlert: true,
+                        preloaderInfo: MESSAGE.wrongCity
+                    });
+                }
+                else {
+                    this.setState({
+                        preloaderAlert: true,
+                        preloaderInfo: MESSAGE.connectionError
+                    });
+                }
+                console.error(error);
+            });
+        }
+
+
+        getWeatherData = () => {
+            openWeatherMapGetData(this.state.latitude, this.state.longitude)
+            .then( data => {
+                this.setState({
+                    currentDayWeatherData: {
+                        temp: unitsChanger(this.state.units, WEATHER.temperature, data.current.temp),
+                        temp_app: unitsChanger(this.state.units, WEATHER.temperature, data.current.feels_like),
+                        pressure: unitsChanger(this.state.units, WEATHER.pressure, data.current.pressure),
+                        humidity: unitsChanger(this.state.units, WEATHER.humidity, data.current.humidity),
+                        wind: unitsChanger(this.state.units, WEATHER.wind, data.current.wind_speed),
+                        description: capitalizeFirstLetter(data.current.weather[0].description),
+                        icon: data.current.weather[0].icon,
+                        id: data.current.weather[0].id
+                    },
+                    nextDaysWeatherData: data.daily.map( next_day => ({
+                        temp: unitsChanger(this.state.units, WEATHER.temperature, next_day.temp.day),
+                        pressure: unitsChanger(this.state.units, WEATHER.pressure, next_day.pressure),
+                        humidity: unitsChanger(this.state.units, WEATHER.humidity, next_day.humidity),
+                        wind: unitsChanger(this.state.units, WEATHER.wind, next_day.wind_speed),
+                        date: timestampToDate(next_day.dt, data.timezone_offset),
+                        description: next_day.weather[0].description.toLowerCase(),
+                        icon: next_day.weather[0].icon,
+                        id: next_day.weather[0].id
+                    })),
+                    localTime: timestampToDate(data.current.dt, data.timezone_offset),
+                    currentDayChartData: prepareChartData(data.hourly, data.timezone_offset),
+                    displayCurrentDayWeather: true
+                });
             })
             .catch( error => {
                 this.setState({
                     preloaderAlert: true,
-                    preloaderInfo: this.CONSTS.connection_error
+                    preloaderInfo: MESSAGE.connectionError
                 });
-                console.error(error)
-            });
-        }
-
-
-        /* getting next five days weather info from weatherbit.io */
-        getNextDaysData = () => {
-            fetch(`https://api.weatherbit.io/v2.0/forecast/daily?days=7` +
-                  `&lat=${this.state.latitude}&lon=${this.state.longitude}` +
-                  `&units=${this.state.units.charAt(0)}&lang=${this.state.lang}` +
-                  `&key=${this.state.weatherBitApiKey}`)
-            .then( resp => {
-                if( resp.ok) {
-                    this.setState({
-                        fiveDaysBtnDisabled: false,
-                    })
-                    return resp.json();
-                }
-                else {
-                    throw new Error(resp.statusText);
-                }
-            })
-            .then( weather_data => {
-                let data = weather_data.data;
-                let nextDays = [];
-
-                for (let i=1; i<data.length; i++){
-                    nextDays[i-1] = {
-                        temp: unitsChanger(this.state.units, this.CONSTS.temperature, data[i].temp),
-                        pressure: unitsChanger(this.state.units, this.CONSTS.pressure, data[i].pres),
-                        humidity: unitsChanger(this.state.units, this.CONSTS.humidity, data[i].rh),
-                        wind: unitsChanger(this.state.units, this.CONSTS.wind, data[i].wind_spd),
-                        description: data[i].weather.description.toLowerCase(),
-                        date: `${data[i].valid_date.split('-').reverse().join('-')}`,
-                        icon: data[i].weather.icon,
-                        id: data[i].weather.code
-                    }
-                }
-                this.setState({
-                    nextDaysWeatherData: nextDays
-                });
-            })
-            .catch( error => {
-                console.error(error)
-            });
-        }
-
-
-        /* getting local time for searched city from timeZoneDb.com */
-        getLocalTime = () => {
-            fetch(`https://api.timezonedb.com/v2.1/get-time-zone?format=json&by=position` +
-                  `&lat=${this.state.latitude}&lng=${this.state.longitude}&key=${this.state.timeZoneDbApiKey}`)
-            .then( resp => {
-                if( resp.ok) {
-                    return resp.json();
-                }
-                else {
-                    throw new Error(resp.statusText);
-                }
-            })
-            .then( data => {
-                if (data.status.toString() === 'OK') {
-                    this.setState({
-                        localTime: {
-                            time: data.formatted.substring(11,16),
-                            date: data.formatted.substring(0,10).split('-').reverse().join('-'),
-                            gmt: data.gmtOffset > 0 ? `(GMT+${data.gmtOffset/3600})` : `(GMT${data.gmtOffset/3600})`,
-                        }
-                    })
-                }
-            })
-            .catch( error => {
                 console.error(error)
             });
         }
@@ -299,28 +171,32 @@ document.addEventListener('DOMContentLoaded', function() {
 
         /* 'next days forecast' button handling */
         displayNextDays = () => {
-            this.setState({ displayNextDaysWeather: !this.state.displayNextDaysWeather })
+            this.setState({
+                displayNextDaysWeather: !this.state.displayNextDaysWeather
+            })
         }
 
 
         /* 'get weather' button handling */
-        handleSubmit = (event) => {
+        handleSubmit = event => {
             event.preventDefault();
+
             this.getCoordinates();
             this.blurSearchField();
+
             this.setState({
                 input: '',
                 localTime: {},
-                displayNextDaysWeather: false,
                 displayCurrentDayWeather: false,
+                displayNextDaysWeather: false,
                 preloaderAlert: false,
-                preloaderInfo: this.CONSTS.loading_data
+                preloaderInfo: MESSAGE.loadingData
             });
         }
 
 
         /* input field on change handling */
-        handleInputOnChange = (event) => {
+        handleInputOnChange = event => {
             this.setState({ input: event.target.value });
         }
 
@@ -345,9 +221,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 isMobile() && mobileStyles.call(this);
             };
 
-            window.onorientationchange = () => {
-                this.setState({screenLandscapeOrientation: !this.state.screenLandscapeOrientation});
-                isMobile() && [mobileStyles.call(this), viewportSettingsChanger.call(this)];
+            window.screen.orientation.onchange = () => {
+                this.setState({ screenLandscapeOrientation: !this.state.screenLandscapeOrientation });
+
+                if (isMobile()) {
+                    mobileStyles.call(this);
+                    viewportSettingsChanger.call(this);
+                }
             };
         }
 
@@ -366,16 +246,22 @@ document.addEventListener('DOMContentLoaded', function() {
                         localTime = {this.state.localTime}
                         location = {this.state.location}
                         currentDay = {this.state.currentDayWeatherData}
-                        btnDisabled =  {this.state.fiveDaysBtnDisabled}
+                        buttonText =  {this.state.displayNextDaysWeather ? BUTTON.currentDayForecast : BUTTON.nextDaysForecast}
                         displayNextDays = {this.displayNextDays}
-                        displayComponent = {this.state.displayCurrentDayWeather}
                         preloaderInfo = {this.state.preloaderInfo}
                         preloaderAlert = {this.state.preloaderAlert}
+                        displayComponent = {this.state.displayCurrentDayWeather}
+                    />
+                    <WeatherChart
+                        hourlyForecast = {this.state.currentDayChartData}
+                        units = {unitsChanger(this.state.units)}
+                        displayComponent = {this.state.displayCurrentDayWeather}
+                        switchComponent = {this.state.displayNextDaysWeather}
                     />
                     <NextDaysWeather
-                        display = {this.state.displayNextDaysWeather}
                         nextDays = {this.state.nextDaysWeatherData}
-                    />
+                        switchComponent = {this.state.displayNextDaysWeather}
+                   />
                 </div>
             )
         }

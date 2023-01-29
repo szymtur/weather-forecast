@@ -5,6 +5,7 @@ module.exports = {
     entry:"./jsx/app.jsx",
     output: { filename: "out.js", path: path.resolve(__dirname, "js") },
     mode: "development", watch: true,
+    devtool: "source-map",
     module: {
         rules: [
         {

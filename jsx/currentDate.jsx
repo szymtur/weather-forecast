@@ -1,19 +1,17 @@
+'use strict';
+
 import React from 'react';
+import { appendLeadingZero } from '../js/helpers.js';
 
 class CurrentDateHeader extends React.Component {
 
-    state = { timezone: null, time: null, date: null }
+    state = { timezone: null, time: null, date: null };
 
     currentTime = () => {
-        let date = new Date();
-
-        let appendLeadingZero = (number) => {
-            if(number.toString().length === 1) { return `0${number}` }
-            else { return number.toString() }
-        }
+        const date = new Date();
 
         this.setState({
-            timezone: date.getTimezoneOffset() < 0 ? `(GMT+${date.getTimezoneOffset()/-60})` : `(GMT${date.getTimezoneOffset()/-60})`,
+            timezone: date.getTimezoneOffset() < 0 ? `(GMT+${date.getTimezoneOffset()/-60})` : `(GMT-${date.getTimezoneOffset()/60})`,
             time: `${appendLeadingZero(date.getHours())}:${appendLeadingZero(date.getMinutes())}:${appendLeadingZero(date.getSeconds())}`,
             date: `${appendLeadingZero(date.getDate())}-${appendLeadingZero(date.getMonth()+1)}-${date.getFullYear()}`
         })
@@ -24,7 +22,7 @@ class CurrentDateHeader extends React.Component {
     }
 
     componentDidMount() {
-        this.interval = setInterval( () => this.currentTime(), 1000);
+        this.interval = setInterval(() => this.currentTime(), 1000);
     }
 
     componentWillUnmount() {
