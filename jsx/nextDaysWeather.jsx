@@ -1,31 +1,29 @@
+'use strict';
+
 import React from 'react';
 import OneDayWeather from './oneDayWeather.jsx';
 
 class NextDaysWeather extends React.Component {
-
     render() {
-        const nexDaysComponentsArray = this.props.nextDays.map( (element, index) => {
+        const nexDaysComponentsArray = this.props.nextDays.map((element, index) => {
+
             return (
-                <OneDayWeather 
+                <OneDayWeather
                     nextDay = {element}
                     key = {index}
                 />
             )
         });
 
-        if(!this.props.nextDays.length) {
-            return null
+        if(!this.props.switchComponent) {
+            return null;
         }
-        else {
-            return (
-                <div
-                    className = 'next-days-weather'
-                    style = {{display: this.props.display ? 'flex' : 'none'}}
-                >
-                    {nexDaysComponentsArray}
-                </div>
-            )
-        }
+
+        return (
+            <div className = 'next-days-weather'>
+                {nexDaysComponentsArray.slice(1,7)}
+            </div>
+        )
     }
 }
 

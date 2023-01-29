@@ -277,27 +277,33 @@ body {
     height: 30px;
     border: 1px solid gray;
     border-radius: 4px;
-    background: #ffffff;
+    background: #e0e0e0;
     outline: none;
-    color: #808080;
+    color: #000000;
     font-size: 0.9em;
     font-weight: 600;
     transition: all 0.5s;
 }
 
 .current-weather .right-col .right-bottom button:hover {
-    background: #ffffff !important;
-    color: #808080 !important;
+    background: #ffffff;
+    color: #606060;
 }
 /* Current weather section styles - end */
+
+
+/* Current Chart section styles - start */
+.current-chart {
+    height: 230px;
+}
+/* Current Chart section styles - end */
 
 
 /* Next five days section styles - start */
 .next-days-weather {
     width: 93%;
     height: 230px;
-    margin: 0 auto;
-    margin-bottom: 15px;
+    margin: 0 auto 15px;
     display: flex;
     justify-content: space-between;
 }
