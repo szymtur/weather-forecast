@@ -57,8 +57,7 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .then(() => {
                 this.getLocationName();
-                this.getWeatherData();  // TODO ???????????
-
+                this.getWeatherData();
             })
             .catch( error => {
                 this.setState({
@@ -80,14 +79,8 @@ document.addEventListener('DOMContentLoaded', function() {
                         country: data.address.country_code.toUpperCase()
                     },
                 });
-            }).then(() => {
-                // this.getWeatherData();
             })
             .catch( error => {
-                // this.setState({
-                //     preloaderAlert: true,
-                //     preloaderInfo: MESSAGE.connectionError
-                // });
                 console.error(error);
             });
         }
