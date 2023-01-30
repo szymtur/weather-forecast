@@ -1319,7 +1319,7 @@ var WeatherChart = /*#__PURE__*/function (_React$Component) {
               family: '"Montserrat", sans-serif'
             },
             callback: function callback(item) {
-              return Math.round(Number(item));
+              return Number(item).toFixed();
             }
           }
         },

@@ -55,7 +55,7 @@ class WeatherChart extends React.Component {
                         size: 12,
                         family: '"Montserrat", sans-serif'
                     },
-                    callback: item => Math.round(Number(item))
+                    callback: item => Number(item).toFixed()
                 }
             },
             axisY2: {
