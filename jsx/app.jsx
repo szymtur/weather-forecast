@@ -10,7 +10,7 @@ import WeatherChart from './weatherChart.jsx';
 import NextDaysWeather from './nextDaysWeather.jsx';
 
 import { config } from '../js/config.js';
-import { WEATHER, MESSAGE, BUTTON } from '../js/consts.js';
+import { WEATHER, MESSAGE, BUTTON, ERROR } from '../js/consts.js';
 
 import { isMobile, viewportSettingsChanger, mobileStyles } from '../js/mobile.js';
 import { capitalizeFirstLetter, placeNameChooser, prepareChartData, timestampToDate, unitsChanger } from '../js/helpers.js';
@@ -62,7 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch( error => {
                 this.setState({
                     preloaderAlert: true,
-                    preloaderInfo: MESSAGE.enterManually
+                    preloaderInfo: error.message === ERROR.failedToFetch ? MESSAGE.connectionError : MESSAGE.enterManually
                 });
                 console.error(error);
             });
@@ -100,18 +100,10 @@ document.addEventListener('DOMContentLoaded', function() {
                 this.getWeatherData();
             })
             .catch(error => {
-                if(error.message === 'NO_DATA') {
-                    this.setState({
-                        preloaderAlert: true,
-                        preloaderInfo: MESSAGE.wrongCity
-                    });
-                }
-                else {
-                    this.setState({
-                        preloaderAlert: true,
-                        preloaderInfo: MESSAGE.connectionError
-                    });
-                }
+                this.setState({
+                    preloaderAlert: true,
+                    preloaderInfo: error.message === ERROR.noData ? MESSAGE.wrongCity : MESSAGE.connectionError
+                });
                 console.error(error);
             });
         }

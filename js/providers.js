@@ -1,10 +1,11 @@
 'use strict'
 
-import { config } from './config';
+import { config } from './config.js';
+import { ERROR } from './consts.js';
 
 const ipInfoGeolocation = () => {
     return fetch(`https://ipinfo.io/?token=${config.ipInfo}`)
-        .then( response => {
+        .then(response => {
             if(response.ok) {
                 return response.json();
             }
@@ -27,7 +28,7 @@ const openStreetMapForwardGeocoding = input => {
         })
         .then(data => {
             if(!data.length) {
-                throw new Error('NO_DATA');
+                throw new Error(ERROR.noData);
             }
 
             return new Promise(resolve => resolve(data));
