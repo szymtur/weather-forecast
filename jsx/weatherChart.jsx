@@ -49,13 +49,12 @@ class WeatherChart extends React.Component {
                 },
                 ticks: {
                     color: '#808080',
-                    count: 5,
+                    maxTicksLimit: 6,
                     font: {
                         weight: 600,
                         size: 12,
                         family: '"Montserrat", sans-serif'
-                    },
-                    callback: item => Number(item).toFixed()
+                    }
                 }
             },
             axisY2: {

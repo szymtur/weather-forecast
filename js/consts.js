@@ -1,5 +1,22 @@
 'use strict'
 
+const BUTTON = {
+    nextDaysForecast: 'next days forecast',
+    currentDayForecast: 'current forecast'
+}
+
+const ERROR = {
+    failedToFetch: 'Failed to fetch',
+    noData: 'NO_DATA'
+}
+
+const MESSAGE = {
+    loadingData: 'loading data...',
+    enterManually: 'enter your location manually',
+    wrongCity: 'wrong city name',
+    connectionError: 'connection error'
+}
+
 const UNIT = {
     metric: 'metric',
     imperial: 'imperial',
@@ -13,21 +30,10 @@ const WEATHER = {
     wind: 'wind'
 }
 
-const MESSAGE = {
-    loadingData: 'loading data...',
-    enterManually: 'enter your location manually',
-    wrongCity: 'wrong city name',
-    connectionError: 'connection error'
-}
-
-const BUTTON = {
-    nextDaysForecast: 'next days forecast',
-    currentDayForecast: 'current forecast'
-}
-
 export {
-    UNIT,
-    WEATHER,
+    BUTTON,
+    ERROR,
     MESSAGE,
-    BUTTON
+    UNIT,
+    WEATHER
 };

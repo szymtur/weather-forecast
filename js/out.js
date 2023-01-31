@@ -71,13 +71,28 @@ var config = {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "UNIT": () => (/* binding */ UNIT),
-/* harmony export */   "WEATHER": () => (/* binding */ WEATHER),
+/* harmony export */   "BUTTON": () => (/* binding */ BUTTON),
+/* harmony export */   "ERROR": () => (/* binding */ ERROR),
 /* harmony export */   "MESSAGE": () => (/* binding */ MESSAGE),
-/* harmony export */   "BUTTON": () => (/* binding */ BUTTON)
+/* harmony export */   "UNIT": () => (/* binding */ UNIT),
+/* harmony export */   "WEATHER": () => (/* binding */ WEATHER)
 /* harmony export */ });
 
 
+var BUTTON = {
+  nextDaysForecast: 'next days forecast',
+  currentDayForecast: 'current forecast'
+};
+var ERROR = {
+  failedToFetch: 'Failed to fetch',
+  noData: 'NO_DATA'
+};
+var MESSAGE = {
+  loadingData: 'loading data...',
+  enterManually: 'enter your location manually',
+  wrongCity: 'wrong city name',
+  connectionError: 'connection error'
+};
 var UNIT = {
   metric: 'metric',
   imperial: 'imperial',
@@ -88,16 +103,6 @@ var WEATHER = {
   pressure: 'pressure',
   humidity: 'humidity',
   wind: 'wind'
-};
-var MESSAGE = {
-  loadingData: 'loading data...',
-  enterManually: 'enter your location manually',
-  wrongCity: 'wrong city name',
-  connectionError: 'connection error'
-};
-var BUTTON = {
-  nextDaysForecast: 'next days forecast',
-  currentDayForecast: 'current forecast'
 };
 
 
@@ -347,13 +352,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "openStreetMapReverseGeocoding": () => (/* binding */ openStreetMapReverseGeocoding),
 /* harmony export */   "openWeatherMapGetData": () => (/* binding */ openWeatherMapGetData)
 /* harmony export */ });
-/* harmony import */ var _config__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./config */ "./js/config.js");
+/* harmony import */ var _config_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./config.js */ "./js/config.js");
+/* harmony import */ var _consts_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./consts.js */ "./js/consts.js");
+
 
 
 
 
 var ipInfoGeolocation = function ipInfoGeolocation() {
-  return fetch("https://ipinfo.io/?token=".concat(_config__WEBPACK_IMPORTED_MODULE_0__.config.ipInfo)).then(function (response) {
+  return fetch("https://ipinfo.io/?token=".concat(_config_js__WEBPACK_IMPORTED_MODULE_0__.config.ipInfo)).then(function (response) {
     if (response.ok) {
       return response.json();
     }
@@ -367,7 +374,7 @@ var ipInfoGeolocation = function ipInfoGeolocation() {
 };
 
 var openStreetMapForwardGeocoding = function openStreetMapForwardGeocoding(input) {
-  return fetch("https://nominatim.openstreetmap.org?format=json&limit=1&addressdetails=1&q=".concat(input, "&accept-language=").concat(_config__WEBPACK_IMPORTED_MODULE_0__.config.lang)).then(function (response) {
+  return fetch("https://nominatim.openstreetmap.org?format=json&limit=1&addressdetails=1&q=".concat(input, "&accept-language=").concat(_config_js__WEBPACK_IMPORTED_MODULE_0__.config.lang)).then(function (response) {
     if (response.ok) {
       return response.json();
     }
@@ -375,7 +382,7 @@ var openStreetMapForwardGeocoding = function openStreetMapForwardGeocoding(input
     throw new Error(response.statusText);
   }).then(function (data) {
     if (!data.length) {
-      throw new Error('NO_DATA');
+      throw new Error(_consts_js__WEBPACK_IMPORTED_MODULE_1__.ERROR.noData);
     }
 
     return new Promise(function (resolve) {
@@ -385,7 +392,7 @@ var openStreetMapForwardGeocoding = function openStreetMapForwardGeocoding(input
 };
 
 var openStreetMapReverseGeocoding = function openStreetMapReverseGeocoding(latitude, longitude) {
-  return fetch("https://nominatim.openstreetmap.org/reverse?format=json&lat=".concat(latitude, "&lon=").concat(longitude, "&accept-language=").concat(_config__WEBPACK_IMPORTED_MODULE_0__.config.lang)).then(function (response) {
+  return fetch("https://nominatim.openstreetmap.org/reverse?format=json&lat=".concat(latitude, "&lon=").concat(longitude, "&accept-language=").concat(_config_js__WEBPACK_IMPORTED_MODULE_0__.config.lang)).then(function (response) {
     if (response.ok) {
       return response.json();
     }
@@ -403,7 +410,7 @@ var openStreetMapReverseGeocoding = function openStreetMapReverseGeocoding(latit
 };
 
 var openWeatherMapGetData = function openWeatherMapGetData(latitude, longitude) {
-  return fetch("https://api.openweathermap.org/data/2.5/onecall?&lat=".concat(latitude, "&lon=").concat(longitude, "&appid=").concat(_config__WEBPACK_IMPORTED_MODULE_0__.config.openWeatherMap, "&units=").concat(_config__WEBPACK_IMPORTED_MODULE_0__.config.units, "&lang=").concat(_config__WEBPACK_IMPORTED_MODULE_0__.config.lang, "&exclude=minutely,alerts")).then(function (response) {
+  return fetch("https://api.openweathermap.org/data/2.5/onecall?&lat=".concat(latitude, "&lon=").concat(longitude, "&appid=").concat(_config_js__WEBPACK_IMPORTED_MODULE_0__.config.openWeatherMap, "&units=").concat(_config_js__WEBPACK_IMPORTED_MODULE_0__.config.units, "&lang=").concat(_config_js__WEBPACK_IMPORTED_MODULE_0__.config.lang, "&exclude=minutely,alerts")).then(function (response) {
     if (response.ok) {
       return response.json();
     }
@@ -1312,14 +1319,11 @@ var WeatherChart = /*#__PURE__*/function (_React$Component) {
           },
           ticks: {
             color: '#808080',
-            count: 5,
+            maxTicksLimit: 6,
             font: {
               weight: 600,
               size: 12,
               family: '"Montserrat", sans-serif'
-            },
-            callback: function callback(item) {
-              return Number(item).toFixed();
             }
           }
         },
@@ -45488,7 +45492,7 @@ document.addEventListener('DOMContentLoaded', function () {
         })["catch"](function (error) {
           _this.setState({
             preloaderAlert: true,
-            preloaderInfo: _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.MESSAGE.enterManually
+            preloaderInfo: error.message === _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.ERROR.failedToFetch ? _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.MESSAGE.connectionError : _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.MESSAGE.enterManually
           });
 
           console.error(error);
@@ -45521,17 +45525,10 @@ document.addEventListener('DOMContentLoaded', function () {
         }).then(function () {
           _this.getWeatherData();
         })["catch"](function (error) {
-          if (error.message === 'NO_DATA') {
-            _this.setState({
-              preloaderAlert: true,
-              preloaderInfo: _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.MESSAGE.wrongCity
-            });
-          } else {
-            _this.setState({
-              preloaderAlert: true,
-              preloaderInfo: _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.MESSAGE.connectionError
-            });
-          }
+          _this.setState({
+            preloaderAlert: true,
+            preloaderInfo: error.message === _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.ERROR.noData ? _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.MESSAGE.wrongCity : _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.MESSAGE.connectionError
+          });
 
           console.error(error);
         });
