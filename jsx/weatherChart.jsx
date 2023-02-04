@@ -50,6 +50,7 @@ class WeatherChart extends React.Component {
                 ticks: {
                     color: '#808080',
                     maxTicksLimit: 6,
+                    precision: 0,
                     font: {
                         weight: 600,
                         size: 12,
@@ -70,12 +71,12 @@ class WeatherChart extends React.Component {
                 ticks: {
                     color: '#800080',
                     maxTicksLimit: 5,
+                    precision: 0,
                     font: {
                         weight: 600,
                         size: 12,
                         family: '"Montserrat", sans-serif'
-                    },
-                    callback: item => Math.round(Number(item))
+                    }
                 }
             },
             xAxis: {
