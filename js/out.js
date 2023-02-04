@@ -1320,7 +1320,6 @@ var WeatherChart = /*#__PURE__*/function (_React$Component) {
           ticks: {
             color: '#808080',
             maxTicksLimit: 6,
-            precision: 0,
             font: {
               weight: 600,
               size: 12,
@@ -1341,11 +1340,13 @@ var WeatherChart = /*#__PURE__*/function (_React$Component) {
           ticks: {
             color: '#800080',
             maxTicksLimit: 5,
-            precision: 0,
             font: {
               weight: 600,
               size: 12,
               family: '"Montserrat", sans-serif'
+            },
+            callback: function callback(item) {
+              return Math.round(Number(item));
             }
           }
         },
