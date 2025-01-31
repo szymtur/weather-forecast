@@ -5,6 +5,8 @@ import React from 'react';
 import { Chart as ChartJs } from 'react-chartjs-2';
 import { CategoryScale, Chart, Legend, LinearScale, LineElement, PointElement } from 'chart.js';
 
+import { WEATHER_UNITS } from '../js/consts.js';
+
 Chart.register(CategoryScale, Legend, LinearScale, LineElement, PointElement);
 
 class WeatherChart extends React.Component {
@@ -100,7 +102,7 @@ class WeatherChart extends React.Component {
             labels: time && time.slice(1, 10),
             datasets: [
                 {
-                    label: this.props.units.temperature,
+                    label: WEATHER_UNITS[this.props.unitSystem]?.temperature,
                     data: temperature && temperature.slice(1, 10),
                     borderColor: '#808080',
                     backgroundColor: 'white',
@@ -110,7 +112,7 @@ class WeatherChart extends React.Component {
                     yAxisID: 'axisY1',
                 },
                 {
-                    label: this.props.units.pressure,
+                    label: WEATHER_UNITS[this.props.unitSystem]?.pressure,
                     data: pressure && pressure.slice(1, 10),
                     borderColor: '#800080',
                     backgroundColor: 'white',
