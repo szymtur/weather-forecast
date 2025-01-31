@@ -1,6 +1,780 @@
 /******/ (() => { // webpackBootstrap
-/******/ 	"use strict";
 /******/ 	var __webpack_modules__ = ({
+
+/***/ "./node_modules/@babel/runtime/node_modules/regenerator-runtime/runtime.js":
+/*!*********************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/node_modules/regenerator-runtime/runtime.js ***!
+  \*********************************************************************************/
+/***/ ((module) => {
+
+/**
+ * Copyright (c) 2014-present, Facebook, Inc.
+ *
+ * This source code is licensed under the MIT license found in the
+ * LICENSE file in the root directory of this source tree.
+ */
+
+var runtime = (function (exports) {
+  "use strict";
+
+  var Op = Object.prototype;
+  var hasOwn = Op.hasOwnProperty;
+  var undefined; // More compressible than void 0.
+  var $Symbol = typeof Symbol === "function" ? Symbol : {};
+  var iteratorSymbol = $Symbol.iterator || "@@iterator";
+  var asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator";
+  var toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag";
+
+  function define(obj, key, value) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+    return obj[key];
+  }
+  try {
+    // IE 8 has a broken Object.defineProperty that only works on DOM objects.
+    define({}, "");
+  } catch (err) {
+    define = function(obj, key, value) {
+      return obj[key] = value;
+    };
+  }
+
+  function wrap(innerFn, outerFn, self, tryLocsList) {
+    // If outerFn provided and outerFn.prototype is a Generator, then outerFn.prototype instanceof Generator.
+    var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator;
+    var generator = Object.create(protoGenerator.prototype);
+    var context = new Context(tryLocsList || []);
+
+    // The ._invoke method unifies the implementations of the .next,
+    // .throw, and .return methods.
+    generator._invoke = makeInvokeMethod(innerFn, self, context);
+
+    return generator;
+  }
+  exports.wrap = wrap;
+
+  // Try/catch helper to minimize deoptimizations. Returns a completion
+  // record like context.tryEntries[i].completion. This interface could
+  // have been (and was previously) designed to take a closure to be
+  // invoked without arguments, but in all the cases we care about we
+  // already have an existing method we want to call, so there's no need
+  // to create a new function object. We can even get away with assuming
+  // the method takes exactly one argument, since that happens to be true
+  // in every case, so we don't have to touch the arguments object. The
+  // only additional allocation required is the completion record, which
+  // has a stable shape and so hopefully should be cheap to allocate.
+  function tryCatch(fn, obj, arg) {
+    try {
+      return { type: "normal", arg: fn.call(obj, arg) };
+    } catch (err) {
+      return { type: "throw", arg: err };
+    }
+  }
+
+  var GenStateSuspendedStart = "suspendedStart";
+  var GenStateSuspendedYield = "suspendedYield";
+  var GenStateExecuting = "executing";
+  var GenStateCompleted = "completed";
+
+  // Returning this object from the innerFn has the same effect as
+  // breaking out of the dispatch switch statement.
+  var ContinueSentinel = {};
+
+  // Dummy constructor functions that we use as the .constructor and
+  // .constructor.prototype properties for functions that return Generator
+  // objects. For full spec compliance, you may wish to configure your
+  // minifier not to mangle the names of these two functions.
+  function Generator() {}
+  function GeneratorFunction() {}
+  function GeneratorFunctionPrototype() {}
+
+  // This is a polyfill for %IteratorPrototype% for environments that
+  // don't natively support it.
+  var IteratorPrototype = {};
+  define(IteratorPrototype, iteratorSymbol, function () {
+    return this;
+  });
+
+  var getProto = Object.getPrototypeOf;
+  var NativeIteratorPrototype = getProto && getProto(getProto(values([])));
+  if (NativeIteratorPrototype &&
+      NativeIteratorPrototype !== Op &&
+      hasOwn.call(NativeIteratorPrototype, iteratorSymbol)) {
+    // This environment has a native %IteratorPrototype%; use it instead
+    // of the polyfill.
+    IteratorPrototype = NativeIteratorPrototype;
+  }
+
+  var Gp = GeneratorFunctionPrototype.prototype =
+    Generator.prototype = Object.create(IteratorPrototype);
+  GeneratorFunction.prototype = GeneratorFunctionPrototype;
+  define(Gp, "constructor", GeneratorFunctionPrototype);
+  define(GeneratorFunctionPrototype, "constructor", GeneratorFunction);
+  GeneratorFunction.displayName = define(
+    GeneratorFunctionPrototype,
+    toStringTagSymbol,
+    "GeneratorFunction"
+  );
+
+  // Helper for defining the .next, .throw, and .return methods of the
+  // Iterator interface in terms of a single ._invoke method.
+  function defineIteratorMethods(prototype) {
+    ["next", "throw", "return"].forEach(function(method) {
+      define(prototype, method, function(arg) {
+        return this._invoke(method, arg);
+      });
+    });
+  }
+
+  exports.isGeneratorFunction = function(genFun) {
+    var ctor = typeof genFun === "function" && genFun.constructor;
+    return ctor
+      ? ctor === GeneratorFunction ||
+        // For the native GeneratorFunction constructor, the best we can
+        // do is to check its .name property.
+        (ctor.displayName || ctor.name) === "GeneratorFunction"
+      : false;
+  };
+
+  exports.mark = function(genFun) {
+    if (Object.setPrototypeOf) {
+      Object.setPrototypeOf(genFun, GeneratorFunctionPrototype);
+    } else {
+      genFun.__proto__ = GeneratorFunctionPrototype;
+      define(genFun, toStringTagSymbol, "GeneratorFunction");
+    }
+    genFun.prototype = Object.create(Gp);
+    return genFun;
+  };
+
+  // Within the body of any async function, `await x` is transformed to
+  // `yield regeneratorRuntime.awrap(x)`, so that the runtime can test
+  // `hasOwn.call(value, "__await")` to determine if the yielded value is
+  // meant to be awaited.
+  exports.awrap = function(arg) {
+    return { __await: arg };
+  };
+
+  function AsyncIterator(generator, PromiseImpl) {
+    function invoke(method, arg, resolve, reject) {
+      var record = tryCatch(generator[method], generator, arg);
+      if (record.type === "throw") {
+        reject(record.arg);
+      } else {
+        var result = record.arg;
+        var value = result.value;
+        if (value &&
+            typeof value === "object" &&
+            hasOwn.call(value, "__await")) {
+          return PromiseImpl.resolve(value.__await).then(function(value) {
+            invoke("next", value, resolve, reject);
+          }, function(err) {
+            invoke("throw", err, resolve, reject);
+          });
+        }
+
+        return PromiseImpl.resolve(value).then(function(unwrapped) {
+          // When a yielded Promise is resolved, its final value becomes
+          // the .value of the Promise<{value,done}> result for the
+          // current iteration.
+          result.value = unwrapped;
+          resolve(result);
+        }, function(error) {
+          // If a rejected Promise was yielded, throw the rejection back
+          // into the async generator function so it can be handled there.
+          return invoke("throw", error, resolve, reject);
+        });
+      }
+    }
+
+    var previousPromise;
+
+    function enqueue(method, arg) {
+      function callInvokeWithMethodAndArg() {
+        return new PromiseImpl(function(resolve, reject) {
+          invoke(method, arg, resolve, reject);
+        });
+      }
+
+      return previousPromise =
+        // If enqueue has been called before, then we want to wait until
+        // all previous Promises have been resolved before calling invoke,
+        // so that results are always delivered in the correct order. If
+        // enqueue has not been called before, then it is important to
+        // call invoke immediately, without waiting on a callback to fire,
+        // so that the async generator function has the opportunity to do
+        // any necessary setup in a predictable way. This predictability
+        // is why the Promise constructor synchronously invokes its
+        // executor callback, and why async functions synchronously
+        // execute code before the first await. Since we implement simple
+        // async functions in terms of async generators, it is especially
+        // important to get this right, even though it requires care.
+        previousPromise ? previousPromise.then(
+          callInvokeWithMethodAndArg,
+          // Avoid propagating failures to Promises returned by later
+          // invocations of the iterator.
+          callInvokeWithMethodAndArg
+        ) : callInvokeWithMethodAndArg();
+    }
+
+    // Define the unified helper method that is used to implement .next,
+    // .throw, and .return (see defineIteratorMethods).
+    this._invoke = enqueue;
+  }
+
+  defineIteratorMethods(AsyncIterator.prototype);
+  define(AsyncIterator.prototype, asyncIteratorSymbol, function () {
+    return this;
+  });
+  exports.AsyncIterator = AsyncIterator;
+
+  // Note that simple async functions are implemented on top of
+  // AsyncIterator objects; they just return a Promise for the value of
+  // the final result produced by the iterator.
+  exports.async = function(innerFn, outerFn, self, tryLocsList, PromiseImpl) {
+    if (PromiseImpl === void 0) PromiseImpl = Promise;
+
+    var iter = new AsyncIterator(
+      wrap(innerFn, outerFn, self, tryLocsList),
+      PromiseImpl
+    );
+
+    return exports.isGeneratorFunction(outerFn)
+      ? iter // If outerFn is a generator, return the full iterator.
+      : iter.next().then(function(result) {
+          return result.done ? result.value : iter.next();
+        });
+  };
+
+  function makeInvokeMethod(innerFn, self, context) {
+    var state = GenStateSuspendedStart;
+
+    return function invoke(method, arg) {
+      if (state === GenStateExecuting) {
+        throw new Error("Generator is already running");
+      }
+
+      if (state === GenStateCompleted) {
+        if (method === "throw") {
+          throw arg;
+        }
+
+        // Be forgiving, per 25.3.3.3.3 of the spec:
+        // https://people.mozilla.org/~jorendorff/es6-draft.html#sec-generatorresume
+        return doneResult();
+      }
+
+      context.method = method;
+      context.arg = arg;
+
+      while (true) {
+        var delegate = context.delegate;
+        if (delegate) {
+          var delegateResult = maybeInvokeDelegate(delegate, context);
+          if (delegateResult) {
+            if (delegateResult === ContinueSentinel) continue;
+            return delegateResult;
+          }
+        }
+
+        if (context.method === "next") {
+          // Setting context._sent for legacy support of Babel's
+          // function.sent implementation.
+          context.sent = context._sent = context.arg;
+
+        } else if (context.method === "throw") {
+          if (state === GenStateSuspendedStart) {
+            state = GenStateCompleted;
+            throw context.arg;
+          }
+
+          context.dispatchException(context.arg);
+
+        } else if (context.method === "return") {
+          context.abrupt("return", context.arg);
+        }
+
+        state = GenStateExecuting;
+
+        var record = tryCatch(innerFn, self, context);
+        if (record.type === "normal") {
+          // If an exception is thrown from innerFn, we leave state ===
+          // GenStateExecuting and loop back for another invocation.
+          state = context.done
+            ? GenStateCompleted
+            : GenStateSuspendedYield;
+
+          if (record.arg === ContinueSentinel) {
+            continue;
+          }
+
+          return {
+            value: record.arg,
+            done: context.done
+          };
+
+        } else if (record.type === "throw") {
+          state = GenStateCompleted;
+          // Dispatch the exception by looping back around to the
+          // context.dispatchException(context.arg) call above.
+          context.method = "throw";
+          context.arg = record.arg;
+        }
+      }
+    };
+  }
+
+  // Call delegate.iterator[context.method](context.arg) and handle the
+  // result, either by returning a { value, done } result from the
+  // delegate iterator, or by modifying context.method and context.arg,
+  // setting context.delegate to null, and returning the ContinueSentinel.
+  function maybeInvokeDelegate(delegate, context) {
+    var method = delegate.iterator[context.method];
+    if (method === undefined) {
+      // A .throw or .return when the delegate iterator has no .throw
+      // method always terminates the yield* loop.
+      context.delegate = null;
+
+      if (context.method === "throw") {
+        // Note: ["return"] must be used for ES3 parsing compatibility.
+        if (delegate.iterator["return"]) {
+          // If the delegate iterator has a return method, give it a
+          // chance to clean up.
+          context.method = "return";
+          context.arg = undefined;
+          maybeInvokeDelegate(delegate, context);
+
+          if (context.method === "throw") {
+            // If maybeInvokeDelegate(context) changed context.method from
+            // "return" to "throw", let that override the TypeError below.
+            return ContinueSentinel;
+          }
+        }
+
+        context.method = "throw";
+        context.arg = new TypeError(
+          "The iterator does not provide a 'throw' method");
+      }
+
+      return ContinueSentinel;
+    }
+
+    var record = tryCatch(method, delegate.iterator, context.arg);
+
+    if (record.type === "throw") {
+      context.method = "throw";
+      context.arg = record.arg;
+      context.delegate = null;
+      return ContinueSentinel;
+    }
+
+    var info = record.arg;
+
+    if (! info) {
+      context.method = "throw";
+      context.arg = new TypeError("iterator result is not an object");
+      context.delegate = null;
+      return ContinueSentinel;
+    }
+
+    if (info.done) {
+      // Assign the result of the finished delegate to the temporary
+      // variable specified by delegate.resultName (see delegateYield).
+      context[delegate.resultName] = info.value;
+
+      // Resume execution at the desired location (see delegateYield).
+      context.next = delegate.nextLoc;
+
+      // If context.method was "throw" but the delegate handled the
+      // exception, let the outer generator proceed normally. If
+      // context.method was "next", forget context.arg since it has been
+      // "consumed" by the delegate iterator. If context.method was
+      // "return", allow the original .return call to continue in the
+      // outer generator.
+      if (context.method !== "return") {
+        context.method = "next";
+        context.arg = undefined;
+      }
+
+    } else {
+      // Re-yield the result returned by the delegate method.
+      return info;
+    }
+
+    // The delegate iterator is finished, so forget it and continue with
+    // the outer generator.
+    context.delegate = null;
+    return ContinueSentinel;
+  }
+
+  // Define Generator.prototype.{next,throw,return} in terms of the
+  // unified ._invoke helper method.
+  defineIteratorMethods(Gp);
+
+  define(Gp, toStringTagSymbol, "Generator");
+
+  // A Generator should always return itself as the iterator object when the
+  // @@iterator function is called on it. Some browsers' implementations of the
+  // iterator prototype chain incorrectly implement this, causing the Generator
+  // object to not be returned from this call. This ensures that doesn't happen.
+  // See https://github.com/facebook/regenerator/issues/274 for more details.
+  define(Gp, iteratorSymbol, function() {
+    return this;
+  });
+
+  define(Gp, "toString", function() {
+    return "[object Generator]";
+  });
+
+  function pushTryEntry(locs) {
+    var entry = { tryLoc: locs[0] };
+
+    if (1 in locs) {
+      entry.catchLoc = locs[1];
+    }
+
+    if (2 in locs) {
+      entry.finallyLoc = locs[2];
+      entry.afterLoc = locs[3];
+    }
+
+    this.tryEntries.push(entry);
+  }
+
+  function resetTryEntry(entry) {
+    var record = entry.completion || {};
+    record.type = "normal";
+    delete record.arg;
+    entry.completion = record;
+  }
+
+  function Context(tryLocsList) {
+    // The root entry object (effectively a try statement without a catch
+    // or a finally block) gives us a place to store values thrown from
+    // locations where there is no enclosing try statement.
+    this.tryEntries = [{ tryLoc: "root" }];
+    tryLocsList.forEach(pushTryEntry, this);
+    this.reset(true);
+  }
+
+  exports.keys = function(object) {
+    var keys = [];
+    for (var key in object) {
+      keys.push(key);
+    }
+    keys.reverse();
+
+    // Rather than returning an object with a next method, we keep
+    // things simple and return the next function itself.
+    return function next() {
+      while (keys.length) {
+        var key = keys.pop();
+        if (key in object) {
+          next.value = key;
+          next.done = false;
+          return next;
+        }
+      }
+
+      // To avoid creating an additional object, we just hang the .value
+      // and .done properties off the next function object itself. This
+      // also ensures that the minifier will not anonymize the function.
+      next.done = true;
+      return next;
+    };
+  };
+
+  function values(iterable) {
+    if (iterable) {
+      var iteratorMethod = iterable[iteratorSymbol];
+      if (iteratorMethod) {
+        return iteratorMethod.call(iterable);
+      }
+
+      if (typeof iterable.next === "function") {
+        return iterable;
+      }
+
+      if (!isNaN(iterable.length)) {
+        var i = -1, next = function next() {
+          while (++i < iterable.length) {
+            if (hasOwn.call(iterable, i)) {
+              next.value = iterable[i];
+              next.done = false;
+              return next;
+            }
+          }
+
+          next.value = undefined;
+          next.done = true;
+
+          return next;
+        };
+
+        return next.next = next;
+      }
+    }
+
+    // Return an iterator with no values.
+    return { next: doneResult };
+  }
+  exports.values = values;
+
+  function doneResult() {
+    return { value: undefined, done: true };
+  }
+
+  Context.prototype = {
+    constructor: Context,
+
+    reset: function(skipTempReset) {
+      this.prev = 0;
+      this.next = 0;
+      // Resetting context._sent for legacy support of Babel's
+      // function.sent implementation.
+      this.sent = this._sent = undefined;
+      this.done = false;
+      this.delegate = null;
+
+      this.method = "next";
+      this.arg = undefined;
+
+      this.tryEntries.forEach(resetTryEntry);
+
+      if (!skipTempReset) {
+        for (var name in this) {
+          // Not sure about the optimal order of these conditions:
+          if (name.charAt(0) === "t" &&
+              hasOwn.call(this, name) &&
+              !isNaN(+name.slice(1))) {
+            this[name] = undefined;
+          }
+        }
+      }
+    },
+
+    stop: function() {
+      this.done = true;
+
+      var rootEntry = this.tryEntries[0];
+      var rootRecord = rootEntry.completion;
+      if (rootRecord.type === "throw") {
+        throw rootRecord.arg;
+      }
+
+      return this.rval;
+    },
+
+    dispatchException: function(exception) {
+      if (this.done) {
+        throw exception;
+      }
+
+      var context = this;
+      function handle(loc, caught) {
+        record.type = "throw";
+        record.arg = exception;
+        context.next = loc;
+
+        if (caught) {
+          // If the dispatched exception was caught by a catch block,
+          // then let that catch block handle the exception normally.
+          context.method = "next";
+          context.arg = undefined;
+        }
+
+        return !! caught;
+      }
+
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        var record = entry.completion;
+
+        if (entry.tryLoc === "root") {
+          // Exception thrown outside of any try block that could handle
+          // it, so set the completion value of the entire function to
+          // throw the exception.
+          return handle("end");
+        }
+
+        if (entry.tryLoc <= this.prev) {
+          var hasCatch = hasOwn.call(entry, "catchLoc");
+          var hasFinally = hasOwn.call(entry, "finallyLoc");
+
+          if (hasCatch && hasFinally) {
+            if (this.prev < entry.catchLoc) {
+              return handle(entry.catchLoc, true);
+            } else if (this.prev < entry.finallyLoc) {
+              return handle(entry.finallyLoc);
+            }
+
+          } else if (hasCatch) {
+            if (this.prev < entry.catchLoc) {
+              return handle(entry.catchLoc, true);
+            }
+
+          } else if (hasFinally) {
+            if (this.prev < entry.finallyLoc) {
+              return handle(entry.finallyLoc);
+            }
+
+          } else {
+            throw new Error("try statement without catch or finally");
+          }
+        }
+      }
+    },
+
+    abrupt: function(type, arg) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.tryLoc <= this.prev &&
+            hasOwn.call(entry, "finallyLoc") &&
+            this.prev < entry.finallyLoc) {
+          var finallyEntry = entry;
+          break;
+        }
+      }
+
+      if (finallyEntry &&
+          (type === "break" ||
+           type === "continue") &&
+          finallyEntry.tryLoc <= arg &&
+          arg <= finallyEntry.finallyLoc) {
+        // Ignore the finally entry if control is not jumping to a
+        // location outside the try/catch block.
+        finallyEntry = null;
+      }
+
+      var record = finallyEntry ? finallyEntry.completion : {};
+      record.type = type;
+      record.arg = arg;
+
+      if (finallyEntry) {
+        this.method = "next";
+        this.next = finallyEntry.finallyLoc;
+        return ContinueSentinel;
+      }
+
+      return this.complete(record);
+    },
+
+    complete: function(record, afterLoc) {
+      if (record.type === "throw") {
+        throw record.arg;
+      }
+
+      if (record.type === "break" ||
+          record.type === "continue") {
+        this.next = record.arg;
+      } else if (record.type === "return") {
+        this.rval = this.arg = record.arg;
+        this.method = "return";
+        this.next = "end";
+      } else if (record.type === "normal" && afterLoc) {
+        this.next = afterLoc;
+      }
+
+      return ContinueSentinel;
+    },
+
+    finish: function(finallyLoc) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.finallyLoc === finallyLoc) {
+          this.complete(entry.completion, entry.afterLoc);
+          resetTryEntry(entry);
+          return ContinueSentinel;
+        }
+      }
+    },
+
+    "catch": function(tryLoc) {
+      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
+        var entry = this.tryEntries[i];
+        if (entry.tryLoc === tryLoc) {
+          var record = entry.completion;
+          if (record.type === "throw") {
+            var thrown = record.arg;
+            resetTryEntry(entry);
+          }
+          return thrown;
+        }
+      }
+
+      // The context.catch method must only be called with a location
+      // argument that corresponds to a known catch block.
+      throw new Error("illegal catch attempt");
+    },
+
+    delegateYield: function(iterable, resultName, nextLoc) {
+      this.delegate = {
+        iterator: values(iterable),
+        resultName: resultName,
+        nextLoc: nextLoc
+      };
+
+      if (this.method === "next") {
+        // Deliberately forget the last sent value so that we don't
+        // accidentally pass it on to the delegate.
+        this.arg = undefined;
+      }
+
+      return ContinueSentinel;
+    }
+  };
+
+  // Regardless of whether this script is executing as a CommonJS module
+  // or not, return the runtime object so that we can declare the variable
+  // regeneratorRuntime in the outer scope, which allows this module to be
+  // injected easily by `bin/regenerator --include-runtime script.js`.
+  return exports;
+
+}(
+  // If this script is executing as a CommonJS module, use module.exports
+  // as the regeneratorRuntime namespace. Otherwise create a new empty
+  // object. Either way, the resulting object will be used to initialize
+  // the regeneratorRuntime variable at the top of this file.
+   true ? module.exports : 0
+));
+
+try {
+  regeneratorRuntime = runtime;
+} catch (accidentalStrictMode) {
+  // This module should not be running in strict mode, so the above
+  // assignment should always work unless something is misconfigured. Just
+  // in case runtime.js accidentally runs in strict mode, in modern engines
+  // we can explicitly access globalThis. In older engines we can escape
+  // strict mode using a global Function call. This could conceivably fail
+  // if a Content Security Policy forbids using Function, but in that case
+  // the proper solution is to fix the accidental strict mode problem. If
+  // you've misconfigured your bundler to force strict mode and applied a
+  // CSP to forbid Function, and you're not willing to fix either of those
+  // problems, please detail your unique predicament in a GitHub issue.
+  if (typeof globalThis === "object") {
+    globalThis.regeneratorRuntime = runtime;
+  } else {
+    Function("r", "regeneratorRuntime = r")(runtime);
+  }
+}
+
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/regenerator/index.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/@babel/runtime/regenerator/index.js ***!
+  \**********************************************************/
+/***/ ((module, __unused_webpack_exports, __webpack_require__) => {
+
+module.exports = __webpack_require__(/*! regenerator-runtime */ "./node_modules/@babel/runtime/node_modules/regenerator-runtime/runtime.js");
+
+
+/***/ }),
 
 /***/ "./js/config.js":
 /*!**********************!*\
@@ -8,6 +782,7 @@
   \**********************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "config": () => (/* binding */ config)
@@ -17,48 +792,49 @@ __webpack_require__.r(__webpack_exports__);
 var config = {
   openWeatherMap: 'd69fb57c3ccd6565f23957b76566730f',
   ipInfo: '6cbc555ebe18f2',
-  units: 'metric',
+  unitSystem: 'metric',
   lang: 'en'
 };
+
 
 /*
     Units format
     =======================================
-    metric       =>  Celsius     m/s     mm
+    metric       =>  Celsius     km/h    mm
     scientific   =>  Kelvin      m/s     mm
     imperial     =>  Fahrenheit  mph     in
 
     Multilingual support
     ====================
-    Arabic - ar
-    Bulgarian - bg
-    Catalan - ca
-    Czech - cz
-    German - de
-    Greek - el
-    English - en
-    Persian (Farsi) - fa
-    Finnish - fi
-    French - fr
-    Galician - gl
-    Croatian - hr
-    Hungarian - hu
-    Italian - it
-    Japanese - ja
-    Korean - kr
-    Latvian - la
-    Lithuanian - lt
-    Macedonian - mk
-    Dutch - nl
-    Polish - pl
-    Portuguese - pt
-    Romanian - ro
-    Russian - ru
-    Slovak - sk
-    Slovenian - sl
-    Spanish - es
-    Turkish - tr
-    Ukrainian - ua
+    ar - Arabic
+    bg - Bulgarian
+    ca - Catalan
+    cz - Czech
+    de - German
+    el - Greek
+    en - English
+    es - Spanish
+    fa - Persian (Farsi)
+    fi - Finnish
+    fr - French
+    gl - Galician
+    hr - Croatian
+    hu - Hungarian
+    it - Italian
+    ja - Japanese
+    kr - Korean
+    la - Latvian
+    lt - Lithuanian
+    mk - Macedonian
+    nl - Dutch
+    pl - Polish
+    pt - Portuguese
+    ro - Romanian
+    ru - Russian
+    sk - Slovak
+    sl - Slovenian
+    tr - Turkish
+    ua - Ukrainian
 */
 
 /***/ }),
@@ -69,13 +845,14 @@ var config = {
   \**********************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "BUTTON": () => (/* binding */ BUTTON),
 /* harmony export */   "ERROR": () => (/* binding */ ERROR),
 /* harmony export */   "MESSAGE": () => (/* binding */ MESSAGE),
-/* harmony export */   "UNIT": () => (/* binding */ UNIT),
-/* harmony export */   "WEATHER": () => (/* binding */ WEATHER)
+/* harmony export */   "UNIT_SYSTEM": () => (/* binding */ UNIT_SYSTEM),
+/* harmony export */   "WEATHER_UNITS": () => (/* binding */ WEATHER_UNITS)
 /* harmony export */ });
 
 
@@ -84,25 +861,40 @@ var BUTTON = {
   currentDayForecast: 'current forecast'
 };
 var ERROR = {
-  failedToFetch: 'Failed to fetch',
-  noData: 'NO_DATA'
+  badRequest: 'BAD_REQUEST',
+  noData: 'NO_DATA',
+  unableToGeocode: 'UNABLE_TO_GEOCODE'
 };
 var MESSAGE = {
   loadingData: 'loading data...',
   enterManually: 'enter your location manually',
-  wrongCity: 'wrong city name',
+  wrongCityName: 'wrong city name',
   connectionError: 'connection error'
 };
-var UNIT = {
+var UNIT_SYSTEM = {
   metric: 'metric',
   imperial: 'imperial',
   scientific: 'scientific'
 };
-var WEATHER = {
-  temperature: 'temperature',
-  pressure: 'pressure',
-  humidity: 'humidity',
-  wind: 'wind'
+var WEATHER_UNITS = {
+  metric: {
+    temperature: "\xB0C",
+    pressure: 'hPa',
+    humidity: '%',
+    wind: 'km/h'
+  },
+  imperial: {
+    temperature: "\xB0F",
+    pressure: 'hPa',
+    humidity: '%',
+    wind: 'mph'
+  },
+  scientific: {
+    temperature: "\xB0K",
+    pressure: 'hPa',
+    humidity: '%',
+    wind: 'm/s'
+  }
 };
 
 
@@ -114,16 +906,18 @@ var WEATHER = {
   \***********************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "capitalizeFirstLetter": () => (/* binding */ capitalizeFirstLetter),
 /* harmony export */   "appendLeadingZero": () => (/* binding */ appendLeadingZero),
 /* harmony export */   "timestampToDate": () => (/* binding */ timestampToDate),
 /* harmony export */   "prepareChartData": () => (/* binding */ prepareChartData),
-/* harmony export */   "unitsChanger": () => (/* binding */ unitsChanger),
-/* harmony export */   "placeNameChooser": () => (/* binding */ placeNameChooser)
+/* harmony export */   "placeNameChooser": () => (/* binding */ placeNameChooser),
+/* harmony export */   "speedRecalculate": () => (/* binding */ speedRecalculate)
 /* harmony export */ });
-/* harmony import */ var _consts_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./consts.js */ "./js/consts.js");
+/* harmony import */ var _babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/toConsumableArray */ "./node_modules/@babel/runtime/helpers/esm/toConsumableArray.js");
+/* harmony import */ var _consts_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./consts.js */ "./js/consts.js");
 
 
 
@@ -131,26 +925,20 @@ __webpack_require__.r(__webpack_exports__);
 var capitalizeFirstLetter = function capitalizeFirstLetter(str) {
   return str.charAt(0).toUpperCase() + str.substring(1);
 };
-
 var appendLeadingZero = function appendLeadingZero(number) {
-  if (number.toString().length < 2) {
-    return "0".concat(number);
-  }
-
-  return number.toString();
+  return number.toString().length < 2 ? "0".concat(number) : number.toString();
 };
-
 var timestampToDate = function timestampToDate(timestamp, offset) {
   // timestamp - seconds
   // offset - seconds
+
   var dateTime = new Date((timestamp + offset) * 1000).toISOString();
   return {
-    time: "".concat(dateTime.substr(11, 5)),
+    time: "".concat(dateTime.slice(11, 16)),
     date: "".concat(dateTime.slice(0, 10).split('-').reverse().join('-')),
     timezone: offset > 0 ? "(GMT+".concat(offset / 3600, ")") : "(GMT".concat(offset / 3600, ")")
   };
 };
-
 var prepareChartData = function prepareChartData(hourlyData, timezoneOffset) {
   var chartData = {
     time: [],
@@ -164,105 +952,20 @@ var prepareChartData = function prepareChartData(hourlyData, timezoneOffset) {
   });
   return chartData;
 };
-
-var unitsChanger = function unitsChanger(unitsSystem, category, value) {
-  if (unitsSystem === _consts_js__WEBPACK_IMPORTED_MODULE_0__.UNIT.metric) {
-    if (category === _consts_js__WEBPACK_IMPORTED_MODULE_0__.WEATHER.temperature) {
-      return "".concat(Math.round(value), " \xB0C");
-    }
-
-    if (category === _consts_js__WEBPACK_IMPORTED_MODULE_0__.WEATHER.wind) {
-      return "".concat(Math.round(Number(value) * 3.6), " km/h");
-    }
-
-    if (category === _consts_js__WEBPACK_IMPORTED_MODULE_0__.WEATHER.pressure) {
-      return "".concat(Math.round(value), " hPa");
-    }
-
-    if (category === _consts_js__WEBPACK_IMPORTED_MODULE_0__.WEATHER.humidity) {
-      return "".concat(Math.round(value * 100) / 100, " %");
-    }
-
-    return {
-      temperature: "\xB0C",
-      pressure: 'hPa'
-    };
-  }
-
-  if (unitsSystem === _consts_js__WEBPACK_IMPORTED_MODULE_0__.UNIT.imperial) {
-    if (category === _consts_js__WEBPACK_IMPORTED_MODULE_0__.WEATHER.temperature) {
-      return "".concat(Math.round(value), " \xB0F");
-    }
-
-    if (category === _consts_js__WEBPACK_IMPORTED_MODULE_0__.WEATHER.wind) {
-      return "".concat(Number(value).toFixed(2), " mph");
-    }
-
-    if (category === _consts_js__WEBPACK_IMPORTED_MODULE_0__.WEATHER.pressure) {
-      return "".concat(Math.round(value), " hPa");
-    }
-
-    if (category === _consts_js__WEBPACK_IMPORTED_MODULE_0__.WEATHER.humidity) {
-      return "".concat(Math.round(value * 100) / 100, " %");
-    }
-
-    return {
-      temperature: "\xB0F",
-      pressure: 'hPa'
-    };
-  }
-
-  if (unitsSystem === _consts_js__WEBPACK_IMPORTED_MODULE_0__.UNIT.scientific) {
-    if (category === _consts_js__WEBPACK_IMPORTED_MODULE_0__.WEATHER.temperature) {
-      return "".concat(Math.round(value), " \xB0K");
-    }
-
-    if (category === _consts_js__WEBPACK_IMPORTED_MODULE_0__.WEATHER.wind) {
-      return "".concat(Number(value).toFixed(2), " m/s");
-    }
-
-    if (category === _consts_js__WEBPACK_IMPORTED_MODULE_0__.WEATHER.pressure) {
-      return "".concat(Math.round(value), " hPa");
-    }
-
-    if (category === _consts_js__WEBPACK_IMPORTED_MODULE_0__.WEATHER.humidity) {
-      return "".concat(Math.round(value * 100) / 100, " %");
-    }
-
-    return {
-      temperature: "\xB0K",
-      pressure: 'hPa'
-    };
-  }
+var speedRecalculate = function speedRecalculate(unitSystem, value) {
+  return unitSystem === (_consts_js__WEBPACK_IMPORTED_MODULE_1__.UNIT_SYSTEM.metric ? Math.round(Number(value) * 3.6) : Number(value).toFixed(2));
 };
-
-var placeNameChooser = function placeNameChooser(data) {
-  var placeAndAreaNames = [data['address']['building'], data['address']['public_building'], data['address']['museum'], data['address']['theatre'], data['address']['arts_centre'], data['address']['cinema'], data['address']['castle'], data['address']['attraction'], data['address']['industrial'], data['address']['hotel'], data['address']['mall'], data['address']['stadium'], data['address']['station'], data['address']['address29'], data['address']['golf_course'], data['address']['park'], data['address']['zoo'], data['address']['peak'], data['address']['river'], data['address']['pedestrian'], data['address']['quarter'], data['address']['neighbourhood'], data['address']['suburb'], data['address']['district'], data['address']['city_district']];
-  var cityNames = [data['address']['island'], data['address']['croft'], data['address']['hamlet'], data['address']['village'], data['address']['city'], data['address']['town'], data['address']['municipality'], data['address']['county'], data['address']['locality'], data['address']['local_administrative_area'], data['address']['state'], data['address']['province'], data['address']['country'], data['address']['country_name']];
-  var resultArray = [];
-  var romanNumeral = new RegExp('^(?:M*(?:LD|LM|CM|CD|D?C{0,3})(?:VL|VC|XC|XL|L?X{0,3})(?:IX|IV|V?I{0,3}))$', 'i');
-
-  for (var i = 0; i < placeAndAreaNames.length; i++) {
-    if (placeAndAreaNames[i] && !romanNumeral.test(placeAndAreaNames[i])) {
-      resultArray.push(placeAndAreaNames[i]);
-      break;
-    }
-  }
-
-  for (var _i = 0; _i < cityNames.length; _i++) {
-    if (cityNames[_i]) {
-      resultArray.push(cityNames[_i]);
-      break;
-    }
-  }
-
-  if (!resultArray[0].indexOf(resultArray[resultArray.length - 1])) {
-    return resultArray[0];
-  }
-
-  return resultArray.join(' ');
+var placeNameChooser = function placeNameChooser(address) {
+  var placeAndAreaNames = ['building', 'public_building', 'museum', 'theatre', 'arts_centre', 'cinema', 'castle', 'attraction', 'industrial', 'hotel', 'mall', 'stadium', 'station', 'address29', 'golf_course', 'park', 'zoo', 'peak', 'river', 'pedestrian', 'quarter', 'neighbourhood', 'suburb', 'district', 'city_district'];
+  var cityNames = ['island', 'croft', 'hamlet', 'village', 'city', 'town', 'municipality', 'county', 'locality', 'local_administrative_area', 'administrative', 'state', 'province', 'country', 'country_name'];
+  var placeName = placeAndAreaNames.map(function (key) {
+    return address[key];
+  }).find(Boolean);
+  var cityName = cityNames.map(function (key) {
+    return address[key];
+  }).find(Boolean);
+  return (0,_babel_runtime_helpers_toConsumableArray__WEBPACK_IMPORTED_MODULE_0__["default"])(new Set([placeName, cityName])).join(' ');
 };
-
 
 
 /***/ }),
@@ -273,6 +976,7 @@ var placeNameChooser = function placeNameChooser(data) {
   \**********************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "isMobile": () => (/* binding */ isMobile),
@@ -280,44 +984,41 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   "mobileStyles": () => (/* binding */ mobileStyles)
 /* harmony export */ });
 
-/* function to detect mobile devices */
 
+/* function to detect mobile devices */
 function isMobile() {
   var mobileDevices = [/Android/i.test(navigator.userAgent), /BlackBerry|RIM|BB|PlayBook/i.test(navigator.userAgent), /iPhone|iPad|iPod/i.test(navigator.userAgent), /Opera Mini/i.test(navigator.userAgent), /IEMobile|WPDesktop|Nokia|Windows Phones/i.test(navigator.userAgent), /webOS/i.test(navigator.userAgent), /Kindle|Silk|KFAPW|KFARWI|KFASWI|KFFOWI|KFJW|KFMEWI|KFOT|KFSAW|KFSOWI|KFTBW|KFTHW|KFTT|WFFOWI/i.test(navigator.userAgent)];
   return mobileDevices.some(function (isMobileDevice) {
     return isMobileDevice;
   });
 }
+
 /* function to change viewport settings */
-
-
 function viewportSettingsChanger() {
   var viewportMeta = document.querySelector('meta[name="viewport"]');
   var viewportSettings = {
     landscape: "width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes",
     portrait: "width=device-width, height=850, initial-scale=1, maximum-scale=1, shrink-to-fit=yes"
   };
-
   if (this.state.screenLandscapeOrientation) {
     viewportMeta.setAttribute('content', viewportSettings.landscape);
   } else {
     viewportMeta.setAttribute('content', viewportSettings.portrait);
   }
 }
+
 /* function to add custom styles for mobile devices */
-
-
 function mobileStyles() {
   var mainContainer = document.querySelector('#app');
   var mainPreloader = document.querySelector('.main-preloader');
   var weatherContainer = document.querySelector('.current-weather');
   var mainContainerWidth = mainContainer.offsetWidth;
   var mainContainerHeight = mainContainer.offsetHeight;
+
   /* styles for body */
-
   document.querySelector('body').style.background = '#d3d3d3';
-  /* styles for main preloader depending on the device's orientation */
 
+  /* styles for main preloader depending on the device's orientation */
   if (!weatherContainer) {
     if (this.state.screenLandscapeOrientation && window.innerHeight <= mainContainerHeight / 1.65) {
       mainPreloader.style.paddingTop = '1em';
@@ -325,16 +1026,14 @@ function mobileStyles() {
       mainPreloader.style.paddingTop = '5em';
     }
   }
+
   /* styles for main container depending on screen resolution */
-
-
   if (window.innerHeight > mainContainerHeight * 1.05 && window.innerWidth > mainContainerWidth * 1.05) {
     mainContainer.style.boxShadow = '0 0 4px black';
   } else {
     mainContainer.style.boxShadow = 'none';
   }
 }
-
 
 
 /***/ }),
@@ -345,6 +1044,7 @@ function mobileStyles() {
   \*************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "ipInfoGeolocation": () => (/* binding */ ipInfoGeolocation),
@@ -358,71 +1058,52 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
+var openWeatherMap = _config_js__WEBPACK_IMPORTED_MODULE_0__.config.openWeatherMap,
+  ipInfo = _config_js__WEBPACK_IMPORTED_MODULE_0__.config.ipInfo,
+  lang = _config_js__WEBPACK_IMPORTED_MODULE_0__.config.lang,
+  unitSystem = _config_js__WEBPACK_IMPORTED_MODULE_0__.config.unitSystem;
 var ipInfoGeolocation = function ipInfoGeolocation() {
-  return fetch("https://ipinfo.io/?token=".concat(_config_js__WEBPACK_IMPORTED_MODULE_0__.config.ipInfo)).then(function (response) {
-    if (response.ok) {
-      return response.json();
+  return fetch("https://ipinfo.io/?token=".concat(ipInfo)).then(function (response) {
+    if (!response.ok) {
+      throw new Error(response.status.toString());
     }
-
-    throw new Error(response.status.toString());
-  }).then(function (data) {
-    return new Promise(function (resolve) {
-      return resolve(data);
-    });
+    return response.json();
   });
 };
-
 var openStreetMapForwardGeocoding = function openStreetMapForwardGeocoding(input) {
-  return fetch("https://nominatim.openstreetmap.org?format=json&limit=1&addressdetails=1&q=".concat(input, "&accept-language=").concat(_config_js__WEBPACK_IMPORTED_MODULE_0__.config.lang)).then(function (response) {
-    if (response.ok) {
-      return response.json();
+  return fetch("https://nominatim.openstreetmap.org/search?format=json&limit=1&addressdetails=1&q=".concat(input, "&accept-language=").concat(lang)).then(function (response) {
+    if (!response.ok) {
+      throw new Error(_consts_js__WEBPACK_IMPORTED_MODULE_1__.ERROR.badRequest);
     }
-
-    throw new Error(response.statusText);
+    return response.json();
   }).then(function (data) {
     if (!data.length) {
       throw new Error(_consts_js__WEBPACK_IMPORTED_MODULE_1__.ERROR.noData);
     }
-
-    return new Promise(function (resolve) {
-      return resolve(data);
-    });
+    return data;
   });
 };
-
 var openStreetMapReverseGeocoding = function openStreetMapReverseGeocoding(latitude, longitude) {
-  return fetch("https://nominatim.openstreetmap.org/reverse?format=json&lat=".concat(latitude, "&lon=").concat(longitude, "&accept-language=").concat(_config_js__WEBPACK_IMPORTED_MODULE_0__.config.lang)).then(function (response) {
-    if (response.ok) {
-      return response.json();
+  return fetch("https://nominatim.openstreetmap.org/reverse?format=json&zoom=14&lat=".concat(latitude, "&lon=").concat(longitude, "&accept-language=").concat(lang)).then(function (response) {
+    if (!response.ok) {
+      throw new Error(_consts_js__WEBPACK_IMPORTED_MODULE_1__.ERROR.badRequest);
     }
-
-    throw new Error(response.statusText);
+    return response.json();
   }).then(function (data) {
     if (data.error) {
       throw new Error(data.error.toString());
     }
-
-    return new Promise(function (resolve) {
-      return resolve(data);
-    });
+    return data;
   });
 };
-
 var openWeatherMapGetData = function openWeatherMapGetData(latitude, longitude) {
-  return fetch("https://api.openweathermap.org/data/2.5/onecall?&lat=".concat(latitude, "&lon=").concat(longitude, "&appid=").concat(_config_js__WEBPACK_IMPORTED_MODULE_0__.config.openWeatherMap, "&units=").concat(_config_js__WEBPACK_IMPORTED_MODULE_0__.config.units, "&lang=").concat(_config_js__WEBPACK_IMPORTED_MODULE_0__.config.lang, "&exclude=minutely,alerts")).then(function (response) {
-    if (response.ok) {
-      return response.json();
+  return fetch("https://api.openweathermap.org/data/3.0/onecall?&lat=".concat(latitude, "&lon=").concat(longitude, "&appid=").concat(openWeatherMap, "&units=").concat(unitSystem, "&lang=").concat(lang, "&exclude=minutely,alerts")).then(function (response) {
+    if (!response.ok) {
+      throw new Error(response.statusText);
     }
-
-    throw new Error(response.statusText);
-  }).then(function (data) {
-    return new Promise(function (resolve) {
-      return resolve(data);
-    });
+    return response.json();
   });
 };
-
 
 
 /***/ }),
@@ -433,86 +1114,63 @@ var openWeatherMapGetData = function openWeatherMapGetData(latitude, longitude) 
   \*****************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var _js_helpers_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../js/helpers.js */ "./js/helpers.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/assertThisInitialized */ "./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js");
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var _js_helpers_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../js/helpers.js */ "./js/helpers.js");
 
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5__["default"])(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5__["default"])(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0,_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4__["default"])(this, result); }; }
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
 
 
 var CurrentDateHeader = /*#__PURE__*/function (_React$Component) {
-  _inherits(CurrentDateHeader, _React$Component);
-
+  (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_3__["default"])(CurrentDateHeader, _React$Component);
   var _super = _createSuper(CurrentDateHeader);
-
   function CurrentDateHeader() {
     var _this;
-
-    _classCallCheck(this, CurrentDateHeader);
-
+    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, CurrentDateHeader);
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
-
     _this = _super.call.apply(_super, [this].concat(args));
-
-    _defineProperty(_assertThisInitialized(_this), "state", {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this), "state", {
       timezone: null,
       time: null,
       date: null
     });
-
-    _defineProperty(_assertThisInitialized(_this), "currentTime", function () {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this), "currentTime", function () {
       var date = new Date();
-
       _this.setState({
         timezone: date.getTimezoneOffset() < 0 ? "(GMT+".concat(date.getTimezoneOffset() / -60, ")") : "(GMT-".concat(date.getTimezoneOffset() / 60, ")"),
-        time: "".concat((0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_1__.appendLeadingZero)(date.getHours()), ":").concat((0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_1__.appendLeadingZero)(date.getMinutes()), ":").concat((0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_1__.appendLeadingZero)(date.getSeconds())),
-        date: "".concat((0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_1__.appendLeadingZero)(date.getDate()), "-").concat((0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_1__.appendLeadingZero)(date.getMonth() + 1), "-").concat(date.getFullYear())
+        time: "".concat((0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_8__.appendLeadingZero)(date.getHours()), ":").concat((0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_8__.appendLeadingZero)(date.getMinutes()), ":").concat((0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_8__.appendLeadingZero)(date.getSeconds())),
+        date: "".concat((0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_8__.appendLeadingZero)(date.getDate()), "-").concat((0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_8__.appendLeadingZero)(date.getMonth() + 1), "-").concat(date.getFullYear())
       });
     });
-
     return _this;
   }
-
-  _createClass(CurrentDateHeader, [{
-    key: "UNSAFE_componentWillMount",
-    value: function UNSAFE_componentWillMount() {
-      this.currentTime();
-    }
-  }, {
+  (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(CurrentDateHeader, [{
     key: "componentDidMount",
     value: function componentDidMount() {
       var _this2 = this;
-
+      this.currentTime();
       this.interval = setInterval(function () {
         return _this2.currentTime();
       }, 1000);
@@ -525,19 +1183,17 @@ var CurrentDateHeader = /*#__PURE__*/function (_React$Component) {
   }, {
     key: "render",
     value: function render() {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement("div", {
         className: "header"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement("div", {
         className: "current-date"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h4", null, this.state.date, " ", this.state.timezone, " ", this.state.time)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement("h4", null, this.state.date, " ", this.state.timezone, " ", this.state.time)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement("div", {
         className: "caption"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h2", null, "Weather Forecast")));
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement("h2", null, "Weather Forecast")));
     }
   }]);
-
   return CurrentDateHeader;
-}(react__WEBPACK_IMPORTED_MODULE_0__.Component);
-
+}(react__WEBPACK_IMPORTED_MODULE_7__.Component);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CurrentDateHeader);
 
 /***/ }),
@@ -548,194 +1204,154 @@ var CurrentDateHeader = /*#__PURE__*/function (_React$Component) {
   \*****************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/assertThisInitialized */ "./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js");
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5__["default"])(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5__["default"])(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0,_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4__["default"])(this, result); }; }
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
-
 var CurrentIcon = /*#__PURE__*/function (_React$Component) {
-  _inherits(CurrentIcon, _React$Component);
-
+  (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_3__["default"])(CurrentIcon, _React$Component);
   var _super = _createSuper(CurrentIcon);
-
   function CurrentIcon() {
     var _this;
-
-    _classCallCheck(this, CurrentIcon);
-
+    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, CurrentIcon);
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
-
     _this = _super.call.apply(_super, [this].concat(args));
-
-    _defineProperty(_assertThisInitialized(_this), "selectIcon", function (id, icon) {
+    /* function for selecting icons based on weather id and icon id */
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this), "selectIcon", function (id, icon) {
       switch (true) {
         case id >= 200 && id <= 233 && icon[2] === 'd':
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement("i", {
             className: "wi wi-day-thunderstorm"
           });
-
         case id >= 200 && id <= 233 && icon[2] === 'n':
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement("i", {
             className: "wi wi-night-thunderstorm"
           });
-
         case id >= 300 && id <= 321 && icon[2] === 'd':
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement("i", {
             className: "wi wi-day-showers"
           });
-
         case id >= 300 && id <= 321 && icon[2] === 'n':
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement("i", {
             className: "wi wi-night-showers"
           });
-
         case id >= 500 && id <= 504 && icon[2] === 'd':
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement("i", {
             className: "wi wi-day-rain"
           });
-
         case id >= 500 && id <= 504 && icon[2] === 'n':
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement("i", {
             className: "wi wi-night-rain"
           });
-
         case id === 511 && icon[2] === 'd':
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement("i", {
             className: "wi wi-day-snow"
           });
-
         case id === 511 && icon[2] === 'n':
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement("i", {
             className: "wi wi-night-snow"
           });
-
         case id >= 520 && id <= 531 && icon[2] === 'd':
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement("i", {
             className: "wi wi-day-rain"
           });
-
         case id >= 520 && id <= 531 && icon[2] === 'n':
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement("i", {
             className: "wi wi-night-rain"
           });
-
         case id >= 600 && id <= 622 && icon[2] === 'd':
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement("i", {
             className: "wi wi-day-snow"
           });
-
         case id >= 600 && id <= 622 && icon[2] === 'n':
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement("i", {
             className: "wi wi-night-snow"
           });
-
         case id >= 701 && id <= 781 && icon[2] === 'd':
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement("i", {
             className: "wi wi-day-fog"
           });
-
         case id >= 701 && id <= 781 && icon[2] === 'n':
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement("i", {
             className: "wi wi-night-fog"
           });
-
         case id === 800 && icon[2] === 'd':
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement("i", {
             className: "wi wi-day-sunny"
           });
-
         case id === 800 && icon[2] === 'n':
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement("i", {
             className: "wi wi-night-clear"
           });
-
         case id === 801 && icon[2] === 'd':
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement("i", {
             className: "wi wi-day-cloudy"
           });
-
         case id === 801 && icon[2] === 'n':
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement("i", {
             className: "wi wi-night-cloudy"
           });
-
         case id === 802 && icon[2] === 'd':
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement("i", {
             className: "wi wi-day-cloudy"
           });
-
         case id === 802 && icon[2] === 'n':
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement("i", {
             className: "wi wi-night-cloudy"
           });
-
         case id === 803 && icon[2] === 'd':
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement("i", {
             className: "wi wi-day-cloudy-high"
           });
-
         case id === 803 && icon[2] === 'n':
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement("i", {
             className: "wi wi-night-cloudy-high"
           });
-
         case id === 804 && icon[2] === 'd':
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement("i", {
             className: "wi wi-day-cloudy-high"
           });
-
         case id === 804 && icon[2] === 'n':
-          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+          return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement("i", {
             className: "wi wi-night-cloudy-high"
           });
       }
     });
-
     return _this;
   }
-
-  _createClass(CurrentIcon, [{
+  (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(CurrentIcon, [{
     key: "render",
     value: function render() {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement("div", {
         className: "current-icon"
       }, this.selectIcon(this.props.id, this.props.icon));
     }
   }]);
-
   return CurrentIcon;
-}(react__WEBPACK_IMPORTED_MODULE_0__.Component);
-
+}(react__WEBPACK_IMPORTED_MODULE_7__.Component);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CurrentIcon);
 
 /***/ }),
@@ -746,129 +1362,118 @@ var CurrentIcon = /*#__PURE__*/function (_React$Component) {
   \********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var _currentIcon_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./currentIcon.jsx */ "./jsx/currentIcon.jsx");
-/* harmony import */ var _mainPreloader_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./mainPreloader.jsx */ "./jsx/mainPreloader.jsx");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var _currentIcon_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./currentIcon.jsx */ "./jsx/currentIcon.jsx");
+/* harmony import */ var _mainPreloader_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./mainPreloader.jsx */ "./jsx/mainPreloader.jsx");
+/* harmony import */ var _js_consts_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../js/consts.js */ "./js/consts.js");
 
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__["default"])(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__["default"])(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0,_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3__["default"])(this, result); }; }
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
 
 
 
 
 var CurrentWeather = /*#__PURE__*/function (_React$Component) {
-  _inherits(CurrentWeather, _React$Component);
-
+  (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_2__["default"])(CurrentWeather, _React$Component);
   var _super = _createSuper(CurrentWeather);
-
   function CurrentWeather() {
-    _classCallCheck(this, CurrentWeather);
-
+    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, CurrentWeather);
     return _super.apply(this, arguments);
   }
-
-  _createClass(CurrentWeather, [{
+  (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(CurrentWeather, [{
     key: "render",
     value: function render() {
       var _this$props$currentDa = this.props.currentDay,
-          temp = _this$props$currentDa.temp,
-          temp_app = _this$props$currentDa.temp_app,
-          pressure = _this$props$currentDa.pressure,
-          humidity = _this$props$currentDa.humidity,
-          wind = _this$props$currentDa.wind,
-          description = _this$props$currentDa.description,
-          icon = _this$props$currentDa.icon,
-          id = _this$props$currentDa.id;
+        temp = _this$props$currentDa.temp,
+        temp_app = _this$props$currentDa.temp_app,
+        pressure = _this$props$currentDa.pressure,
+        humidity = _this$props$currentDa.humidity,
+        wind = _this$props$currentDa.wind,
+        description = _this$props$currentDa.description,
+        icon = _this$props$currentDa.icon,
+        id = _this$props$currentDa.id;
+      var _WEATHER_UNITS$this$p = _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.WEATHER_UNITS[this.props.unitSystem],
+        tempUnit = _WEATHER_UNITS$this$p.temperature,
+        pressureUnit = _WEATHER_UNITS$this$p.pressure,
+        humidityUnit = _WEATHER_UNITS$this$p.humidity,
+        windUnit = _WEATHER_UNITS$this$p.wind;
       var _this$props$localTime = this.props.localTime,
-          time = _this$props$localTime.time,
-          date = _this$props$localTime.date,
-          timezone = _this$props$localTime.timezone;
+        time = _this$props$localTime.time,
+        date = _this$props$localTime.date,
+        timezone = _this$props$localTime.timezone;
       var _this$props$location = this.props.location,
-          city = _this$props$location.city,
-          country = _this$props$location.country;
-
+        city = _this$props$location.city,
+        country = _this$props$location.country;
       if (!this.props.displayComponent) {
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_mainPreloader_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement(_mainPreloader_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
           preloaderInfo: this.props.preloaderInfo,
           preloaderAlert: this.props.preloaderAlert
         });
       }
-
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("div", {
         className: "current-weather"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("div", {
         className: "local-info"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("div", {
         className: "city"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h3", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("h3", {
         style: {
           fontSize: String(city).length >= 20 ? '1em' : null
         }
-      }, city, " ", country)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      }, city, " ", country)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("div", {
         className: "date-time"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h6", null, date, " ", timezone, " ", time))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("h6", null, date, " ", timezone, " ", time))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("div", {
         className: "left-col"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("div", {
         className: "left-rows"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("i", {
         className: "wi wi-thermometer"
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h3", null, temp, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("span", null, " / ", temp_app))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("h3", null, temp, " ", tempUnit, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("span", null, " / ", temp_app, " ", tempUnit))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("div", {
         className: "left-rows"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("i", {
         className: "wi wi-barometer"
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h3", null, pressure)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("h3", null, pressure, " ", pressureUnit)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("div", {
         className: "left-rows"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("i", {
         className: "wi wi-humidity"
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h3", null, humidity)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("h3", null, humidity, " ", humidityUnit)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("div", {
         className: "left-rows"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("i", {
         className: "wi wi-strong-wind"
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h3", null, wind))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("h3", null, wind, " ", windUnit))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("div", {
         className: "right-col"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("div", {
         className: "col-60"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h5", null, description)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("h5", null, description)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("div", {
         className: "col-40"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_currentIcon_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement(_currentIcon_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
         icon: icon,
         id: id
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("div", {
         className: "right-bottom"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("button", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("button", {
         onClick: this.props.displayNextDays
       }, this.props.buttonText))));
     }
   }]);
-
   return CurrentWeather;
-}(react__WEBPACK_IMPORTED_MODULE_0__.Component);
-
+}(react__WEBPACK_IMPORTED_MODULE_5__.Component);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CurrentWeather);
 
 /***/ }),
@@ -879,74 +1484,58 @@ var CurrentWeather = /*#__PURE__*/function (_React$Component) {
   \*******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__["default"])(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__["default"])(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0,_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3__["default"])(this, result); }; }
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-
-
 var MainPreloader = /*#__PURE__*/function (_React$Component) {
-  _inherits(MainPreloader, _React$Component);
-
+  (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_2__["default"])(MainPreloader, _React$Component);
   var _super = _createSuper(MainPreloader);
-
   function MainPreloader() {
-    _classCallCheck(this, MainPreloader);
-
+    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, MainPreloader);
     return _super.apply(this, arguments);
   }
-
-  _createClass(MainPreloader, [{
+  (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(MainPreloader, [{
     key: "render",
     value: function render() {
       var classes = !this.props.preloaderAlert ? 'main-loading animation' : 'main-loading';
       var styles = {
         color: !this.props.preloaderAlert ? '#000000' : '#444444'
       };
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("div", {
         className: "main-preloader",
         style: styles
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("svg", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("svg", {
         className: classes,
         xmlns: "http://www.w3.org/2000/svg",
         viewBox: "0 0 512 512"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("path", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("path", {
         fill: "currentColor",
         d: "M256 160c-52.9 0-96 43.1-96 96s43.1 96 96 96 96-43.1 96-96-43.1-96-96-96zm246.4 80.5l-94.7-47.3 33.5-100.4c4.5-13.6-8.4-26.5-21.9-21.9l-100.4 33.5-47.4-94.8c-6.4-12.8-24.6-12.8-31 0l-47.3 94.7L92.7 70.8c-13.6-4.5-26.5 8.4-21.9 21.9l33.5 100.4-94.7 47.4c-12.8 6.4-12.8 24.6 0 31l94.7 47.3-33.5 100.5c-4.5 13.6 8.4 26.5 21.9 21.9l100.4-33.5 47.3 94.7c6.4 12.8 24.6 12.8 31 0l47.3-94.7 100.4 33.5c13.6 4.5 26.5-8.4 21.9-21.9l-33.5-100.4 94.7-47.3c13-6.5 13-24.7.2-31.1zm-155.9 106c-49.9 49.9-131.1 49.9-181 0-49.9-49.9-49.9-131.1 0-181 49.9-49.9 131.1-49.9 181 0 49.9 49.9 49.9 131.1 0 181z"
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", {
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("p", {
         className: "info"
       }, this.props.preloaderInfo));
     }
   }]);
-
   return MainPreloader;
-}(react__WEBPACK_IMPORTED_MODULE_0__.Component);
-
+}(react__WEBPACK_IMPORTED_MODULE_5__.Component);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MainPreloader);
 
 /***/ }),
@@ -957,73 +1546,57 @@ var MainPreloader = /*#__PURE__*/function (_React$Component) {
   \*********************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var _oneDayWeather_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./oneDayWeather.jsx */ "./jsx/oneDayWeather.jsx");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var _oneDayWeather_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./oneDayWeather.jsx */ "./jsx/oneDayWeather.jsx");
 
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__["default"])(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__["default"])(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0,_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3__["default"])(this, result); }; }
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-
 
 
 var NextDaysWeather = /*#__PURE__*/function (_React$Component) {
-  _inherits(NextDaysWeather, _React$Component);
-
+  (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_2__["default"])(NextDaysWeather, _React$Component);
   var _super = _createSuper(NextDaysWeather);
-
   function NextDaysWeather() {
-    _classCallCheck(this, NextDaysWeather);
-
+    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, NextDaysWeather);
     return _super.apply(this, arguments);
   }
-
-  _createClass(NextDaysWeather, [{
+  (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(NextDaysWeather, [{
     key: "render",
     value: function render() {
+      var _this = this;
       var nexDaysComponentsArray = this.props.nextDays.map(function (element, index) {
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_oneDayWeather_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement(_oneDayWeather_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
           nextDay: element,
+          unitSystem: _this.props.unitSystem,
           key: index
         });
       });
-
       if (!this.props.switchComponent) {
         return null;
       }
-
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("div", {
         className: "next-days-weather"
       }, nexDaysComponentsArray.slice(1, 7));
     }
   }]);
-
   return NextDaysWeather;
-}(react__WEBPACK_IMPORTED_MODULE_0__.Component);
-
+}(react__WEBPACK_IMPORTED_MODULE_5__.Component);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (NextDaysWeather);
 
 /***/ }),
@@ -1034,98 +1607,89 @@ var NextDaysWeather = /*#__PURE__*/function (_React$Component) {
   \*******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var _currentIcon_jsx__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./currentIcon.jsx */ "./jsx/currentIcon.jsx");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var _currentIcon_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./currentIcon.jsx */ "./jsx/currentIcon.jsx");
+/* harmony import */ var _js_consts__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../js/consts */ "./js/consts.js");
 
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__["default"])(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__["default"])(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0,_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3__["default"])(this, result); }; }
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
 
 
 
 var OneDayWeather = /*#__PURE__*/function (_React$Component) {
-  _inherits(OneDayWeather, _React$Component);
-
+  (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_2__["default"])(OneDayWeather, _React$Component);
   var _super = _createSuper(OneDayWeather);
-
   function OneDayWeather() {
-    _classCallCheck(this, OneDayWeather);
-
+    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, OneDayWeather);
     return _super.apply(this, arguments);
   }
-
-  _createClass(OneDayWeather, [{
+  (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(OneDayWeather, [{
     key: "render",
     value: function render() {
       var _this$props$nextDay = this.props.nextDay,
-          date = _this$props$nextDay.date,
-          temp = _this$props$nextDay.temp,
-          pressure = _this$props$nextDay.pressure,
-          humidity = _this$props$nextDay.humidity,
-          wind = _this$props$nextDay.wind,
-          description = _this$props$nextDay.description,
-          icon = _this$props$nextDay.icon,
-          id = _this$props$nextDay.id;
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+        date = _this$props$nextDay.date,
+        temp = _this$props$nextDay.temp,
+        pressure = _this$props$nextDay.pressure,
+        humidity = _this$props$nextDay.humidity,
+        wind = _this$props$nextDay.wind,
+        description = _this$props$nextDay.description,
+        icon = _this$props$nextDay.icon,
+        id = _this$props$nextDay.id;
+      var _WEATHER_UNITS$this$p = _js_consts__WEBPACK_IMPORTED_MODULE_7__.WEATHER_UNITS[this.props.unitSystem],
+        tempUnit = _WEATHER_UNITS$this$p.temperature,
+        pressureUnit = _WEATHER_UNITS$this$p.pressure,
+        humidityUnit = _WEATHER_UNITS$this$p.humidity,
+        windUnit = _WEATHER_UNITS$this$p.wind;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("div", {
         className: "day-container"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("div", {
         className: "row date"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h5", null, date.date)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("h5", null, date.date)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("div", {
         className: "row icon"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_currentIcon_jsx__WEBPACK_IMPORTED_MODULE_1__["default"], {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement(_currentIcon_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
         icon: icon,
         id: id
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("div", {
         className: "row description"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h6", null, description)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("h6", null, description)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("div", {
         className: "row weather-data"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("div", {
         className: "row"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("i", {
         className: "wi wi-thermometer"
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h5", null, temp)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("h5", null, temp, " ", tempUnit)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("div", {
         className: "row"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("i", {
         className: "wi wi-barometer"
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h5", null, pressure)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("h5", null, pressure, " ", pressureUnit)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("div", {
         className: "row"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("i", {
         className: "wi wi-humidity"
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h5", null, humidity)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("h5", null, humidity, " ", humidityUnit)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("div", {
         className: "row"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("i", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("i", {
         className: "wi wi-strong-wind"
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("h5", null, wind))));
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("h5", null, wind, " ", windUnit))));
     }
   }]);
-
   return OneDayWeather;
-}(react__WEBPACK_IMPORTED_MODULE_0__.Component);
-
+}(react__WEBPACK_IMPORTED_MODULE_5__.Component);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (OneDayWeather);
 
 /***/ }),
@@ -1136,67 +1700,53 @@ var OneDayWeather = /*#__PURE__*/function (_React$Component) {
   \*******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
-/* harmony import */ var _js_mobile_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../js/mobile.js */ "./js/mobile.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+/* harmony import */ var _js_mobile_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../js/mobile.js */ "./js/mobile.js");
 
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__["default"])(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_4__["default"])(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0,_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_3__["default"])(this, result); }; }
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-
 
 
 
 var SearchSection = /*#__PURE__*/function (_React$Component) {
-  _inherits(SearchSection, _React$Component);
-
+  (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_2__["default"])(SearchSection, _React$Component);
   var _super = _createSuper(SearchSection);
-
   function SearchSection() {
-    _classCallCheck(this, SearchSection);
-
+    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, SearchSection);
     return _super.apply(this, arguments);
   }
-
-  _createClass(SearchSection, [{
+  (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(SearchSection, [{
     key: "componentDidMount",
     value: function componentDidMount() {
-      if ((0,_js_mobile_js__WEBPACK_IMPORTED_MODULE_2__.isMobile)()) {
-        react_dom__WEBPACK_IMPORTED_MODULE_1__.findDOMNode(this).querySelector('input[type="search"]').blur();
+      if ((0,_js_mobile_js__WEBPACK_IMPORTED_MODULE_7__.isMobile)()) {
+        react_dom__WEBPACK_IMPORTED_MODULE_6__.findDOMNode(this).querySelector('input[type="search"]').blur();
       }
     }
   }, {
     key: "render",
     value: function render() {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("div", {
         className: "search"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("form", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("form", {
         onSubmit: this.props.handleSubmit
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("input", {
         type: "search",
         autoFocus: true,
         className: "normal",
@@ -1204,17 +1754,15 @@ var SearchSection = /*#__PURE__*/function (_React$Component) {
         value: this.props.input,
         onChange: this.props.handleInputOnChange,
         onFocus: this.props.handleInputOnFocus
-      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("input", {
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5__.createElement("input", {
         type: "submit",
         value: "get weather",
         disabled: !this.props.input
       })));
     }
   }]);
-
   return SearchSection;
-}(react__WEBPACK_IMPORTED_MODULE_0__.Component);
-
+}(react__WEBPACK_IMPORTED_MODULE_5__.Component);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SearchSection);
 
 /***/ }),
@@ -1225,61 +1773,49 @@ var SearchSection = /*#__PURE__*/function (_React$Component) {
   \******************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react_chartjs_2__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! react-chartjs-2 */ "./node_modules/react-chartjs-2/dist/index.js");
-/* harmony import */ var chart_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! chart.js */ "./node_modules/chart.js/dist/chart.esm.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/assertThisInitialized */ "./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js");
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react_chartjs_2__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-chartjs-2 */ "./node_modules/react-chartjs-2/dist/index.js");
+/* harmony import */ var chart_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! chart.js */ "./node_modules/chart.js/dist/chart.esm.js");
+/* harmony import */ var _js_consts_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../js/consts.js */ "./js/consts.js");
 
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
 
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
 
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
 
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5__["default"])(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5__["default"])(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0,_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4__["default"])(this, result); }; }
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
 
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
 
 
-
-chart_js__WEBPACK_IMPORTED_MODULE_1__.Chart.register(chart_js__WEBPACK_IMPORTED_MODULE_1__.CategoryScale, chart_js__WEBPACK_IMPORTED_MODULE_1__.Legend, chart_js__WEBPACK_IMPORTED_MODULE_1__.LinearScale, chart_js__WEBPACK_IMPORTED_MODULE_1__.LineElement, chart_js__WEBPACK_IMPORTED_MODULE_1__.PointElement);
-
+chart_js__WEBPACK_IMPORTED_MODULE_8__.Chart.register(chart_js__WEBPACK_IMPORTED_MODULE_8__.CategoryScale, chart_js__WEBPACK_IMPORTED_MODULE_8__.Legend, chart_js__WEBPACK_IMPORTED_MODULE_8__.LinearScale, chart_js__WEBPACK_IMPORTED_MODULE_8__.LineElement, chart_js__WEBPACK_IMPORTED_MODULE_8__.PointElement);
 var WeatherChart = /*#__PURE__*/function (_React$Component) {
-  _inherits(WeatherChart, _React$Component);
-
+  (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_3__["default"])(WeatherChart, _React$Component);
   var _super = _createSuper(WeatherChart);
-
   function WeatherChart() {
     var _this;
-
-    _classCallCheck(this, WeatherChart);
-
+    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, WeatherChart);
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
-
     _this = _super.call.apply(_super, [this].concat(args));
-
-    _defineProperty(_assertThisInitialized(_this), "options", {
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_6__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_2__["default"])(_this), "options", {
       responsive: true,
       maintainAspectRatio: false,
       interaction: {
@@ -1361,21 +1897,20 @@ var WeatherChart = /*#__PURE__*/function (_React$Component) {
         }
       }
     });
-
     return _this;
   }
-
-  _createClass(WeatherChart, [{
+  (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(WeatherChart, [{
     key: "render",
     value: function render() {
+      var _WEATHER_UNITS$this$p, _WEATHER_UNITS$this$p2;
       var _this$props$hourlyFor = this.props.hourlyForecast,
-          time = _this$props$hourlyFor.time,
-          temperature = _this$props$hourlyFor.temperature,
-          pressure = _this$props$hourlyFor.pressure;
+        time = _this$props$hourlyFor.time,
+        temperature = _this$props$hourlyFor.temperature,
+        pressure = _this$props$hourlyFor.pressure;
       var data = {
         labels: time && time.slice(1, 10),
         datasets: [{
-          label: this.props.units.temperature,
+          label: (_WEATHER_UNITS$this$p = _js_consts_js__WEBPACK_IMPORTED_MODULE_9__.WEATHER_UNITS[this.props.unitSystem]) === null || _WEATHER_UNITS$this$p === void 0 ? void 0 : _WEATHER_UNITS$this$p.temperature,
           data: temperature && temperature.slice(1, 10),
           borderColor: '#808080',
           backgroundColor: 'white',
@@ -1384,7 +1919,7 @@ var WeatherChart = /*#__PURE__*/function (_React$Component) {
           borderWidth: 2,
           yAxisID: 'axisY1'
         }, {
-          label: this.props.units.pressure,
+          label: (_WEATHER_UNITS$this$p2 = _js_consts_js__WEBPACK_IMPORTED_MODULE_9__.WEATHER_UNITS[this.props.unitSystem]) === null || _WEATHER_UNITS$this$p2 === void 0 ? void 0 : _WEATHER_UNITS$this$p2.pressure,
           data: pressure && pressure.slice(1, 10),
           borderColor: '#800080',
           backgroundColor: 'white',
@@ -1394,24 +1929,20 @@ var WeatherChart = /*#__PURE__*/function (_React$Component) {
           yAxisID: 'axisY2'
         }]
       };
-
       if (!this.props.displayComponent || this.props.switchComponent) {
         return null;
       }
-
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement("div", {
         className: "current-weather current-chart"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(react_chartjs_2__WEBPACK_IMPORTED_MODULE_2__.Chart, {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_7__.createElement(react_chartjs_2__WEBPACK_IMPORTED_MODULE_10__.Chart, {
         options: this.options,
         data: data,
         type: "line"
       }));
     }
   }]);
-
   return WeatherChart;
-}(react__WEBPACK_IMPORTED_MODULE_0__.Component);
-
+}(react__WEBPACK_IMPORTED_MODULE_7__.Component);
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (WeatherChart);
 
 /***/ }),
@@ -1422,6 +1953,7 @@ var WeatherChart = /*#__PURE__*/function (_React$Component) {
   \*************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "defaults": () => (/* reexport safe */ _chunks_helpers_segment_js__WEBPACK_IMPORTED_MODULE_0__.d),
@@ -12072,6 +12604,7 @@ const registerables = [
   \**************************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "$": () => (/* binding */ overrides),
@@ -14676,6 +15209,7 @@ function styleChanged(style, prevStyle) {
   \****************************************************************************************************************************************/
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -14702,6 +15236,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, "@media (orientation: portrait) {\r\n\r
   \************************************************************************************************************************************/
 /***/ ((module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -14730,6 +15265,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, "/* Main styles - start */\r\n* {\r\n  
   \*****************************************************/
 /***/ ((module) => {
 
+"use strict";
 
 
 /*
@@ -14841,6 +15377,7 @@ module.exports = function (cssWithMappingToString) {
   \************************************************************/
 /***/ ((module) => {
 
+"use strict";
 
 
 module.exports = function (item) {
@@ -14872,6 +15409,7 @@ module.exports = function (item) {
   \*********************************************/
 /***/ ((module) => {
 
+"use strict";
 /*
 object-assign
 (c) Sindre Sorhus
@@ -14972,6 +15510,7 @@ module.exports = shouldUseNative() ? Object.assign : function (target, source) {
   \****************************************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "Bar": () => (/* binding */ Bar),
@@ -15170,6 +15709,7 @@ const Scatter = /* #__PURE__ */ createTypedChart('scatter', chart_js__WEBPACK_IM
   \*************************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
+"use strict";
 /** @license React v17.0.2
  * react-dom.development.js
  *
@@ -41437,6 +41977,7 @@ exports.version = ReactVersion;
   \*****************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
+"use strict";
 
 
 function checkDCE() {
@@ -41480,6 +42021,7 @@ if (false) {} else {
   \*****************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
+"use strict";
 /** @license React v17.0.2
  * react.development.js
  *
@@ -43823,6 +44365,7 @@ exports.version = ReactVersion;
   \*************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
+"use strict";
 
 
 if (false) {} else {
@@ -43838,6 +44381,7 @@ if (false) {} else {
   \*********************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
+"use strict";
 /** @license React v0.20.2
  * scheduler-tracing.development.js
  *
@@ -44195,6 +44739,7 @@ exports.unstable_wrap = unstable_wrap;
   \*************************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
+"use strict";
 /** @license React v0.20.2
  * scheduler.development.js
  *
@@ -44851,6 +45396,7 @@ exports.unstable_wrapCallback = unstable_wrapCallback;
   \*****************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
+"use strict";
 
 
 if (false) {} else {
@@ -44866,6 +45412,7 @@ if (false) {} else {
   \*******************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
+"use strict";
 
 
 if (false) {} else {
@@ -44881,6 +45428,7 @@ if (false) {} else {
   \****************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -44935,6 +45483,7 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
   \************************/
 /***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
 
+"use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
@@ -44989,6 +45538,7 @@ var update = _node_modules_style_loader_dist_runtime_injectStylesIntoStyleTag_js
   \****************************************************************************/
 /***/ ((module) => {
 
+"use strict";
 
 
 var stylesInDOM = [];
@@ -45102,6 +45652,7 @@ module.exports = function (list, options) {
   \********************************************************************/
 /***/ ((module) => {
 
+"use strict";
 
 
 var memo = {};
@@ -45150,6 +45701,7 @@ module.exports = insertBySelector;
   \**********************************************************************/
 /***/ ((module) => {
 
+"use strict";
 
 
 /* istanbul ignore next  */
@@ -45170,6 +45722,7 @@ module.exports = insertStyleElement;
   \**********************************************************************************/
 /***/ ((module, __unused_webpack_exports, __webpack_require__) => {
 
+"use strict";
 
 
 /* istanbul ignore next  */
@@ -45191,6 +45744,7 @@ module.exports = setAttributesWithoutAttributes;
   \***************************************************************/
 /***/ ((module) => {
 
+"use strict";
 
 
 /* istanbul ignore next  */
@@ -45270,6 +45824,7 @@ module.exports = domAPI;
   \*********************************************************************/
 /***/ ((module) => {
 
+"use strict";
 
 
 /* istanbul ignore next  */
@@ -45286,6 +45841,507 @@ function styleTagTransform(css, styleElement) {
 }
 
 module.exports = styleTagTransform;
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _arrayLikeToArray)
+/* harmony export */ });
+function _arrayLikeToArray(arr, len) {
+  if (len == null || len > arr.length) len = arr.length;
+
+  for (var i = 0, arr2 = new Array(len); i < len; i++) {
+    arr2[i] = arr[i];
+  }
+
+  return arr2;
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/arrayWithHoles.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/arrayWithHoles.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _arrayWithHoles)
+/* harmony export */ });
+function _arrayWithHoles(arr) {
+  if (Array.isArray(arr)) return arr;
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/arrayWithoutHoles.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/arrayWithoutHoles.js ***!
+  \**********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _arrayWithoutHoles)
+/* harmony export */ });
+/* harmony import */ var _arrayLikeToArray_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./arrayLikeToArray.js */ "./node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js");
+
+function _arrayWithoutHoles(arr) {
+  if (Array.isArray(arr)) return (0,_arrayLikeToArray_js__WEBPACK_IMPORTED_MODULE_0__["default"])(arr);
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js":
+/*!**************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js ***!
+  \**************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _assertThisInitialized)
+/* harmony export */ });
+function _assertThisInitialized(self) {
+  if (self === void 0) {
+    throw new ReferenceError("this hasn't been initialised - super() hasn't been called");
+  }
+
+  return self;
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js":
+/*!*********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js ***!
+  \*********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _asyncToGenerator)
+/* harmony export */ });
+function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) {
+  try {
+    var info = gen[key](arg);
+    var value = info.value;
+  } catch (error) {
+    reject(error);
+    return;
+  }
+
+  if (info.done) {
+    resolve(value);
+  } else {
+    Promise.resolve(value).then(_next, _throw);
+  }
+}
+
+function _asyncToGenerator(fn) {
+  return function () {
+    var self = this,
+        args = arguments;
+    return new Promise(function (resolve, reject) {
+      var gen = fn.apply(self, args);
+
+      function _next(value) {
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value);
+      }
+
+      function _throw(err) {
+        asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err);
+      }
+
+      _next(undefined);
+    });
+  };
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/classCallCheck.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _classCallCheck)
+/* harmony export */ });
+function _classCallCheck(instance, Constructor) {
+  if (!(instance instanceof Constructor)) {
+    throw new TypeError("Cannot call a class as a function");
+  }
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/createClass.js":
+/*!****************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/createClass.js ***!
+  \****************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _createClass)
+/* harmony export */ });
+function _defineProperties(target, props) {
+  for (var i = 0; i < props.length; i++) {
+    var descriptor = props[i];
+    descriptor.enumerable = descriptor.enumerable || false;
+    descriptor.configurable = true;
+    if ("value" in descriptor) descriptor.writable = true;
+    Object.defineProperty(target, descriptor.key, descriptor);
+  }
+}
+
+function _createClass(Constructor, protoProps, staticProps) {
+  if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+  if (staticProps) _defineProperties(Constructor, staticProps);
+  Object.defineProperty(Constructor, "prototype", {
+    writable: false
+  });
+  return Constructor;
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/defineProperty.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _defineProperty)
+/* harmony export */ });
+function _defineProperty(obj, key, value) {
+  if (key in obj) {
+    Object.defineProperty(obj, key, {
+      value: value,
+      enumerable: true,
+      configurable: true,
+      writable: true
+    });
+  } else {
+    obj[key] = value;
+  }
+
+  return obj;
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _getPrototypeOf)
+/* harmony export */ });
+function _getPrototypeOf(o) {
+  _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) {
+    return o.__proto__ || Object.getPrototypeOf(o);
+  };
+  return _getPrototypeOf(o);
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/inherits.js":
+/*!*************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/inherits.js ***!
+  \*************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _inherits)
+/* harmony export */ });
+/* harmony import */ var _setPrototypeOf_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./setPrototypeOf.js */ "./node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js");
+
+function _inherits(subClass, superClass) {
+  if (typeof superClass !== "function" && superClass !== null) {
+    throw new TypeError("Super expression must either be null or a function");
+  }
+
+  subClass.prototype = Object.create(superClass && superClass.prototype, {
+    constructor: {
+      value: subClass,
+      writable: true,
+      configurable: true
+    }
+  });
+  Object.defineProperty(subClass, "prototype", {
+    writable: false
+  });
+  if (superClass) (0,_setPrototypeOf_js__WEBPACK_IMPORTED_MODULE_0__["default"])(subClass, superClass);
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/iterableToArray.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/iterableToArray.js ***!
+  \********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _iterableToArray)
+/* harmony export */ });
+function _iterableToArray(iter) {
+  if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/iterableToArrayLimit.js":
+/*!*************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/iterableToArrayLimit.js ***!
+  \*************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _iterableToArrayLimit)
+/* harmony export */ });
+function _iterableToArrayLimit(arr, i) {
+  var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"];
+
+  if (_i == null) return;
+  var _arr = [];
+  var _n = true;
+  var _d = false;
+
+  var _s, _e;
+
+  try {
+    for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) {
+      _arr.push(_s.value);
+
+      if (i && _arr.length === i) break;
+    }
+  } catch (err) {
+    _d = true;
+    _e = err;
+  } finally {
+    try {
+      if (!_n && _i["return"] != null) _i["return"]();
+    } finally {
+      if (_d) throw _e;
+    }
+  }
+
+  return _arr;
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/nonIterableRest.js":
+/*!********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/nonIterableRest.js ***!
+  \********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _nonIterableRest)
+/* harmony export */ });
+function _nonIterableRest() {
+  throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/nonIterableSpread.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/nonIterableSpread.js ***!
+  \**********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _nonIterableSpread)
+/* harmony export */ });
+function _nonIterableSpread() {
+  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js":
+/*!******************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js ***!
+  \******************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _possibleConstructorReturn)
+/* harmony export */ });
+/* harmony import */ var _typeof_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./typeof.js */ "./node_modules/@babel/runtime/helpers/esm/typeof.js");
+/* harmony import */ var _assertThisInitialized_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./assertThisInitialized.js */ "./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js");
+
+
+function _possibleConstructorReturn(self, call) {
+  if (call && ((0,_typeof_js__WEBPACK_IMPORTED_MODULE_0__["default"])(call) === "object" || typeof call === "function")) {
+    return call;
+  } else if (call !== void 0) {
+    throw new TypeError("Derived constructors may only return object or undefined");
+  }
+
+  return (0,_assertThisInitialized_js__WEBPACK_IMPORTED_MODULE_1__["default"])(self);
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js":
+/*!*******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/setPrototypeOf.js ***!
+  \*******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _setPrototypeOf)
+/* harmony export */ });
+function _setPrototypeOf(o, p) {
+  _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) {
+    o.__proto__ = p;
+    return o;
+  };
+
+  return _setPrototypeOf(o, p);
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/slicedToArray.js":
+/*!******************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/slicedToArray.js ***!
+  \******************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _slicedToArray)
+/* harmony export */ });
+/* harmony import */ var _arrayWithHoles_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./arrayWithHoles.js */ "./node_modules/@babel/runtime/helpers/esm/arrayWithHoles.js");
+/* harmony import */ var _iterableToArrayLimit_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./iterableToArrayLimit.js */ "./node_modules/@babel/runtime/helpers/esm/iterableToArrayLimit.js");
+/* harmony import */ var _unsupportedIterableToArray_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./unsupportedIterableToArray.js */ "./node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js");
+/* harmony import */ var _nonIterableRest_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./nonIterableRest.js */ "./node_modules/@babel/runtime/helpers/esm/nonIterableRest.js");
+
+
+
+
+function _slicedToArray(arr, i) {
+  return (0,_arrayWithHoles_js__WEBPACK_IMPORTED_MODULE_0__["default"])(arr) || (0,_iterableToArrayLimit_js__WEBPACK_IMPORTED_MODULE_1__["default"])(arr, i) || (0,_unsupportedIterableToArray_js__WEBPACK_IMPORTED_MODULE_2__["default"])(arr, i) || (0,_nonIterableRest_js__WEBPACK_IMPORTED_MODULE_3__["default"])();
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/toConsumableArray.js":
+/*!**********************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/toConsumableArray.js ***!
+  \**********************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _toConsumableArray)
+/* harmony export */ });
+/* harmony import */ var _arrayWithoutHoles_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./arrayWithoutHoles.js */ "./node_modules/@babel/runtime/helpers/esm/arrayWithoutHoles.js");
+/* harmony import */ var _iterableToArray_js__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./iterableToArray.js */ "./node_modules/@babel/runtime/helpers/esm/iterableToArray.js");
+/* harmony import */ var _unsupportedIterableToArray_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./unsupportedIterableToArray.js */ "./node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js");
+/* harmony import */ var _nonIterableSpread_js__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./nonIterableSpread.js */ "./node_modules/@babel/runtime/helpers/esm/nonIterableSpread.js");
+
+
+
+
+function _toConsumableArray(arr) {
+  return (0,_arrayWithoutHoles_js__WEBPACK_IMPORTED_MODULE_0__["default"])(arr) || (0,_iterableToArray_js__WEBPACK_IMPORTED_MODULE_1__["default"])(arr) || (0,_unsupportedIterableToArray_js__WEBPACK_IMPORTED_MODULE_2__["default"])(arr) || (0,_nonIterableSpread_js__WEBPACK_IMPORTED_MODULE_3__["default"])();
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/typeof.js":
+/*!***********************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/typeof.js ***!
+  \***********************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _typeof)
+/* harmony export */ });
+function _typeof(obj) {
+  "@babel/helpers - typeof";
+
+  return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) {
+    return typeof obj;
+  } : function (obj) {
+    return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+  }, _typeof(obj);
+}
+
+/***/ }),
+
+/***/ "./node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js":
+/*!*******************************************************************************!*\
+  !*** ./node_modules/@babel/runtime/helpers/esm/unsupportedIterableToArray.js ***!
+  \*******************************************************************************/
+/***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (/* binding */ _unsupportedIterableToArray)
+/* harmony export */ });
+/* harmony import */ var _arrayLikeToArray_js__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./arrayLikeToArray.js */ "./node_modules/@babel/runtime/helpers/esm/arrayLikeToArray.js");
+
+function _unsupportedIterableToArray(o, minLen) {
+  if (!o) return;
+  if (typeof o === "string") return (0,_arrayLikeToArray_js__WEBPACK_IMPORTED_MODULE_0__["default"])(o, minLen);
+  var n = Object.prototype.toString.call(o).slice(8, -1);
+  if (n === "Object" && o.constructor) n = o.constructor.name;
+  if (n === "Map" || n === "Set") return Array.from(o);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return (0,_arrayLikeToArray_js__WEBPACK_IMPORTED_MODULE_0__["default"])(o, minLen);
+}
 
 /***/ })
 
@@ -45358,65 +46414,52 @@ module.exports = styleTagTransform;
 /******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
-// This entry need to be wrapped in an IIFE because it need to be isolated against other modules in the chunk.
+// This entry need to be wrapped in an IIFE because it need to be in strict mode.
 (() => {
+"use strict";
 /*!*********************!*\
   !*** ./jsx/app.jsx ***!
   \*********************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
-/* harmony import */ var _searchSection_jsx__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./searchSection.jsx */ "./jsx/searchSection.jsx");
-/* harmony import */ var _currentDate_jsx__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./currentDate.jsx */ "./jsx/currentDate.jsx");
-/* harmony import */ var _currentWeather_jsx__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./currentWeather.jsx */ "./jsx/currentWeather.jsx");
-/* harmony import */ var _weatherChart_jsx__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./weatherChart.jsx */ "./jsx/weatherChart.jsx");
-/* harmony import */ var _nextDaysWeather_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./nextDaysWeather.jsx */ "./jsx/nextDaysWeather.jsx");
-/* harmony import */ var _js_config_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../js/config.js */ "./js/config.js");
-/* harmony import */ var _js_consts_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../js/consts.js */ "./js/consts.js");
-/* harmony import */ var _js_mobile_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../js/mobile.js */ "./js/mobile.js");
-/* harmony import */ var _js_helpers_js__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ../js/helpers.js */ "./js/helpers.js");
-/* harmony import */ var _js_providers_js__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ../js/providers.js */ "./js/providers.js");
-/* harmony import */ var _css_styles_css__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ../css/styles.css */ "./css/styles.css");
-/* harmony import */ var _css_responsive_css__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ../css/responsive.css */ "./css/responsive.css");
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/esm/slicedToArray.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/assertThisInitialized */ "./node_modules/@babel/runtime/helpers/esm/assertThisInitialized.js");
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react_dom__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! react-dom */ "./node_modules/react-dom/index.js");
+/* harmony import */ var _searchSection_jsx__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./searchSection.jsx */ "./jsx/searchSection.jsx");
+/* harmony import */ var _currentDate_jsx__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./currentDate.jsx */ "./jsx/currentDate.jsx");
+/* harmony import */ var _currentWeather_jsx__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./currentWeather.jsx */ "./jsx/currentWeather.jsx");
+/* harmony import */ var _weatherChart_jsx__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./weatherChart.jsx */ "./jsx/weatherChart.jsx");
+/* harmony import */ var _nextDaysWeather_jsx__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ./nextDaysWeather.jsx */ "./jsx/nextDaysWeather.jsx");
+/* harmony import */ var _js_config_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../js/config.js */ "./js/config.js");
+/* harmony import */ var _js_consts_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../js/consts.js */ "./js/consts.js");
+/* harmony import */ var _js_mobile_js__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../js/mobile.js */ "./js/mobile.js");
+/* harmony import */ var _js_helpers_js__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../js/helpers.js */ "./js/helpers.js");
+/* harmony import */ var _js_providers_js__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../js/providers.js */ "./js/providers.js");
+/* harmony import */ var _css_styles_css__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ../css/styles.css */ "./css/styles.css");
+/* harmony import */ var _css_responsive_css__WEBPACK_IMPORTED_MODULE_23__ = __webpack_require__(/*! ../css/responsive.css */ "./css/responsive.css");
 
 
-function _typeof(obj) { "@babel/helpers - typeof"; return _typeof = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function (obj) { return typeof obj; } : function (obj) { return obj && "function" == typeof Symbol && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }, _typeof(obj); }
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _unsupportedIterableToArray(arr, i) || _nonIterableRest(); }
 
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
 
-function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
 
-function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) { arr2[i] = arr[i]; } return arr2; }
 
-function _iterableToArrayLimit(arr, i) { var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"]; if (_i == null) return; var _arr = []; var _n = true; var _d = false; var _s, _e; try { for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
 
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
-function _defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } }
 
-function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); Object.defineProperty(Constructor, "prototype", { writable: false }); return Constructor; }
 
-function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function"); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, writable: true, configurable: true } }); Object.defineProperty(subClass, "prototype", { writable: false }); if (superClass) _setPrototypeOf(subClass, superClass); }
-
-function _setPrototypeOf(o, p) { _setPrototypeOf = Object.setPrototypeOf || function _setPrototypeOf(o, p) { o.__proto__ = p; return o; }; return _setPrototypeOf(o, p); }
-
-function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = _getPrototypeOf(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = _getPrototypeOf(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return _possibleConstructorReturn(this, result); }; }
-
-function _possibleConstructorReturn(self, call) { if (call && (_typeof(call) === "object" || typeof call === "function")) { return call; } else if (call !== void 0) { throw new TypeError("Derived constructors may only return object or undefined"); } return _assertThisInitialized(self); }
-
-function _assertThisInitialized(self) { if (self === void 0) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return self; }
-
+function _createSuper(Derived) { var hasNativeReflectConstruct = _isNativeReflectConstruct(); return function _createSuperInternal() { var Super = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7__["default"])(Derived), result; if (hasNativeReflectConstruct) { var NewTarget = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_7__["default"])(this).constructor; result = Reflect.construct(Super, arguments, NewTarget); } else { result = Super.apply(this, arguments); } return (0,_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_6__["default"])(this, result); }; }
 function _isNativeReflectConstruct() { if (typeof Reflect === "undefined" || !Reflect.construct) return false; if (Reflect.construct.sham) return false; if (typeof Proxy === "function") return true; try { Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); return true; } catch (e) { return false; } }
-
-function _getPrototypeOf(o) { _getPrototypeOf = Object.setPrototypeOf ? Object.getPrototypeOf : function _getPrototypeOf(o) { return o.__proto__ || Object.getPrototypeOf(o); }; return _getPrototypeOf(o); }
-
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-
 
 
 
@@ -45434,262 +46477,315 @@ function _defineProperty(obj, key, value) { if (key in obj) { Object.definePrope
 if (!window.Promise) {
   window.Promise = Promise;
 }
-
 document.addEventListener('DOMContentLoaded', function () {
   var Main = /*#__PURE__*/function (_React$Component) {
-    _inherits(Main, _React$Component);
-
+    (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5__["default"])(Main, _React$Component);
     var _super = _createSuper(Main);
-
     function Main() {
       var _this;
-
-      _classCallCheck(this, Main);
-
+      (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_3__["default"])(this, Main);
       for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
         args[_key] = arguments[_key];
       }
-
       _this = _super.call.apply(_super, [this].concat(args));
-
-      _defineProperty(_assertThisInitialized(_this), "state", {
+      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), "state", {
+        currentDayChartData: {},
+        currentDayWeatherData: {},
+        displayCurrentDayWeather: false,
+        displayNextDaysWeather: false,
         input: '',
         latitude: null,
         longitude: null,
-        preloaderInfo: _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.MESSAGE.loadingData,
-        preloaderAlert: false,
-        displayCurrentDayWeather: false,
-        displayNextDaysWeather: false,
-        screenLandscapeOrientation: window.innerHeight <= window.innerWidth,
         location: {},
         localTime: {},
-        currentDayWeatherData: {},
-        currentDayChartData: {},
         nextDaysWeatherData: [],
-        units: _js_config_js__WEBPACK_IMPORTED_MODULE_7__.config.units
+        preloaderAlert: false,
+        preloaderInfo: _js_consts_js__WEBPACK_IMPORTED_MODULE_18__.MESSAGE.loadingData,
+        screenLandscapeOrientation: window.innerHeight <= window.innerWidth,
+        unitSystem: _js_config_js__WEBPACK_IMPORTED_MODULE_17__.config.unitSystem
       });
-
-      _defineProperty(_assertThisInitialized(_this), "getCurrentPosition", function () {
-        (0,_js_providers_js__WEBPACK_IMPORTED_MODULE_11__.ipInfoGeolocation)().then(function (data) {
-          var _data$loc$split = data.loc.split(','),
-              _data$loc$split2 = _slicedToArray(_data$loc$split, 2),
-              latitude = _data$loc$split2[0],
-              longitude = _data$loc$split2[1];
-
-          _this.setState({
-            latitude: latitude,
-            longitude: longitude,
-            location: {
-              city: data.city,
-              country: data.country.toUpperCase()
+      /* geolocation - getting current position by ip address from ipinfo.io */
+      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), "getCurrentPosition", /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(/*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_9___default().mark(function _callee() {
+        var data, _data$loc$split, _data$loc$split2, latitude, longitude;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_9___default().wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.prev = 0;
+                _context.next = 3;
+                return (0,_js_providers_js__WEBPACK_IMPORTED_MODULE_21__.ipInfoGeolocation)();
+              case 3:
+                data = _context.sent;
+                _data$loc$split = data.loc.split(','), _data$loc$split2 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__["default"])(_data$loc$split, 2), latitude = _data$loc$split2[0], longitude = _data$loc$split2[1];
+                _this.setState({
+                  latitude: latitude,
+                  longitude: longitude,
+                  location: {
+                    city: data.city,
+                    country: data.country.toUpperCase()
+                  }
+                });
+                _context.next = 8;
+                return _this.getLocationName();
+              case 8:
+                _context.next = 10;
+                return _this.getWeatherData();
+              case 10:
+                _context.next = 16;
+                break;
+              case 12:
+                _context.prev = 12;
+                _context.t0 = _context["catch"](0);
+                _this.setState({
+                  preloaderAlert: true,
+                  preloaderInfo: _context.t0.message === _js_consts_js__WEBPACK_IMPORTED_MODULE_18__.ERROR.unableToGeocode ? _js_consts_js__WEBPACK_IMPORTED_MODULE_18__.MESSAGE.enterManually : _js_consts_js__WEBPACK_IMPORTED_MODULE_18__.MESSAGE.connectionError
+                });
+                console.error("getCurrentPosition ".concat(_context.t0));
+              case 16:
+              case "end":
+                return _context.stop();
             }
-          });
-        }).then(function () {
-          _this.getLocationName();
-
-          _this.getWeatherData();
-        })["catch"](function (error) {
-          _this.setState({
-            preloaderAlert: true,
-            preloaderInfo: error.message === _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.ERROR.failedToFetch ? _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.MESSAGE.connectionError : _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.MESSAGE.enterManually
-          });
-
-          console.error(error);
-        });
-      });
-
-      _defineProperty(_assertThisInitialized(_this), "getLocationName", function () {
-        (0,_js_providers_js__WEBPACK_IMPORTED_MODULE_11__.openStreetMapReverseGeocoding)(_this.state.latitude, _this.state.longitude).then(function (data) {
-          _this.setState({
-            location: {
-              city: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_10__.placeNameChooser)(data),
-              country: data.address.country_code.toUpperCase()
+          }
+        }, _callee, null, [[0, 12]]);
+      })));
+      /* reverse geocoding - getting city name from latitude and longitude using openstreetmap.org */
+      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), "getLocationName", /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(/*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_9___default().mark(function _callee2() {
+        var data;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_9___default().wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.prev = 0;
+                _context2.next = 3;
+                return (0,_js_providers_js__WEBPACK_IMPORTED_MODULE_21__.openStreetMapReverseGeocoding)(_this.state.latitude, _this.state.longitude);
+              case 3:
+                data = _context2.sent;
+                _this.setState({
+                  location: {
+                    city: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_20__.placeNameChooser)(data.address),
+                    country: data.address.country_code.toUpperCase()
+                  }
+                });
+                _context2.next = 11;
+                break;
+              case 7:
+                _context2.prev = 7;
+                _context2.t0 = _context2["catch"](0);
+                console.error("getLocationName ".concat(_context2.t0));
+                throw new Error(_js_consts_js__WEBPACK_IMPORTED_MODULE_18__.ERROR.unableToGeocode);
+              case 11:
+              case "end":
+                return _context2.stop();
             }
-          });
-        })["catch"](function (error) {
-          console.error(error);
-        });
-      });
-
-      _defineProperty(_assertThisInitialized(_this), "getCoordinates", function () {
-        (0,_js_providers_js__WEBPACK_IMPORTED_MODULE_11__.openStreetMapForwardGeocoding)(_this.state.input).then(function (data) {
-          _this.setState({
-            latitude: parseFloat(data[0].lat).toFixed(4),
-            longitude: parseFloat(data[0].lon).toFixed(4),
-            location: {
-              city: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_10__.placeNameChooser)(data[0]),
-              country: data[0].address.country_code.toUpperCase()
+          }
+        }, _callee2, null, [[0, 7]]);
+      })));
+      /* forward geocoding - getting latitude and longitude from city name using openstreetmap.org */
+      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), "getCoordinates", /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(/*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_9___default().mark(function _callee3() {
+        var data;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_9___default().wrap(function _callee3$(_context3) {
+          while (1) {
+            switch (_context3.prev = _context3.next) {
+              case 0:
+                _context3.prev = 0;
+                _context3.next = 3;
+                return (0,_js_providers_js__WEBPACK_IMPORTED_MODULE_21__.openStreetMapForwardGeocoding)(_this.state.input);
+              case 3:
+                data = _context3.sent;
+                _this.setState({
+                  latitude: parseFloat(data[0].lat).toFixed(4),
+                  longitude: parseFloat(data[0].lon).toFixed(4),
+                  location: {
+                    city: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_20__.placeNameChooser)(data[0].address),
+                    country: data[0].address.country_code.toUpperCase()
+                  }
+                });
+                _context3.next = 11;
+                break;
+              case 7:
+                _context3.prev = 7;
+                _context3.t0 = _context3["catch"](0);
+                console.error("getCoordinates ".concat(_context3.t0));
+                throw _context3.t0;
+              case 11:
+              case "end":
+                return _context3.stop();
             }
-          });
-        }).then(function () {
-          _this.getWeatherData();
-        })["catch"](function (error) {
-          _this.setState({
-            preloaderAlert: true,
-            preloaderInfo: error.message === _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.ERROR.noData ? _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.MESSAGE.wrongCity : _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.MESSAGE.connectionError
-          });
-
-          console.error(error);
-        });
+          }
+        }, _callee3, null, [[0, 7]]);
+      })));
+      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), "getWeatherData", /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(/*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_9___default().mark(function _callee4() {
+        var data;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_9___default().wrap(function _callee4$(_context4) {
+          while (1) {
+            switch (_context4.prev = _context4.next) {
+              case 0:
+                _context4.prev = 0;
+                _context4.next = 3;
+                return (0,_js_providers_js__WEBPACK_IMPORTED_MODULE_21__.openWeatherMapGetData)(_this.state.latitude, _this.state.longitude);
+              case 3:
+                data = _context4.sent;
+                _this.setState({
+                  currentDayWeatherData: {
+                    temp: Math.round(data.current.temp),
+                    temp_app: Math.round(data.current.feels_like),
+                    pressure: Math.round(data.current.pressure),
+                    humidity: Math.round(data.current.humidity * 100 / 100),
+                    wind: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_20__.speedRecalculate)(_this.state.unitSystem, data.current.wind_speed),
+                    description: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_20__.capitalizeFirstLetter)(data.current.weather[0].description),
+                    icon: data.current.weather[0].icon,
+                    id: data.current.weather[0].id
+                  },
+                  nextDaysWeatherData: data.daily.map(function (next_day) {
+                    return {
+                      temp: Math.round(next_day.temp.day),
+                      pressure: Math.round(next_day.pressure),
+                      humidity: Math.round(next_day.humidity * 100 / 100),
+                      wind: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_20__.speedRecalculate)(_this.state.unitSystem, next_day.wind_speed),
+                      date: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_20__.timestampToDate)(next_day.dt, data.timezone_offset),
+                      description: next_day.weather[0].description.toLowerCase(),
+                      icon: next_day.weather[0].icon,
+                      id: next_day.weather[0].id
+                    };
+                  }),
+                  localTime: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_20__.timestampToDate)(data.current.dt, data.timezone_offset),
+                  currentDayChartData: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_20__.prepareChartData)(data.hourly, data.timezone_offset),
+                  displayCurrentDayWeather: true
+                });
+                _context4.next = 11;
+                break;
+              case 7:
+                _context4.prev = 7;
+                _context4.t0 = _context4["catch"](0);
+                console.error("getWeatherData ".concat(_context4.t0));
+                throw _context4.t0;
+              case 11:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4, null, [[0, 7]]);
+      })));
+      /* removing focus from search field */
+      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), "blurSearchField", function () {
+        react_dom__WEBPACK_IMPORTED_MODULE_11__.findDOMNode((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this)).querySelector('input[type="search"]').blur();
       });
-
-      _defineProperty(_assertThisInitialized(_this), "getWeatherData", function () {
-        (0,_js_providers_js__WEBPACK_IMPORTED_MODULE_11__.openWeatherMapGetData)(_this.state.latitude, _this.state.longitude).then(function (data) {
-          _this.setState({
-            currentDayWeatherData: {
-              temp: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_10__.unitsChanger)(_this.state.units, _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.WEATHER.temperature, data.current.temp),
-              temp_app: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_10__.unitsChanger)(_this.state.units, _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.WEATHER.temperature, data.current.feels_like),
-              pressure: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_10__.unitsChanger)(_this.state.units, _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.WEATHER.pressure, data.current.pressure),
-              humidity: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_10__.unitsChanger)(_this.state.units, _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.WEATHER.humidity, data.current.humidity),
-              wind: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_10__.unitsChanger)(_this.state.units, _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.WEATHER.wind, data.current.wind_speed),
-              description: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_10__.capitalizeFirstLetter)(data.current.weather[0].description),
-              icon: data.current.weather[0].icon,
-              id: data.current.weather[0].id
-            },
-            nextDaysWeatherData: data.daily.map(function (next_day) {
-              return {
-                temp: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_10__.unitsChanger)(_this.state.units, _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.WEATHER.temperature, next_day.temp.day),
-                pressure: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_10__.unitsChanger)(_this.state.units, _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.WEATHER.pressure, next_day.pressure),
-                humidity: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_10__.unitsChanger)(_this.state.units, _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.WEATHER.humidity, next_day.humidity),
-                wind: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_10__.unitsChanger)(_this.state.units, _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.WEATHER.wind, next_day.wind_speed),
-                date: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_10__.timestampToDate)(next_day.dt, data.timezone_offset),
-                description: next_day.weather[0].description.toLowerCase(),
-                icon: next_day.weather[0].icon,
-                id: next_day.weather[0].id
-              };
-            }),
-            localTime: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_10__.timestampToDate)(data.current.dt, data.timezone_offset),
-            currentDayChartData: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_10__.prepareChartData)(data.hourly, data.timezone_offset),
-            displayCurrentDayWeather: true
-          });
-        })["catch"](function (error) {
-          _this.setState({
-            preloaderAlert: true,
-            preloaderInfo: _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.MESSAGE.connectionError
-          });
-
-          console.error(error);
-        });
-      });
-
-      _defineProperty(_assertThisInitialized(_this), "blurSearchField", function () {
-        react_dom__WEBPACK_IMPORTED_MODULE_1__.findDOMNode(_assertThisInitialized(_this)).querySelector('input[type="search"]').blur();
-      });
-
-      _defineProperty(_assertThisInitialized(_this), "displayNextDays", function () {
+      /* 'next days forecast' button handling */
+      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), "displayNextDays", function () {
         _this.setState({
           displayNextDaysWeather: !_this.state.displayNextDaysWeather
         });
       });
-
-      _defineProperty(_assertThisInitialized(_this), "handleSubmit", function (event) {
+      /* 'get weather' button handling */
+      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), "handleSubmit", function (event) {
         event.preventDefault();
-
-        _this.getCoordinates();
-
-        _this.blurSearchField();
-
         _this.setState({
           input: '',
-          localTime: {},
           displayCurrentDayWeather: false,
           displayNextDaysWeather: false,
           preloaderAlert: false,
-          preloaderInfo: _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.MESSAGE.loadingData
+          preloaderInfo: _js_consts_js__WEBPACK_IMPORTED_MODULE_18__.MESSAGE.loadingData
+        });
+        _this.blurSearchField();
+        _this.getCoordinates().then(function () {
+          return _this.getWeatherData();
+        })["catch"](function (error) {
+          console.error("handleSubmit ".concat(error));
+          _this.setState({
+            preloaderAlert: true,
+            preloaderInfo: error.message === _js_consts_js__WEBPACK_IMPORTED_MODULE_18__.ERROR.noData ? _js_consts_js__WEBPACK_IMPORTED_MODULE_18__.MESSAGE.wrongCityName : _js_consts_js__WEBPACK_IMPORTED_MODULE_18__.MESSAGE.connectionError
+          });
         });
       });
-
-      _defineProperty(_assertThisInitialized(_this), "handleInputOnChange", function (event) {
+      /* input field on change handling */
+      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), "handleInputOnChange", function (event) {
         _this.setState({
           input: event.target.value
         });
       });
-
-      _defineProperty(_assertThisInitialized(_this), "handleInputOnFocus", function () {
-        (0,_js_mobile_js__WEBPACK_IMPORTED_MODULE_9__.isMobile)() && _js_mobile_js__WEBPACK_IMPORTED_MODULE_9__.viewportSettingsChanger.call(_assertThisInitialized(_this));
+      /* input field on focus handling */
+      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), "handleInputOnFocus", function () {
+        (0,_js_mobile_js__WEBPACK_IMPORTED_MODULE_19__.isMobile)() && _js_mobile_js__WEBPACK_IMPORTED_MODULE_19__.viewportSettingsChanger.call((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this));
       });
-
-      _defineProperty(_assertThisInitialized(_this), "UNSAFE_componentWillMount", function () {
-        _this.getCurrentPosition();
-      });
-
-      _defineProperty(_assertThisInitialized(_this), "componentDidMount", function () {
-        window.onload = function () {
-          (0,_js_mobile_js__WEBPACK_IMPORTED_MODULE_9__.isMobile)() && _js_mobile_js__WEBPACK_IMPORTED_MODULE_9__.mobileStyles.call(_assertThisInitialized(_this));
-        };
-
-        window.onresize = function () {
-          (0,_js_mobile_js__WEBPACK_IMPORTED_MODULE_9__.isMobile)() && _js_mobile_js__WEBPACK_IMPORTED_MODULE_9__.mobileStyles.call(_assertThisInitialized(_this));
-        };
-
-        window.screen.orientation.onchange = function () {
-          _this.setState({
-            screenLandscapeOrientation: !_this.state.screenLandscapeOrientation
-          });
-
-          if ((0,_js_mobile_js__WEBPACK_IMPORTED_MODULE_9__.isMobile)()) {
-            _js_mobile_js__WEBPACK_IMPORTED_MODULE_9__.mobileStyles.call(_assertThisInitialized(_this));
-            _js_mobile_js__WEBPACK_IMPORTED_MODULE_9__.viewportSettingsChanger.call(_assertThisInitialized(_this));
+      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), "componentDidMount", /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(/*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_9___default().mark(function _callee5() {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_9___default().wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                _context5.next = 2;
+                return _this.getCurrentPosition();
+              case 2:
+                window.onload = function () {
+                  (0,_js_mobile_js__WEBPACK_IMPORTED_MODULE_19__.isMobile)() && _js_mobile_js__WEBPACK_IMPORTED_MODULE_19__.mobileStyles.call((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this));
+                };
+                window.onresize = function () {
+                  (0,_js_mobile_js__WEBPACK_IMPORTED_MODULE_19__.isMobile)() && _js_mobile_js__WEBPACK_IMPORTED_MODULE_19__.mobileStyles.call((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this));
+                };
+                window.screen.orientation.onchange = function () {
+                  _this.setState({
+                    screenLandscapeOrientation: !_this.state.screenLandscapeOrientation
+                  });
+                  if ((0,_js_mobile_js__WEBPACK_IMPORTED_MODULE_19__.isMobile)()) {
+                    _js_mobile_js__WEBPACK_IMPORTED_MODULE_19__.mobileStyles.call((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this));
+                    _js_mobile_js__WEBPACK_IMPORTED_MODULE_19__.viewportSettingsChanger.call((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this));
+                  }
+                };
+              case 5:
+              case "end":
+                return _context5.stop();
+            }
           }
-        };
-      });
-
-      _defineProperty(_assertThisInitialized(_this), "render", function () {
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", {
+        }, _callee5);
+      })));
+      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_8__["default"])((0,_babel_runtime_helpers_assertThisInitialized__WEBPACK_IMPORTED_MODULE_4__["default"])(_this), "render", function () {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_10__.createElement("div", {
           className: "app-wrapper"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_currentDate_jsx__WEBPACK_IMPORTED_MODULE_3__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_searchSection_jsx__WEBPACK_IMPORTED_MODULE_2__["default"], {
-          input: _this.state.input,
-          handleSubmit: _this.handleSubmit,
+        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_10__.createElement(_currentDate_jsx__WEBPACK_IMPORTED_MODULE_13__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_10__.createElement(_searchSection_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
+          handleInputOnChange: _this.handleInputOnChange,
           handleInputOnFocus: _this.handleInputOnFocus,
-          handleInputOnChange: _this.handleInputOnChange
-        }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_currentWeather_jsx__WEBPACK_IMPORTED_MODULE_4__["default"], {
+          handleSubmit: _this.handleSubmit,
+          input: _this.state.input
+        }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_10__.createElement(_currentWeather_jsx__WEBPACK_IMPORTED_MODULE_14__["default"], {
+          buttonText: _this.state.displayNextDaysWeather ? _js_consts_js__WEBPACK_IMPORTED_MODULE_18__.BUTTON.currentDayForecast : _js_consts_js__WEBPACK_IMPORTED_MODULE_18__.BUTTON.nextDaysForecast,
+          currentDay: _this.state.currentDayWeatherData,
+          displayComponent: _this.state.displayCurrentDayWeather,
+          displayNextDays: _this.displayNextDays,
           localTime: _this.state.localTime,
           location: _this.state.location,
-          currentDay: _this.state.currentDayWeatherData,
-          buttonText: _this.state.displayNextDaysWeather ? _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.BUTTON.currentDayForecast : _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.BUTTON.nextDaysForecast,
-          displayNextDays: _this.displayNextDays,
-          preloaderInfo: _this.state.preloaderInfo,
           preloaderAlert: _this.state.preloaderAlert,
-          displayComponent: _this.state.displayCurrentDayWeather
-        }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_weatherChart_jsx__WEBPACK_IMPORTED_MODULE_5__["default"], {
-          hourlyForecast: _this.state.currentDayChartData,
-          units: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_10__.unitsChanger)(_this.state.units),
+          preloaderInfo: _this.state.preloaderInfo,
+          unitSystem: _this.state.unitSystem
+        }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_10__.createElement(_weatherChart_jsx__WEBPACK_IMPORTED_MODULE_15__["default"], {
           displayComponent: _this.state.displayCurrentDayWeather,
-          switchComponent: _this.state.displayNextDaysWeather
-        }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(_nextDaysWeather_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
+          hourlyForecast: _this.state.currentDayChartData,
+          switchComponent: _this.state.displayNextDaysWeather,
+          unitSystem: _this.state.unitSystem
+        }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_10__.createElement(_nextDaysWeather_jsx__WEBPACK_IMPORTED_MODULE_16__["default"], {
           nextDays: _this.state.nextDaysWeatherData,
+          unitSystem: _this.state.unitSystem,
           switchComponent: _this.state.displayNextDaysWeather
         }));
       });
-
       return _this;
     }
-
-    return _createClass(Main);
-  }(react__WEBPACK_IMPORTED_MODULE_0__.Component);
-
+    return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2__["default"])(Main);
+  }(react__WEBPACK_IMPORTED_MODULE_10__.Component);
   var App = /*#__PURE__*/function (_React$Component2) {
-    _inherits(App, _React$Component2);
-
+    (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_5__["default"])(App, _React$Component2);
     var _super2 = _createSuper(App);
-
     function App() {
-      _classCallCheck(this, App);
-
+      (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_3__["default"])(this, App);
       return _super2.apply(this, arguments);
     }
-
-    _createClass(App, [{
+    (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2__["default"])(App, [{
       key: "render",
       value: function render() {
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(Main, null);
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_10__.createElement(Main, null);
       }
     }]);
-
     return App;
-  }(react__WEBPACK_IMPORTED_MODULE_0__.Component);
-
-  react_dom__WEBPACK_IMPORTED_MODULE_1__.render( /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_0__.createElement(App, null), document.getElementById('app'));
+  }(react__WEBPACK_IMPORTED_MODULE_10__.Component);
+  react_dom__WEBPACK_IMPORTED_MODULE_11__.render(/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_10__.createElement(App, null), document.getElementById('app'));
 });
 })();
 

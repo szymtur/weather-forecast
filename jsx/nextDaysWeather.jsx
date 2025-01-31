@@ -10,6 +10,7 @@ class NextDaysWeather extends React.Component {
             return (
                 <OneDayWeather
                     nextDay = {element}
+                    unitSystem = {this.props.unitSystem}
                     key = {index}
                 />
             )

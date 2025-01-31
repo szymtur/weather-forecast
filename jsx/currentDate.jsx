@@ -17,11 +17,8 @@ class CurrentDateHeader extends React.Component {
         })
     }
 
-    UNSAFE_componentWillMount() {
-        this.currentTime();
-    }
-
     componentDidMount() {
+        this.currentTime();
         this.interval = setInterval(() => this.currentTime(), 1000);
     }
 

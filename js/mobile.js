@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 /* function to detect mobile devices */
 function isMobile() {
