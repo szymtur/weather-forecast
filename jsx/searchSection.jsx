@@ -1,7 +1,6 @@
 'use strict';
 
 import React from 'react';
-import ReactDOM from 'react-dom';
 
 import { isMobile } from '../js/mobile.js';
 
@@ -9,7 +8,7 @@ class SearchSection extends React.Component {
 
     componentDidMount() {
         if (isMobile()) {
-            ReactDOM.findDOMNode(this).querySelector('input[type="search"]').blur();
+            this.props.inputRef?.current && this.props.inputRef.current.blur();
         }
     }
 
@@ -18,13 +17,14 @@ class SearchSection extends React.Component {
             <div className='search'>
                 <form onSubmit={this.props.handleSubmit}>
                     <input
-                        type="search"
                         autoFocus={true}
                         className='normal'
-                        placeholder='city'
-                        value={this.props.input}
-                        onChange={this.props.handleInputOnChange}
                         onFocus={this.props.handleInputOnFocus}
+                        onChange={this.props.handleInputOnChange}
+                        placeholder='city'
+                        ref={this.props.inputRef}
+                        type="search"
+                        value={this.props.input}
                     />
                     <input
                         type='submit'

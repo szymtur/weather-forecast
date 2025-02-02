@@ -8,25 +8,29 @@ const { openWeatherMap, ipInfo, lang, unitSystem } = config;
 
 const ipInfoGeolocation = () => {
     return fetch(`https://ipinfo.io/?token=${ipInfo}`)
-        .then(response => {
+        .then((response) => {
             if(!response.ok) {
                 throw new Error(response.status.toString());
             }
 
             return response.json();
+        })
+        .catch((error) => {
+            console.error(`ipInfoGeolocation ${error}`);
+            throw new Error(ERROR.unableToGeolocation);
         });
 };
 
-const openStreetMapForwardGeocoding = input => {
+const openStreetMapForwardGeocoding = (input) => {
     return fetch(`https://nominatim.openstreetmap.org/search?format=json&limit=1&addressdetails=1&q=${input}&accept-language=${lang}`)
-        .then(response => {
+        .then((response) => {
             if (!response.ok) {
                 throw new Error(ERROR.badRequest);
             }
 
             return response.json();
         })
-        .then(data => {
+        .then((data) => {
             if(!data.length) {
                 throw new Error(ERROR.noData);
             }
@@ -37,14 +41,14 @@ const openStreetMapForwardGeocoding = input => {
 
 const openStreetMapReverseGeocoding = (latitude, longitude) => {
     return fetch(`https://nominatim.openstreetmap.org/reverse?format=json&zoom=14&lat=${latitude}&lon=${longitude}&accept-language=${lang}`)
-        .then(response => {
+        .then((response) => {
             if (!response.ok) {
                 throw new Error(ERROR.badRequest);
             }
 
             return response.json();
         })
-        .then(data => {
+        .then((data) => {
             if (data.error) {
                 throw new Error(data.error.toString());
             }
@@ -55,7 +59,7 @@ const openStreetMapReverseGeocoding = (latitude, longitude) => {
 
 const openWeatherMapGetData = (latitude, longitude) => {
     return fetch(`https://api.openweathermap.org/data/3.0/onecall?&lat=${latitude}&lon=${longitude}&appid=${openWeatherMap}&units=${unitSystem}&lang=${lang}&exclude=minutely,alerts`)
-        .then( response => {
+        .then((response) => {
             if(!response.ok) {
                 throw new Error(response.statusText);
             }

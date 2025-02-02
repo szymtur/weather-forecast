@@ -1,6 +1,6 @@
 'use strict';
 
-import { UNIT_SYSTEM } from './consts.js';
+import { UNIT_SYSTEM, WEATHER_ICON_MAP } from './consts.js';
 
 
 const capitalizeFirstLetter = (str) => str.charAt(0).toUpperCase() + str.substring(1);
@@ -21,19 +21,20 @@ const timestampToDate = (timestamp, offset) => {
 };
 
 const prepareChartData = (hourlyData, timezoneOffset) => {
-    const chartData = { time: [], temperature: [], pressure: [] };
+    const chartData = { time: [], temperature: [], pressure: [], icon: [] };
 
     hourlyData.forEach((hourData) => {
         chartData.time.push(timestampToDate(hourData.dt, timezoneOffset).time);
         chartData.temperature.push(hourData.temp);
         chartData.pressure.push(hourData.pressure);
+        chartData.icon.push(WEATHER_ICON_MAP[hourData.weather[0]?.icon].code);
     });
 
     return chartData;
 };
 
 const speedRecalculate = (unitSystem, value) => {
-    return unitSystem === (UNIT_SYSTEM.metric ? Math.round(Number(value) * 3.6) : Number(value).toFixed(2));
+    return (unitSystem === UNIT_SYSTEM.metric ? Math.round(Number(value) * 3.6) : Number(value).toFixed(2));
 };
 
 const placeNameChooser = (address) => {
@@ -83,8 +84,8 @@ const placeNameChooser = (address) => {
         'country_name'
     ];
 
-    const placeName = placeAndAreaNames.map(key => address[key]).find(Boolean);
-    const cityName = cityNames.map(key => address[key]).find(Boolean);
+    const placeName = placeAndAreaNames.map((key) => address[key]).find(Boolean);
+    const cityName = cityNames.map((key) => address[key]).find(Boolean);
 
     return [...new Set([placeName, cityName])].join(' ');
 };
