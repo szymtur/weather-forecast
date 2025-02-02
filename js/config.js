@@ -13,9 +13,9 @@ export { config };
 /*
     Units format
     =======================================
-    metric       =>  Celsius     km/h    mm
-    scientific   =>  Kelvin      m/s     mm
-    imperial     =>  Fahrenheit  mph     in
+    metric       ->  Celsius     km/h    mm
+    scientific   ->  Kelvin      m/s     mm
+    imperial     ->  Fahrenheit  mph     in
 
     Multilingual support
     ====================

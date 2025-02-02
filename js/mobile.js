@@ -12,7 +12,7 @@ function isMobile() {
         (/Kindle|Silk|KFAPW|KFARWI|KFASWI|KFFOWI|KFJW|KFMEWI|KFOT|KFSAW|KFSOWI|KFTBW|KFTHW|KFTT|WFFOWI/i).test(navigator.userAgent)
     ];
 
-    return mobileDevices.some(isMobileDevice => isMobileDevice);
+    return mobileDevices.some((isMobileDevice) => isMobileDevice);
 }
 
 /* function to change viewport settings */
@@ -44,11 +44,11 @@ function mobileStyles() {
 
     /* styles for main preloader depending on the device's orientation */
     if(!weatherContainer) {
-        if (this.state.screenLandscapeOrientation && window.innerHeight <= mainContainerHeight / 1.65) {
-            mainPreloader.style.paddingTop ='1em';
+        if (this.state.screenLandscapeOrientation && window.innerHeight <= mainContainerHeight / 1.5) {
+            mainPreloader.style.paddingTop ='3em';
         }
         else {
-            mainPreloader.style.paddingTop ='5em';
+            mainPreloader.style.paddingTop ='8em';
         }
     }
 

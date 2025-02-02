@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 
 import SearchSection from './searchSection.jsx';
 import CurrentDateHeader from './currentDate.jsx';
@@ -31,6 +31,7 @@ document.addEventListener('DOMContentLoaded', function() {
             displayCurrentDayWeather: false,
             displayNextDaysWeather: false,
             input: '',
+            inputRef: React.createRef(),
             latitude: null,
             longitude: null,
             location: {},
@@ -50,23 +51,21 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 const [latitude, longitude] = data.loc.split(',');
 
-                this.setState({
-                    latitude,
-                    longitude,
-                    location: { city: data.city, country: data.country.toUpperCase() }
+                await new Promise((resolve) => {
+                    this.setState({
+                        latitude,
+                        longitude,
+                        location: { city: data.city, country: data.country.toUpperCase() }
+                    }, resolve)
                 });
-
-                await this.getLocationName();
-                await this.getWeatherData();
 
             } catch (error) {
-                this.setState({
-                    preloaderAlert: true,
-                    preloaderInfo: error.message === ERROR.unableToGeocode ? MESSAGE.enterManually : MESSAGE.connectionError
-                });
-
-                console.error(`getCurrentPosition ${error}`);
+                console.error(`getCurrentPosition ${error}`)
+                throw error;
             }
+
+            await this.getLocationName();
+            await this.getWeatherData();
         };
 
 
@@ -117,18 +116,16 @@ document.addEventListener('DOMContentLoaded', function() {
                         humidity: Math.round((data.current.humidity * 100) / 100),
                         wind: speedRecalculate(this.state.unitSystem, data.current.wind_speed),
                         description: capitalizeFirstLetter(data.current.weather[0].description),
-                        icon: data.current.weather[0].icon,
-                        id: data.current.weather[0].id
+                        icon: data.current.weather[0].icon
                     },
-                    nextDaysWeatherData: data.daily.map(next_day => ({
+                    nextDaysWeatherData: data.daily.map((next_day) => ({
                         temp: Math.round(next_day.temp.day),
                         pressure: Math.round(next_day.pressure),
                         humidity: Math.round((next_day.humidity * 100) / 100),
                         wind: speedRecalculate(this.state.unitSystem, next_day.wind_speed),
                         date: timestampToDate(next_day.dt, data.timezone_offset),
                         description: next_day.weather[0].description.toLowerCase(),
-                        icon: next_day.weather[0].icon,
-                        id: next_day.weather[0].id
+                        icon: next_day.weather[0].icon
                     })),
                     localTime: timestampToDate(data.current.dt, data.timezone_offset),
                     currentDayChartData: prepareChartData(data.hourly, data.timezone_offset),
@@ -143,7 +140,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         /* removing focus from search field */
         blurSearchField = () => {
-            ReactDOM.findDOMNode(this).querySelector('input[type="search"]').blur();
+            this.state.inputRef.current && this.state.inputRef.current.blur();
         };
 
 
@@ -156,7 +153,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 
         /* 'get weather' button handling */
-        handleSubmit = event => {
+        handleSubmit = (event) => {
             event.preventDefault();
 
             this.setState({
@@ -173,19 +170,19 @@ document.addEventListener('DOMContentLoaded', function() {
                 .then(() => {
                     return this.getWeatherData();
                 })
-                .catch( error => {
+                .catch((error) => {
                     console.error(`handleSubmit ${error}`);
 
                     this.setState({
                         preloaderAlert: true,
-                        preloaderInfo: error.message === ERROR.noData ? MESSAGE.wrongCityName : MESSAGE.connectionError,
+                        preloaderInfo: error.message === ERROR.noData ? MESSAGE.wrongCityName : MESSAGE.connectionError
                     });
                 });
         }
 
 
         /* input field on change handling */
-        handleInputOnChange = event => {
+        handleInputOnChange = (event) => {
             this.setState({ input: event.target.value });
         };
 
@@ -196,8 +193,17 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
 
-        componentDidMount = async () => {
-            await this.getCurrentPosition();
+        componentDidMount = () => {
+            this.getCurrentPosition().catch((error) => {
+                this.setState({
+                    preloaderAlert: true,
+                    preloaderInfo: [ERROR.unableToGeolocation,
+                        ERROR.unableToGeocode].includes(error.message) ? MESSAGE.enterManually : MESSAGE.connectionError
+                });
+
+                console.error(`componentDidMount ${error}`);
+            });
+
 
             window.onload = () => {
                 isMobile() && mobileStyles.call(this);
@@ -227,6 +233,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         handleInputOnFocus = {this.handleInputOnFocus}
                         handleSubmit = {this.handleSubmit}
                         input = {this.state.input}
+                        inputRef = {this.state.inputRef}
                     />
                     <CurrentWeather
                         buttonText =  {this.state.displayNextDaysWeather ? BUTTON.currentDayForecast : BUTTON.nextDaysForecast}
@@ -262,8 +269,7 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 
+    const root = ReactDOM.createRoot(document.getElementById("app"));
 
-    ReactDOM.render (
-        <App />, document.getElementById('app')
-    );
+    root.render(<App />);
 });

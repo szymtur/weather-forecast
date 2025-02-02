@@ -10,7 +10,7 @@ import { WEATHER_UNITS } from '../js/consts.js';
 class CurrentWeather extends React.Component {
 
     render() {
-        const { temp, temp_app, pressure, humidity, wind, description, icon, id } = this.props.currentDay;
+        const { temp, temp_app, pressure, humidity, wind, description, icon } = this.props.currentDay;
         const { temperature: tempUnit, pressure: pressureUnit, humidity: humidityUnit, wind: windUnit } = WEATHER_UNITS[this.props.unitSystem];
         const { time, date, timezone } = this.props.localTime;
         const { city, country } = this.props.location;
@@ -39,7 +39,7 @@ class CurrentWeather extends React.Component {
 
                 <div className = 'left-col'>
                     <div className='left-rows'>
-                        <p><i className='wi wi-thermometer'/></p><h3>{temp} {tempUnit}<span> / {temp_app} {tempUnit}</span></h3>
+                        <p><i className='wi wi-thermometer' /></p><h3>{temp} {tempUnit}<span> / {temp_app} {tempUnit}</span></h3>
                     </div>
                     <div className='left-rows'>
                         <p><i className='wi wi-barometer'/></p><h3>{pressure} {pressureUnit}</h3>
@@ -57,7 +57,7 @@ class CurrentWeather extends React.Component {
                         <h5>{description}</h5>
                     </div>
                     <div className = 'col-40'>
-                        <CurrentIcon icon={icon} id={id}/>
+                        <CurrentIcon icon={icon} />
                     </div>
                     <div className='right-bottom'>
                         <button onClick={this.props.displayNextDays}>

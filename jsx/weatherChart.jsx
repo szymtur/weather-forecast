@@ -21,23 +21,26 @@ class WeatherChart extends React.Component {
         stacked: false,
         layout: {
             padding: {
-                bottom: 5
+                bottom: -7
             }
         },
         plugins: {
             legend: {
                 display: true,
                 onClick: null,
+                position: 'bottom',
                 labels: {
-                    usePointStyle: true,
-                    pointStyle: 'rectRounded',
+                    color: '#000000',
                     font: {
-                        weight: 600,
+                        weight: 500,
                         size: 13,
                         family: '"Montserrat", sans-serif'
-                    }
+                    },
+                    pointStyle: 'circle',
+                    usePointStyle: true,
+                    boxHeight: 4,
                 }
-            },
+            }
         },
         scales: {
             axisY1: {
@@ -75,20 +78,33 @@ class WeatherChart extends React.Component {
                     maxTicksLimit: 5,
                     precision: 0,
                     font: {
-                        weight: 600,
                         size: 12,
+                        weight: 600,
                         family: '"Montserrat", sans-serif'
                     }
                 }
             },
-            xAxis: {
+            x: {
+                position: 'bottom',
                 ticks: {
-                    color: 'black',
+                    color: '#000000',
                     font: {
-                        weight: 600,
                         size: 12,
+                        weight: 600,
                         family: '"Montserrat", sans-serif',
                     }
+                }
+            },
+            x2: {
+                position: 'top',
+                ticks: {
+                    color: '#000000',
+                    padding: 10,
+                    font: {
+                        size: 23,
+                        family: 'Weathericons',
+                    },
+                    callback: (_, index) => this.props.hourlyForecast.icon.slice(1, 10)[index]
                 }
             }
         }
@@ -103,7 +119,7 @@ class WeatherChart extends React.Component {
             datasets: [
                 {
                     label: WEATHER_UNITS[this.props.unitSystem]?.temperature,
-                    data: temperature && temperature.slice(1, 10),
+                    data: temperature?.slice(1, 10),
                     borderColor: '#808080',
                     backgroundColor: 'white',
                     pointRadius: 3,
@@ -113,17 +129,16 @@ class WeatherChart extends React.Component {
                 },
                 {
                     label: WEATHER_UNITS[this.props.unitSystem]?.pressure,
-                    data: pressure && pressure.slice(1, 10),
+                    data: pressure?.slice(1, 10),
                     borderColor: '#800080',
                     backgroundColor: 'white',
                     pointRadius: 3,
                     pointStyle: 'circle',
                     borderWidth: 2,
                     yAxisID: 'axisY2',
-                },
+                }
             ],
         };
-
 
         if (!this.props.displayComponent || this.props.switchComponent) {
             return null;

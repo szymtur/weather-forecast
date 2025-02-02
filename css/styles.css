@@ -224,6 +224,7 @@ body {
     font-size: 1.4em;
     color: #000000;
 }
+
 .current-weather .left-col .left-rows p .wi.wi-strong-wind {
     margin-left: 0.2em;
 }
@@ -385,6 +386,7 @@ body {
     display: inline-block;
     width: 40px;
 }
+
 .next-days-weather .day-container .row h5 {
     display: inline-block;
     font-weight: 500;
@@ -424,6 +426,7 @@ body {
     from {
         transform: rotate(0deg);
     }
+
     to {
         transform: rotate(360deg);
     }

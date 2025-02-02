@@ -7,7 +7,7 @@ import { WEATHER_UNITS } from "../js/consts";
 
 class OneDayWeather extends React.Component {
     render() {
-        const { date, temp, pressure, humidity, wind, description, icon, id } = this.props.nextDay;
+        const { date, temp, pressure, humidity, wind, description, icon } = this.props.nextDay;
         const { temperature: tempUnit, pressure: pressureUnit, humidity: humidityUnit, wind: windUnit } = WEATHER_UNITS[this.props.unitSystem];
 
         return (
@@ -16,7 +16,7 @@ class OneDayWeather extends React.Component {
                     <h5>{date.date}</h5>
                 </div>
                 <div className='row icon'>
-                    <CurrentIcon icon={icon} id={id}/>
+                    <CurrentIcon icon={icon}/>
                 </div>
                 <div className='row description'>
                     <h6>{description}</h6>
