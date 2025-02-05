@@ -5,7 +5,7 @@ import React from 'react';
 import { WEATHER_ICON_MAP } from '../js/consts.js';
 
 
-class CurrentIcon extends React.Component {
+class WeatherIcon extends React.Component {
     render() {
         return (
             <div className="current-icon">
@@ -15,4 +15,4 @@ class CurrentIcon extends React.Component {
     }
 }
 
-export default CurrentIcon;
+export default WeatherIcon;

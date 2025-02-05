@@ -1,7 +1,7 @@
 'use strict';
 
 import React from 'react';
-import CurrentIcon from './currentIcon.jsx';
+import WeatherIcon from './weatherIcon.jsx';
 
 import { WEATHER_UNITS } from "../js/consts";
 
@@ -16,7 +16,7 @@ class OneDayWeather extends React.Component {
                     <h5>{date.date}</h5>
                 </div>
                 <div className='row icon'>
-                    <CurrentIcon icon={icon}/>
+                    <WeatherIcon icon={icon}/>
                 </div>
                 <div className='row description'>
                     <h6>{description}</h6>

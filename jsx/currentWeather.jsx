@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-import CurrentIcon from './currentIcon.jsx';
+import WeatherIcon from './weatherIcon.jsx';
 import MainPreloader from './mainPreloader.jsx';
 
 import { WEATHER_UNITS } from '../js/consts.js';
@@ -57,7 +57,7 @@ class CurrentWeather extends React.Component {
                         <h5>{description}</h5>
                     </div>
                     <div className = 'col-40'>
-                        <CurrentIcon icon={icon} />
+                        <WeatherIcon icon={icon} />
                     </div>
                     <div className='right-bottom'>
                         <button onClick={this.props.displayNextDays}>

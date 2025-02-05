@@ -10,7 +10,6 @@ import { WEATHER_UNITS } from '../js/consts.js';
 Chart.register(CategoryScale, Legend, LinearScale, LineElement, PointElement);
 
 class WeatherChart extends React.Component {
-
     options = {
         responsive: true,
         maintainAspectRatio: false,
@@ -21,7 +20,7 @@ class WeatherChart extends React.Component {
         stacked: false,
         layout: {
             padding: {
-                bottom: -7
+                bottom: -5
             }
         },
         plugins: {
@@ -101,7 +100,7 @@ class WeatherChart extends React.Component {
                     color: '#000000',
                     padding: 10,
                     font: {
-                        size: 23,
+                        size: 22,
                         family: 'Weathericons',
                     },
                     callback: (_, index) => this.props.hourlyForecast.icon.slice(1, 10)[index]

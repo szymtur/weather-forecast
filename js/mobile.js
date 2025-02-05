@@ -21,7 +21,7 @@ function viewportSettingsChanger() {
     const viewportSettings = {
         landscape: `width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`,
         portrait: `width=device-width, height=850, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`
-    }
+    };
 
     if(this.state.screenLandscapeOrientation) {
         viewportMeta.setAttribute('content', viewportSettings.landscape);
@@ -40,7 +40,7 @@ function mobileStyles() {
     const mainContainerHeight = mainContainer.offsetHeight;
 
     /* styles for body */
-    document.querySelector('body').style.background = '#d3d3d3';
+    document.body.classList.add('mobile-background');
 
     /* styles for main preloader depending on the device's orientation */
     if(!weatherContainer) {

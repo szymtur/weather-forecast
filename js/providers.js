@@ -54,7 +54,11 @@ const openStreetMapReverseGeocoding = (latitude, longitude) => {
             }
 
             return data;
-        });
+        })
+        .catch((error) => {
+            console.error(`openStreetMapReverseGeocoding ${error}`);
+            throw new Error(ERROR.unableToGeocode);
+        })
 };
 
 const openWeatherMapGetData = (latitude, longitude) => {

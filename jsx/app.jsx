@@ -48,24 +48,26 @@ document.addEventListener('DOMContentLoaded', function() {
         getCurrentPosition = async () => {
             try {
                 const data = await ipInfoGeolocation();
-
                 const [latitude, longitude] = data.loc.split(',');
 
-                await new Promise((resolve) => {
-                    this.setState({
-                        latitude,
-                        longitude,
-                        location: { city: data.city, country: data.country.toUpperCase() }
-                    }, resolve)
-                });
+                this.setState({
+                    latitude,
+                    longitude,
+                    location: { city: data.city, country: data.country.toUpperCase() }
+                }, async () => {
+                    try {
+                        await this.getLocationName();
+                        await this.getWeatherData();
+                    } catch (error) {
+                        console.error(`getCurrentPosition ${error}`);
+                        this.handleError(error);
+                    }
+                })
 
             } catch (error) {
-                console.error(`getCurrentPosition ${error}`)
+                console.error(`getCurrentPosition ${error}`);
                 throw error;
             }
-
-            await this.getLocationName();
-            await this.getWeatherData();
         };
 
 
@@ -79,10 +81,11 @@ document.addEventListener('DOMContentLoaded', function() {
                         city: placeNameChooser(data.address),
                         country: data.address.country_code.toUpperCase(),
                     },
-                });
+                })
+
             } catch (error) {
                 console.error(`getLocationName ${error}`);
-                throw new Error(ERROR.unableToGeocode);
+                throw error;
             }
         };
 
@@ -93,10 +96,21 @@ document.addEventListener('DOMContentLoaded', function() {
                 const data = await openStreetMapForwardGeocoding(this.state.input);
 
                 this.setState({
-                    latitude: parseFloat(data[0].lat).toFixed(4),
-                    longitude: parseFloat(data[0].lon).toFixed(4),
-                    location: { city: placeNameChooser(data[0].address), country: data[0].address.country_code.toUpperCase() },
+                    latitude: data[0].lat,
+                    longitude: data[0].lon,
+                    location: {
+                        city: placeNameChooser(data[0].address),
+                        country: data[0].address.country_code.toUpperCase()
+                    },
+                }, async () => {
+                    try {
+                        await this.getWeatherData();
+                    } catch (error) {
+                        console.error(`getCoordinates ${error}`);
+                        this.handleError(error);
+                    }
                 });
+
             } catch (error) {
                 console.error(`getCoordinates ${error}`);
                 throw error;
@@ -104,6 +118,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
 
+        /* Fetching weather data from OpenWeatherMap API */
         getWeatherData = async () => {
             try {
                 const data = await openWeatherMapGetData(this.state.latitude, this.state.longitude);
@@ -144,7 +159,7 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
 
-        /* 'next days forecast' button handling */
+        /* handling 'next days forecast' button click */
         displayNextDays = () => {
             this.setState({
                 displayNextDaysWeather: !this.state.displayNextDaysWeather
@@ -152,10 +167,8 @@ document.addEventListener('DOMContentLoaded', function() {
         };
 
 
-        /* 'get weather' button handling */
-        handleSubmit = (event) => {
-            event.preventDefault();
-
+        /* resetting state before fetching new data */
+        resetStateBeforeFetching = () => {
             this.setState({
                 input: '',
                 displayCurrentDayWeather: false,
@@ -163,63 +176,75 @@ document.addEventListener('DOMContentLoaded', function() {
                 preloaderAlert: false,
                 preloaderInfo: MESSAGE.loadingData
             });
+        };
 
+
+        /* handling errors and displaying relevant message */
+        handleError = (error) => {
+            const errorMessageMap = {
+                [ERROR.noData]: MESSAGE.wrongCityName,
+                [ERROR.unableToGeolocation]: MESSAGE.enterManually,
+                [ERROR.unableToGeocode]: MESSAGE.enterManually
+            };
+
+            this.setState({
+                preloaderAlert: true,
+                preloaderInfo: errorMessageMap[error.message] || MESSAGE.connectionError
+            });
+        };
+
+
+        /* handling 'get weather' button click */
+        handleSubmit = (event) => {
+            event.preventDefault();
+
+            this.resetStateBeforeFetching();
             this.blurSearchField();
 
             this.getCoordinates()
-                .then(() => {
-                    return this.getWeatherData();
-                })
                 .catch((error) => {
                     console.error(`handleSubmit ${error}`);
-
-                    this.setState({
-                        preloaderAlert: true,
-                        preloaderInfo: error.message === ERROR.noData ? MESSAGE.wrongCityName : MESSAGE.connectionError
-                    });
-                });
+                    this.handleError(error);
+                })
         }
 
 
-        /* input field on change handling */
+        /* handling input field value change */
         handleInputOnChange = (event) => {
             this.setState({ input: event.target.value });
         };
 
 
-        /* input field on focus handling */
+        /* handling input field focus on mobile devices */
         handleInputOnFocus = () => {
-            isMobile() && viewportSettingsChanger.call(this);
+            if (isMobile()) {
+                viewportSettingsChanger.call(this);
+            }
         };
 
 
         componentDidMount = () => {
-            this.getCurrentPosition().catch((error) => {
-                this.setState({
-                    preloaderAlert: true,
-                    preloaderInfo: [ERROR.unableToGeolocation,
-                        ERROR.unableToGeocode].includes(error.message) ? MESSAGE.enterManually : MESSAGE.connectionError
+            if (isMobile()) {
+                mobileStyles.call(this);
+
+                window.onresize = () => {
+                    mobileStyles.call(this);
+                };
+            }
+
+            this.getCurrentPosition()
+                .catch((error) => {
+                    console.error(`componentDidMount ${error}`);
+                    this.handleError(error);
                 });
 
-                console.error(`componentDidMount ${error}`);
-            });
-
-
-            window.onload = () => {
-                isMobile() && mobileStyles.call(this);
-            };
-
-            window.onresize = () => {
-                isMobile() && mobileStyles.call(this);
-            };
-
             window.screen.orientation.onchange = () => {
-                this.setState({ screenLandscapeOrientation: !this.state.screenLandscapeOrientation });
-
-                if (isMobile()) {
-                    mobileStyles.call(this);
-                    viewportSettingsChanger.call(this);
-                }
+                this.setState({ screenLandscapeOrientation: !this.state.screenLandscapeOrientation }, () => {
+                    if (isMobile()) {
+                        viewportSettingsChanger.call(this);
+                        mobileStyles.call(this);
+                    }
+                });
             };
         };
 
