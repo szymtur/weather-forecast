@@ -2,7 +2,7 @@
 
 import React from 'react';
 
-class MainPreloader extends React.Component {
+class Preloader extends React.Component {
     render() {
         const classes = !this.props.preloaderAlert ? 'main-loading animation' : 'main-loading';
         const styles = { color: !this.props.preloaderAlert ? '#000000' : '#444444' };
@@ -21,4 +21,4 @@ class MainPreloader extends React.Component {
     }
 }
 
-export default MainPreloader;
+export default Preloader;
