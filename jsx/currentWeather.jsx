@@ -2,8 +2,8 @@
 
 import React from 'react';
 
-import CurrentIcon from './currentIcon.jsx';
-import MainPreloader from './mainPreloader.jsx';
+import WeatherIcon from './weatherIcon.jsx';
+import Preloader from './preloader.jsx';
 
 import { WEATHER_UNITS } from '../js/consts.js';
 
@@ -17,7 +17,7 @@ class CurrentWeather extends React.Component {
 
         if(!this.props.displayComponent) {
             return (
-                <MainPreloader
+                <Preloader
                     preloaderInfo = {this.props.preloaderInfo}
                     preloaderAlert = {this.props.preloaderAlert}
                 />
@@ -57,7 +57,7 @@ class CurrentWeather extends React.Component {
                         <h5>{description}</h5>
                     </div>
                     <div className = 'col-40'>
-                        <CurrentIcon icon={icon} />
+                        <WeatherIcon icon={icon} />
                     </div>
                     <div className='right-bottom'>
                         <button onClick={this.props.displayNextDays}>

@@ -320,7 +320,7 @@ function mobileStyles() {
   var mainContainerHeight = mainContainer.offsetHeight;
 
   /* styles for body */
-  document.querySelector('body').style.background = '#d3d3d3';
+  document.body.classList.add('mobile-background');
 
   /* styles for main preloader depending on the device's orientation */
   if (!weatherContainer) {
@@ -401,6 +401,9 @@ var openStreetMapReverseGeocoding = function openStreetMapReverseGeocoding(latit
       throw new Error(data.error.toString());
     }
     return data;
+  })["catch"](function (error) {
+    console.error("openStreetMapReverseGeocoding ".concat(error));
+    throw new Error(_consts_js__WEBPACK_IMPORTED_MODULE_1__.ERROR.unableToGeocode);
   });
 };
 var openWeatherMapGetData = function openWeatherMapGetData(latitude, longitude) {
@@ -502,57 +505,6 @@ var CurrentDateHeader = /*#__PURE__*/function (_React$Component) {
 
 /***/ }),
 
-/***/ "./jsx/currentIcon.jsx":
-/*!*****************************!*\
-  !*** ./jsx/currentIcon.jsx ***!
-  \*****************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
-/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
-/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
-/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _js_consts_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../js/consts.js */ "./js/consts.js");
-
-
-
-
-
-
-
-function _callSuper(t, o, e) { return o = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__["default"])(o), (0,_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__["default"])(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__["default"])(t).constructor) : o.apply(t, e)); }
-function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
-
-
-var CurrentIcon = /*#__PURE__*/function (_React$Component) {
-  function CurrentIcon() {
-    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, CurrentIcon);
-    return _callSuper(this, CurrentIcon, arguments);
-  }
-  (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(CurrentIcon, _React$Component);
-  return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(CurrentIcon, [{
-    key: "render",
-    value: function render() {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
-        className: "current-icon"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("i", {
-        className: _js_consts_js__WEBPACK_IMPORTED_MODULE_6__.WEATHER_ICON_MAP[this.props.icon].className
-      }));
-    }
-  }]);
-}((react__WEBPACK_IMPORTED_MODULE_5___default().Component));
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CurrentIcon);
-
-/***/ }),
-
 /***/ "./jsx/currentWeather.jsx":
 /*!********************************!*\
   !*** ./jsx/currentWeather.jsx ***!
@@ -571,8 +523,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _currentIcon_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./currentIcon.jsx */ "./jsx/currentIcon.jsx");
-/* harmony import */ var _mainPreloader_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./mainPreloader.jsx */ "./jsx/mainPreloader.jsx");
+/* harmony import */ var _weatherIcon_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./weatherIcon.jsx */ "./jsx/weatherIcon.jsx");
+/* harmony import */ var _preloader_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./preloader.jsx */ "./jsx/preloader.jsx");
 /* harmony import */ var _js_consts_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../js/consts.js */ "./js/consts.js");
 
 
@@ -617,7 +569,7 @@ var CurrentWeather = /*#__PURE__*/function (_React$Component) {
         city = _this$props$location.city,
         country = _this$props$location.country;
       if (!this.props.displayComponent) {
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement(_mainPreloader_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement(_preloader_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
           preloaderInfo: this.props.preloaderInfo,
           preloaderAlert: this.props.preloaderAlert
         });
@@ -658,7 +610,7 @@ var CurrentWeather = /*#__PURE__*/function (_React$Component) {
         className: "col-60"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("h5", null, description)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
         className: "col-40"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement(_currentIcon_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement(_weatherIcon_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
         icon: icon
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
         className: "right-bottom"
@@ -669,67 +621,6 @@ var CurrentWeather = /*#__PURE__*/function (_React$Component) {
   }]);
 }((react__WEBPACK_IMPORTED_MODULE_5___default().Component));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CurrentWeather);
-
-/***/ }),
-
-/***/ "./jsx/mainPreloader.jsx":
-/*!*******************************!*\
-  !*** ./jsx/mainPreloader.jsx ***!
-  \*******************************/
-/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
-/* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
-/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
-/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
-/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_5__);
-
-
-
-
-
-
-
-function _callSuper(t, o, e) { return o = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__["default"])(o), (0,_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__["default"])(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__["default"])(t).constructor) : o.apply(t, e)); }
-function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
-
-var MainPreloader = /*#__PURE__*/function (_React$Component) {
-  function MainPreloader() {
-    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, MainPreloader);
-    return _callSuper(this, MainPreloader, arguments);
-  }
-  (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(MainPreloader, _React$Component);
-  return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(MainPreloader, [{
-    key: "render",
-    value: function render() {
-      var classes = !this.props.preloaderAlert ? 'main-loading animation' : 'main-loading';
-      var styles = {
-        color: !this.props.preloaderAlert ? '#000000' : '#444444'
-      };
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
-        className: "main-preloader",
-        style: styles
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("svg", {
-        className: classes,
-        xmlns: "http://www.w3.org/2000/svg",
-        viewBox: "0 0 512 512"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("path", {
-        fill: "currentColor",
-        d: "M256 160c-52.9 0-96 43.1-96 96s43.1 96 96 96 96-43.1 96-96-43.1-96-96-96zm246.4 80.5l-94.7-47.3 33.5-100.4c4.5-13.6-8.4-26.5-21.9-21.9l-100.4 33.5-47.4-94.8c-6.4-12.8-24.6-12.8-31 0l-47.3 94.7L92.7 70.8c-13.6-4.5-26.5 8.4-21.9 21.9l33.5 100.4-94.7 47.4c-12.8 6.4-12.8 24.6 0 31l94.7 47.3-33.5 100.5c-4.5 13.6 8.4 26.5 21.9 21.9l100.4-33.5 47.3 94.7c6.4 12.8 24.6 12.8 31 0l47.3-94.7 100.4 33.5c13.6 4.5 26.5-8.4 21.9-21.9l-33.5-100.4 94.7-47.3c13-6.5 13-24.7.2-31.1zm-155.9 106c-49.9 49.9-131.1 49.9-181 0-49.9-49.9-49.9-131.1 0-181 49.9-49.9 131.1-49.9 181 0 49.9 49.9 49.9 131.1 0 181z"
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("p", {
-        className: "info"
-      }, this.props.preloaderInfo));
-    }
-  }]);
-}((react__WEBPACK_IMPORTED_MODULE_5___default().Component));
-/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (MainPreloader);
 
 /***/ }),
 
@@ -811,7 +702,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _currentIcon_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./currentIcon.jsx */ "./jsx/currentIcon.jsx");
+/* harmony import */ var _weatherIcon_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./weatherIcon.jsx */ "./jsx/weatherIcon.jsx");
 /* harmony import */ var _js_consts__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../js/consts */ "./js/consts.js");
 
 
@@ -853,7 +744,7 @@ var OneDayWeather = /*#__PURE__*/function (_React$Component) {
         className: "row date"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("h5", null, date.date)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
         className: "row icon"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement(_currentIcon_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement(_weatherIcon_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
         icon: icon
       })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
         className: "row description"
@@ -880,6 +771,67 @@ var OneDayWeather = /*#__PURE__*/function (_React$Component) {
   }]);
 }((react__WEBPACK_IMPORTED_MODULE_5___default().Component));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (OneDayWeather);
+
+/***/ }),
+
+/***/ "./jsx/preloader.jsx":
+/*!***************************!*\
+  !*** ./jsx/preloader.jsx ***!
+  \***************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_5__);
+
+
+
+
+
+
+
+function _callSuper(t, o, e) { return o = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__["default"])(o), (0,_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__["default"])(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__["default"])(t).constructor) : o.apply(t, e)); }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+
+var Preloader = /*#__PURE__*/function (_React$Component) {
+  function Preloader() {
+    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, Preloader);
+    return _callSuper(this, Preloader, arguments);
+  }
+  (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(Preloader, _React$Component);
+  return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(Preloader, [{
+    key: "render",
+    value: function render() {
+      var classes = !this.props.preloaderAlert ? 'main-loading animation' : 'main-loading';
+      var styles = {
+        color: !this.props.preloaderAlert ? '#000000' : '#444444'
+      };
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
+        className: "main-preloader",
+        style: styles
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("svg", {
+        className: classes,
+        xmlns: "http://www.w3.org/2000/svg",
+        viewBox: "0 0 512 512"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("path", {
+        fill: "currentColor",
+        d: "M256 160c-52.9 0-96 43.1-96 96s43.1 96 96 96 96-43.1 96-96-43.1-96-96-96zm246.4 80.5l-94.7-47.3 33.5-100.4c4.5-13.6-8.4-26.5-21.9-21.9l-100.4 33.5-47.4-94.8c-6.4-12.8-24.6-12.8-31 0l-47.3 94.7L92.7 70.8c-13.6-4.5-26.5 8.4-21.9 21.9l33.5 100.4-94.7 47.4c-12.8 6.4-12.8 24.6 0 31l94.7 47.3-33.5 100.5c-4.5 13.6 8.4 26.5 21.9 21.9l100.4-33.5 47.3 94.7c6.4 12.8 24.6 12.8 31 0l47.3-94.7 100.4 33.5c13.6 4.5 26.5-8.4 21.9-21.9l-33.5-100.4 94.7-47.3c13-6.5 13-24.7.2-31.1zm-155.9 106c-49.9 49.9-131.1 49.9-181 0-49.9-49.9-49.9-131.1 0-181 49.9-49.9 131.1-49.9 181 0 49.9 49.9 49.9 131.1 0 181z"
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("p", {
+        className: "info"
+      }, this.props.preloaderInfo));
+    }
+  }]);
+}((react__WEBPACK_IMPORTED_MODULE_5___default().Component));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Preloader);
 
 /***/ }),
 
@@ -1010,7 +962,7 @@ var WeatherChart = /*#__PURE__*/function (_React$Component) {
       stacked: false,
       layout: {
         padding: {
-          bottom: -7
+          bottom: -5
         }
       },
       plugins: {
@@ -1090,7 +1042,7 @@ var WeatherChart = /*#__PURE__*/function (_React$Component) {
             color: '#000000',
             padding: 10,
             font: {
-              size: 23,
+              size: 22,
               family: 'Weathericons'
             },
             callback: function callback(_, index) {
@@ -1147,6 +1099,57 @@ var WeatherChart = /*#__PURE__*/function (_React$Component) {
   }]);
 }((react__WEBPACK_IMPORTED_MODULE_6___default().Component));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (WeatherChart);
+
+/***/ }),
+
+/***/ "./jsx/weatherIcon.jsx":
+/*!*****************************!*\
+  !*** ./jsx/weatherIcon.jsx ***!
+  \*****************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _js_consts_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../js/consts.js */ "./js/consts.js");
+
+
+
+
+
+
+
+function _callSuper(t, o, e) { return o = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__["default"])(o), (0,_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__["default"])(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__["default"])(t).constructor) : o.apply(t, e)); }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+
+
+var WeatherIcon = /*#__PURE__*/function (_React$Component) {
+  function WeatherIcon() {
+    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, WeatherIcon);
+    return _callSuper(this, WeatherIcon, arguments);
+  }
+  (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(WeatherIcon, _React$Component);
+  return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(WeatherIcon, [{
+    key: "render",
+    value: function render() {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
+        className: "current-icon"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("i", {
+        className: _js_consts_js__WEBPACK_IMPORTED_MODULE_6__.WEATHER_ICON_MAP[this.props.icon].className
+      }));
+    }
+  }]);
+}((react__WEBPACK_IMPORTED_MODULE_5___default().Component));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (WeatherIcon);
 
 /***/ }),
 
@@ -1243,7 +1246,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `@media (orientation: portrait) {
     }
 
     .current-weather .local-info .city {
-        width: 80%;
+        width: 100%;
         height: 2.5em;
     }
 
@@ -1345,7 +1348,6 @@ ___CSS_LOADER_EXPORT___.push([module.id, `@media (orientation: portrait) {
         display: flex;
     }
 
-    .next-days-weather .day-container .row.description h6,
     .next-days-weather .day-container .row.description h6 {
         width: 95%;
         margin: 0 auto;
@@ -1364,7 +1366,7 @@ ___CSS_LOADER_EXPORT___.push([module.id, `@media (orientation: portrait) {
     body {
         height: inherit;
     }
-}`, "",{"version":3,"sources":["webpack://./css/responsive.css"],"names":[],"mappings":"AAAA;;IAEI,wBAAwB;IACxB;QACI,YAAY;QACZ,gBAAgB;QAChB,aAAa;IACjB;IACA,sBAAsB;;;IAGtB,0BAA0B;IAC1B;QACI,gBAAgB;IACpB;;IAEA;QACI,mBAAmB;QACnB,mBAAmB;IACvB;;IAEA;QACI,gBAAgB;IACpB;IACA,wBAAwB;;;IAGxB,kCAAkC;IAClC;QACI,YAAY;IAChB;IACA,gCAAgC;;;IAGhC,2CAA2C;IAC3C;QACI,aAAa;QACb,wBAAwB;IAC5B;;IAEA;QACI,YAAY;QACZ,oBAAa;QAAb,oBAAa;QAAb,aAAa;QACb,4BAA8B;QAA9B,8BAA8B;YAA9B,kCAA8B;gBAA9B,8BAA8B;QAC9B,gBAAgB;IACpB;;IAEA;;QAEI,WAAW;QACX,aAAa;IACjB;;IAEA;QACI,iBAAiB;QACjB,kBAAkB;IACtB;;IAEA;QACI,WAAW;QACX,YAAY;IAChB;;IAEA;QACI,iBAAiB;IACrB;;IAEA;QACI,UAAU;QACV,aAAa;IACjB;;IAEA;QACI,mBAAmB;IACvB;;IAEA;QACI,gBAAgB;IACpB;;IAEA;QACI,4BAAsB;QAAtB,6BAAsB;YAAtB,0BAAsB;gBAAtB,sBAAsB;QACtB,qBAAiB;YAAjB,iBAAiB;IACrB;;IAEA;;;QAGI,WAAW;IACf;;IAEA;;QAEI,YAAY;IAChB;;IAEA;QACI,4BAAQ;YAAR,iBAAQ;gBAAR,QAAQ;IACZ;;IAEA;QACI,4BAAQ;YAAR,iBAAQ;gBAAR,QAAQ;QACR,oBAAa;QAAb,oBAAa;QAAb,aAAa;QACb,yBAAmB;YAAnB,sBAAmB;gBAAnB,mBAAmB;QACnB,qBAAyB;YAAzB,kBAAyB;gBAAzB,yBAAyB;IAC7B;;IAEA;QACI,4BAAQ;YAAR,iBAAQ;gBAAR,QAAQ;QACR,cAAc;IAClB;;IAEA;QACI,cAAc;QACd,iBAAiB;QACjB,yBAAyB;IAC7B;;IAEA;QACI,UAAU;QACV,iBAAiB;QACjB,iBAAiB;QACjB,oBAAoB;IACxB;IACA,yCAAyC;;;IAGzC,0CAA0C;IAC1C;QACI,UAAU;QACV,YAAY;QACZ,cAAc;QACd,oBAAa;QAAb,oBAAa;QAAb,aAAa;QACb,yBAA8B;YAA9B,sBAA8B;gBAA9B,8BAA8B;QAC9B,mBAAe;YAAf,eAAe;IACnB;;IAEA;QACI,kBAAkB;QAClB,UAAU;QACV,qBAAqB;IACzB;;IAEA;QACI,oBAAa;QAAb,oBAAa;QAAb,aAAa;IACjB;;IAEA;;QAEI,UAAU;QACV,cAAc;IAClB;IACA,wCAAwC;AAC5C;;;AAGA;IACI;QACI,eAAe;IACnB;AACJ;;AAEA;IACI;QACI,eAAe;IACnB;AACJ","sourcesContent":["@media (orientation: portrait) {\r\n\r\n    /* Main styles - start */\r\n    #app {\r\n        width: 420px;\r\n        min-width: 320px;\r\n        height: 850px;\r\n    }\r\n    /* Main styles - end */\r\n\r\n\r\n    /* Header styles - start */\r\n    .header .current-date h4 {\r\n        font-size: 0.8em;\r\n    }\r\n\r\n    .header .caption {\r\n        padding-top: 0.25em;\r\n        margin-top: -0.25em;\r\n    }\r\n\r\n    .header .caption h2 {\r\n        font-size: 1.2em;\r\n    }\r\n    /* Header styles - end */\r\n\r\n\r\n    /* Search section styles - start */\r\n    .search {\r\n        height: 55px;\r\n    }\r\n    /* Search section styles - end */\r\n\r\n\r\n    /* Current weather section styles - start */\r\n    .current-weather {\r\n        height: 215px;\r\n        padding: 2% 2.5% 1.5% 2%;\r\n    }\r\n\r\n    .current-weather .local-info {\r\n        height: 65px;\r\n        display: flex;\r\n        flex-direction: column-reverse;\r\n        margin-bottom: 0;\r\n    }\r\n\r\n    .current-weather .local-info .date-time,\r\n    .current-weather .local-info .dots-preloader {\r\n        width: 100%;\r\n        height: 1.2em;\r\n    }\r\n\r\n    .current-weather .local-info .dots-preloader {\r\n        text-align: right;\r\n        padding-right: 15%;\r\n    }\r\n\r\n    .current-weather .local-info .dots-preloader .dots-loading {\r\n        width: 60px;\r\n        height: 10px;\r\n    }\r\n\r\n    .current-weather .local-info .date-time h6 {\r\n        font-size: 0.75em;\r\n    }\r\n\r\n    .current-weather .local-info .city {\r\n        width: 80%;\r\n        height: 2.5em;\r\n    }\r\n\r\n    .current-weather .left-col {\r\n        padding-top: 0.25em;\r\n    }\r\n\r\n    .current-weather .left-col .left-rows h3 {\r\n        font-size: 0.9em;\r\n    }\r\n\r\n    .current-weather .right-col {\r\n        flex-direction: column;\r\n        flex-wrap: nowrap;\r\n    }\r\n\r\n    .current-weather .right-col .col-40,\r\n    .current-weather .right-col .col-60,\r\n    .current-weather .right-col .right-bottom {\r\n        width: 100%;\r\n    }\r\n\r\n    .current-weather .right-col .col-40,\r\n    .current-weather .right-col .col-60 {\r\n        height: 50px;\r\n    }\r\n\r\n    .current-weather .right-col .col-40 {\r\n        order: 0;\r\n    }\r\n\r\n    .current-weather .right-col .col-60 {\r\n        order: 1;\r\n        display: flex;\r\n        align-items: center;\r\n        justify-content: flex-end;\r\n    }\r\n\r\n    .current-weather .right-col .right-bottom {\r\n        order: 2;\r\n        padding-top: 0;\r\n    }\r\n\r\n    .current-weather .right-col .col-40 .current-icon {\r\n        font-size: 3em;\r\n        text-align: right;\r\n        margin: -0.2em 0.15em 0 0;\r\n    }\r\n\r\n    .current-weather .right-col .col-60 h5 {\r\n        width: 75%;\r\n        font-size: 0.95em;\r\n        text-align: right;\r\n        margin: 0 0.25em 0 0;\r\n    }\r\n    /* Current weather section styles - end */\r\n\r\n\r\n    /* Next five days section styles - start */\r\n    .next-days-weather {\r\n        width: 93%;\r\n        height: 100%;\r\n        margin: 0 auto;\r\n        display: flex;\r\n        justify-content: space-between;\r\n        flex-wrap: wrap;\r\n    }\r\n\r\n    .next-days-weather .day-container {\r\n        border-radius: 5px;\r\n        width: 32%;\r\n        margin-bottom: 0.75em;\r\n    }\r\n\r\n    .next-days-weather .day-container:last-child {\r\n        display: flex;\r\n    }\r\n\r\n    .next-days-weather .day-container .row.description h6,\r\n    .next-days-weather .day-container .row.description h6 {\r\n        width: 95%;\r\n        margin: 0 auto;\r\n    }\r\n    /* Next five days section styles - end */\r\n}\r\n\r\n\r\n@media(orientation: portrait) and (max-height: 850px) {\r\n    body {\r\n        height: inherit;\r\n    }\r\n}\r\n\r\n@media (orientation: landscape) and (max-height: 580px) {\r\n    body {\r\n        height: inherit;\r\n    }\r\n}"],"sourceRoot":""}]);
+}`, "",{"version":3,"sources":["webpack://./css/responsive.css"],"names":[],"mappings":"AAAA;;IAEI,wBAAwB;IACxB;QACI,YAAY;QACZ,gBAAgB;QAChB,aAAa;IACjB;IACA,sBAAsB;;;IAGtB,0BAA0B;IAC1B;QACI,gBAAgB;IACpB;;IAEA;QACI,mBAAmB;QACnB,mBAAmB;IACvB;;IAEA;QACI,gBAAgB;IACpB;IACA,wBAAwB;;;IAGxB,kCAAkC;IAClC;QACI,YAAY;IAChB;IACA,gCAAgC;;;IAGhC,2CAA2C;IAC3C;QACI,aAAa;QACb,wBAAwB;IAC5B;;IAEA;QACI,YAAY;QACZ,oBAAa;QAAb,oBAAa;QAAb,aAAa;QACb,4BAA8B;QAA9B,8BAA8B;YAA9B,kCAA8B;gBAA9B,8BAA8B;QAC9B,gBAAgB;IACpB;;IAEA;;QAEI,WAAW;QACX,aAAa;IACjB;;IAEA;QACI,iBAAiB;QACjB,kBAAkB;IACtB;;IAEA;QACI,WAAW;QACX,YAAY;IAChB;;IAEA;QACI,iBAAiB;IACrB;;IAEA;QACI,WAAW;QACX,aAAa;IACjB;;IAEA;QACI,mBAAmB;IACvB;;IAEA;QACI,gBAAgB;IACpB;;IAEA;QACI,4BAAsB;QAAtB,6BAAsB;YAAtB,0BAAsB;gBAAtB,sBAAsB;QACtB,qBAAiB;YAAjB,iBAAiB;IACrB;;IAEA;;;QAGI,WAAW;IACf;;IAEA;;QAEI,YAAY;IAChB;;IAEA;QACI,4BAAQ;YAAR,iBAAQ;gBAAR,QAAQ;IACZ;;IAEA;QACI,4BAAQ;YAAR,iBAAQ;gBAAR,QAAQ;QACR,oBAAa;QAAb,oBAAa;QAAb,aAAa;QACb,yBAAmB;YAAnB,sBAAmB;gBAAnB,mBAAmB;QACnB,qBAAyB;YAAzB,kBAAyB;gBAAzB,yBAAyB;IAC7B;;IAEA;QACI,4BAAQ;YAAR,iBAAQ;gBAAR,QAAQ;QACR,cAAc;IAClB;;IAEA;QACI,cAAc;QACd,iBAAiB;QACjB,yBAAyB;IAC7B;;IAEA;QACI,UAAU;QACV,iBAAiB;QACjB,iBAAiB;QACjB,oBAAoB;IACxB;IACA,yCAAyC;;;IAGzC,0CAA0C;IAC1C;QACI,UAAU;QACV,YAAY;QACZ,cAAc;QACd,oBAAa;QAAb,oBAAa;QAAb,aAAa;QACb,yBAA8B;YAA9B,sBAA8B;gBAA9B,8BAA8B;QAC9B,mBAAe;YAAf,eAAe;IACnB;;IAEA;QACI,kBAAkB;QAClB,UAAU;QACV,qBAAqB;IACzB;;IAEA;QACI,oBAAa;QAAb,oBAAa;QAAb,aAAa;IACjB;;IAEA;QACI,UAAU;QACV,cAAc;IAClB;IACA,wCAAwC;AAC5C;;;AAGA;IACI;QACI,eAAe;IACnB;AACJ;;AAEA;IACI;QACI,eAAe;IACnB;AACJ","sourcesContent":["@media (orientation: portrait) {\r\n\r\n    /* Main styles - start */\r\n    #app {\r\n        width: 420px;\r\n        min-width: 320px;\r\n        height: 850px;\r\n    }\r\n    /* Main styles - end */\r\n\r\n\r\n    /* Header styles - start */\r\n    .header .current-date h4 {\r\n        font-size: 0.8em;\r\n    }\r\n\r\n    .header .caption {\r\n        padding-top: 0.25em;\r\n        margin-top: -0.25em;\r\n    }\r\n\r\n    .header .caption h2 {\r\n        font-size: 1.2em;\r\n    }\r\n    /* Header styles - end */\r\n\r\n\r\n    /* Search section styles - start */\r\n    .search {\r\n        height: 55px;\r\n    }\r\n    /* Search section styles - end */\r\n\r\n\r\n    /* Current weather section styles - start */\r\n    .current-weather {\r\n        height: 215px;\r\n        padding: 2% 2.5% 1.5% 2%;\r\n    }\r\n\r\n    .current-weather .local-info {\r\n        height: 65px;\r\n        display: flex;\r\n        flex-direction: column-reverse;\r\n        margin-bottom: 0;\r\n    }\r\n\r\n    .current-weather .local-info .date-time,\r\n    .current-weather .local-info .dots-preloader {\r\n        width: 100%;\r\n        height: 1.2em;\r\n    }\r\n\r\n    .current-weather .local-info .dots-preloader {\r\n        text-align: right;\r\n        padding-right: 15%;\r\n    }\r\n\r\n    .current-weather .local-info .dots-preloader .dots-loading {\r\n        width: 60px;\r\n        height: 10px;\r\n    }\r\n\r\n    .current-weather .local-info .date-time h6 {\r\n        font-size: 0.75em;\r\n    }\r\n\r\n    .current-weather .local-info .city {\r\n        width: 100%;\r\n        height: 2.5em;\r\n    }\r\n\r\n    .current-weather .left-col {\r\n        padding-top: 0.25em;\r\n    }\r\n\r\n    .current-weather .left-col .left-rows h3 {\r\n        font-size: 0.9em;\r\n    }\r\n\r\n    .current-weather .right-col {\r\n        flex-direction: column;\r\n        flex-wrap: nowrap;\r\n    }\r\n\r\n    .current-weather .right-col .col-40,\r\n    .current-weather .right-col .col-60,\r\n    .current-weather .right-col .right-bottom {\r\n        width: 100%;\r\n    }\r\n\r\n    .current-weather .right-col .col-40,\r\n    .current-weather .right-col .col-60 {\r\n        height: 50px;\r\n    }\r\n\r\n    .current-weather .right-col .col-40 {\r\n        order: 0;\r\n    }\r\n\r\n    .current-weather .right-col .col-60 {\r\n        order: 1;\r\n        display: flex;\r\n        align-items: center;\r\n        justify-content: flex-end;\r\n    }\r\n\r\n    .current-weather .right-col .right-bottom {\r\n        order: 2;\r\n        padding-top: 0;\r\n    }\r\n\r\n    .current-weather .right-col .col-40 .current-icon {\r\n        font-size: 3em;\r\n        text-align: right;\r\n        margin: -0.2em 0.15em 0 0;\r\n    }\r\n\r\n    .current-weather .right-col .col-60 h5 {\r\n        width: 75%;\r\n        font-size: 0.95em;\r\n        text-align: right;\r\n        margin: 0 0.25em 0 0;\r\n    }\r\n    /* Current weather section styles - end */\r\n\r\n\r\n    /* Next five days section styles - start */\r\n    .next-days-weather {\r\n        width: 93%;\r\n        height: 100%;\r\n        margin: 0 auto;\r\n        display: flex;\r\n        justify-content: space-between;\r\n        flex-wrap: wrap;\r\n    }\r\n\r\n    .next-days-weather .day-container {\r\n        border-radius: 5px;\r\n        width: 32%;\r\n        margin-bottom: 0.75em;\r\n    }\r\n\r\n    .next-days-weather .day-container:last-child {\r\n        display: flex;\r\n    }\r\n\r\n    .next-days-weather .day-container .row.description h6 {\r\n        width: 95%;\r\n        margin: 0 auto;\r\n    }\r\n    /* Next five days section styles - end */\r\n}\r\n\r\n\r\n@media(orientation: portrait) and (max-height: 850px) {\r\n    body {\r\n        height: inherit;\r\n    }\r\n}\r\n\r\n@media (orientation: landscape) and (max-height: 580px) {\r\n    body {\r\n        height: inherit;\r\n    }\r\n}"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -1861,7 +1863,7 @@ body {
     width: 90%;
     margin: 0 auto;
     font-weight: 600;
-    font-size: 0.7em
+    font-size: 0.7em;
 }
 
 .next-days-weather .day-container .row p {
@@ -1932,7 +1934,14 @@ body {
     }
 }
 /* Preloader Styles - end */
-`, "",{"version":3,"sources":["webpack://./css/styles.css"],"names":[],"mappings":"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","sourcesContent":["@import url('https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700');\r\n@import url('https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/weather-icons.min.css');\r\n\r\n/* Main styles - start */\r\n* {\r\n    box-sizing: border-box;\r\n    margin: 0;\r\n    padding: 0;\r\n}\r\n\r\nbody {\r\n    width: 100%;\r\n    height: 100vh;\r\n    display: flex;\r\n    justify-content: center;\r\n    align-items: center;\r\n    user-select: none;\r\n    overflow-x: hidden;\r\n    font-family: 'Montserrat', sans-serif;\r\n}\r\n\r\n#app {\r\n    width: 580px;\r\n    min-width: 580px;\r\n    height: 600px;\r\n    background: #d3d3d3;\r\n    border-radius: 5px;\r\n}\r\n/* Main styles - end */\r\n\r\n\r\n/* Header styles - start */\r\n.header {\r\n    width: 96%;\r\n    height: 75px;\r\n    display: flex;\r\n    flex-wrap: wrap;\r\n    margin: 0 auto;\r\n    padding: 10px;\r\n    overflow: hidden;\r\n}\r\n\r\n.header .caption {\r\n    height: 30px;\r\n    width: 100%;\r\n    text-align: right;\r\n    margin-top: -0.75em;\r\n}\r\n\r\n.header .current-date {\r\n    height: 20px;\r\n    width: 100%;\r\n    font-size: 0.9em;\r\n    margin: 1em 0 0.25em 0.1em;\r\n}\r\n/* Header styles - end */\r\n\r\n\r\n/* Search section styles - start */\r\n.search {\r\n    width: 95%;\r\n    height: 65px;\r\n    margin: 0 auto;\r\n    padding: 1.5%;\r\n}\r\n\r\n.search form {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n}\r\n\r\n.search input[type='search'] {\r\n    width: 60%;\r\n    height: 30px;\r\n    border-radius: 5px;\r\n    outline: none;\r\n    border: 1px solid black;\r\n    text-align: center;\r\n\r\n    -webkit-appearance: none;\r\n        -moz-appearance: none;\r\n}\r\n\r\n.search input[type='search']::-webkit-search-cancel-button {\r\n    margin-right: 10px;\r\n    height: 12px;\r\n    width: 12px;\r\n    border-radius: 10px;\r\n    background: red;\r\n\r\n    -webkit-appearance: none;\r\n        -moz-appearance: none;\r\n}\r\n\r\n.search input[type='search'].normal::placeholder {\r\n    font-family: 'Montserrat', sans-serif;\r\n    font-weight: 500;\r\n}\r\n\r\n.search input[type='search'].warning::placeholder {\r\n    font-family: 'Montserrat', sans-serif;\r\n    color: red;\r\n    font-weight: 600;\r\n}\r\n\r\n.search input[type='submit'] {\r\n    width: 37%;\r\n    height: 30px;\r\n    border-radius: 5px;\r\n    border: 1px solid black;\r\n    background: #808080;\r\n    outline: none;\r\n    color: #ffffff;\r\n    font-size: 0.9em;\r\n    font-weight: 600;\r\n    letter-spacing: 0.5px;\r\n    transition: all 0.5s;\r\n\r\n    -webkit-appearance: none;\r\n        -moz-appearance: none;\r\n}\r\n\r\n.search input[type='submit']:hover {\r\n    background: #000000;\r\n    color: #ffffff;\r\n}\r\n/* Search section styles - end */\r\n\r\n\r\n/* Current weather section styles - start */\r\n.current-weather {\r\n    width: 93%;\r\n    height: 200px;\r\n    padding: 2%;\r\n    background: #ffffff;\r\n    border-radius: 5px;\r\n    margin: 0 auto 0.75em;\r\n    color: #800080;\r\n    display: flex;\r\n    overflow: hidden;\r\n    flex-wrap: wrap;\r\n}\r\n\r\n.current-weather .local-info {\r\n    width: 100%;\r\n    margin-bottom: 0.3em;\r\n    display: flex;\r\n    justify-content: space-between;\r\n}\r\n\r\n.current-weather .local-info .city {\r\n    width: 110%;\r\n    height: 2.4em;\r\n    overflow: hidden;\r\n}\r\n\r\n.current-weather .local-info .city h3 {\r\n    font-weight: 600;\r\n    margin-left: 0.25em;\r\n    font-size: 1.3em;\r\n}\r\n\r\n.current-weather .local-info .dots-preloader,\r\n.current-weather .local-info .date-time {\r\n    overflow: hidden;\r\n}\r\n\r\n.current-weather .local-info .dots-preloader {\r\n    text-align: center;\r\n    width: 75%;\r\n    padding-left: 10%;\r\n    margin-top: -0.5%;\r\n}\r\n\r\n.current-weather .local-info .date-time {\r\n    text-align: right;\r\n    width: 85%;\r\n    height: 0.9em;\r\n}\r\n\r\n.current-weather .local-info .date-time h6 {\r\n    color: #444444;\r\n    font-weight: 700;\r\n    font-size: 0.8em;\r\n}\r\n\r\n.current-weather .left-col,\r\n.current-weather .right-col {\r\n    height: 130px;\r\n}\r\n\r\n.current-weather .left-col {\r\n    width: 40%;\r\n}\r\n\r\n.current-weather .left-col .left-rows {\r\n    width: 100%;\r\n    height: 25%;\r\n    overflow: hidden;\r\n}\r\n\r\n.current-weather .left-col h3 {\r\n    font-weight: 600;\r\n    line-height: 2.5em;\r\n}\r\n\r\n.current-weather .left-col .left-rows p {\r\n    width: 30px;\r\n    margin-right: 1em;\r\n    text-align: center;\r\n    display: inline-block;\r\n}\r\n\r\n.current-weather .left-col .left-rows h3 {\r\n    display: inline-block;\r\n}\r\n\r\n.current-weather .left-col .left-rows h3 span {\r\n    font-size: 0.8em;\r\n}\r\n\r\n.current-weather .left-col .left-rows p .wi {\r\n    font-size: 1.4em;\r\n    color: #000000;\r\n}\r\n\r\n.current-weather .left-col .left-rows p .wi.wi-strong-wind {\r\n    margin-left: 0.2em;\r\n}\r\n\r\n.current-weather .right-col {\r\n    width: 60%;\r\n    display: flex;\r\n    flex-wrap: wrap;\r\n}\r\n\r\n.current-weather .right-col .col-60,\r\n.current-weather .right-col .col-40 {\r\n    height: 100px;\r\n}\r\n\r\n.current-weather .right-col .col-60 {\r\n    width: 60%;\r\n    text-align: center;\r\n}\r\n\r\n.current-weather .right-col .col-60 h5 {\r\n    margin-top: 2.4em;\r\n    font-weight: 600;\r\n    font-size: 1.1em;\r\n    width: 95%;\r\n}\r\n\r\n.current-weather .right-col .col-40 {\r\n    width: 40%;\r\n}\r\n\r\n.current-weather .right-col .col-40 .current-icon {\r\n    margin: 0.1em -0.1em 0 0;\r\n    color: #000000;\r\n    font-size: 3.5em;\r\n    text-align: center;\r\n}\r\n\r\n.current-weather .right-col .col-40 .current-icon .wi.wi-day-cloudy-high {\r\n    font-size: 1.2em;\r\n}\r\n\r\n.current-weather .right-col .right-bottom {\r\n    width: 100%;\r\n    text-align: right;\r\n    padding-top: 0.1em;\r\n}\r\n\r\n.current-weather .right-col .right-bottom button {\r\n    width: 150px;\r\n    height: 30px;\r\n    border: 1px solid gray;\r\n    border-radius: 4px;\r\n    background: #e0e0e0;\r\n    outline: none;\r\n    color: #000000;\r\n    font-size: 0.9em;\r\n    font-weight: 600;\r\n    transition: all 0.5s;\r\n}\r\n\r\n.current-weather .right-col .right-bottom button:hover {\r\n    background: #ffffff;\r\n    color: #606060;\r\n}\r\n/* Current weather section styles - end */\r\n\r\n\r\n/* Current Chart section styles - start */\r\n.current-chart {\r\n    height: 230px;\r\n}\r\n/* Current Chart section styles - end */\r\n\r\n\r\n/* Next five days section styles - start */\r\n.next-days-weather {\r\n    width: 93%;\r\n    height: 230px;\r\n    margin: 0 auto 15px;\r\n    display: flex;\r\n    justify-content: space-between;\r\n}\r\n\r\n.next-days-weather .day-container {\r\n    width: 19.5%;\r\n    height: 230px;\r\n    background: #f5f5f5;\r\n    padding-bottom: 7px;\r\n    padding-top: 5px;\r\n    display: flex;\r\n    flex-direction: column;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n    overflow: hidden;\r\n}\r\n\r\n.next-days-weather .day-container:first-child {\r\n    border-top-left-radius: 5px;\r\n    border-bottom-left-radius: 5px;\r\n}\r\n\r\n.next-days-weather .day-container:nth-child(5) {\r\n    border-top-right-radius: 5px;\r\n    border-bottom-right-radius: 5px;\r\n}\r\n\r\n.next-days-weather .day-container:nth-child(6) {\r\n    display: none;\r\n}\r\n\r\n.next-days-weather .day-container .row {\r\n    width: 100%;\r\n    padding: 2px 2px 2px 1px;\r\n}\r\n\r\n.next-days-weather .day-container .row.date,\r\n.next-days-weather .day-container .row.icon,\r\n.next-days-weather .day-container .row.description,\r\n.next-days-weather .day-container .row p {\r\n    text-align: center;\r\n}\r\n\r\n.next-days-weather .day-container .row.weather-data {\r\n    width: fit-content;\r\n    margin-left: -10px;\r\n}\r\n\r\n.next-days-weather .day-container .row.date h5 {\r\n    font-weight: 600;\r\n    font-size: 0.8em;\r\n}\r\n\r\n.next-days-weather .day-container .row.icon {\r\n    font-size: 2em;\r\n    padding: 0.1em;\r\n}\r\n\r\n.next-days-weather .day-container .row.icon .current-icon {\r\n    height: 45px;\r\n}\r\n\r\n.next-days-weather .day-container .row.icon .wi.wi-day-cloudy-high {\r\n    font-size: 1.25em;\r\n}\r\n\r\n.next-days-weather .day-container .row.description {\r\n    height: 35px;\r\n}\r\n\r\n.next-days-weather .day-container .row.description h6 {\r\n    width: 90%;\r\n    margin: 0 auto;\r\n    font-weight: 600;\r\n    font-size: 0.7em\r\n}\r\n\r\n.next-days-weather .day-container .row p {\r\n    display: inline-block;\r\n    width: 40px;\r\n}\r\n\r\n.next-days-weather .day-container .row h5 {\r\n    display: inline-block;\r\n    font-weight: 500;\r\n    font-size: 0.75em;\r\n}\r\n\r\n.next-days-weather .day-container .row p .wi {\r\n    font-size: 1em;\r\n}\r\n/* Next five days section styles - end */\r\n\r\n\r\n/* Preloader Styles - start */\r\n.main-preloader {\r\n    text-align: center;\r\n    padding: 5em;\r\n}\r\n\r\n.main-preloader .info {\r\n    padding: 0.5em;\r\n    font-weight: 600;\r\n}\r\n\r\n.main-preloader .main-loading {\r\n    width: 3.5em;\r\n    height: 3.5em;\r\n}\r\n\r\n.main-preloader .animation {\r\n    animation-name: spin;\r\n    animation-duration: 1800ms;\r\n    animation-iteration-count: infinite;\r\n    animation-timing-function: linear;\r\n}\r\n\r\n@keyframes spin {\r\n    from {\r\n        transform: rotate(0deg);\r\n    }\r\n\r\n    to {\r\n        transform: rotate(360deg);\r\n    }\r\n}\r\n/* Preloader Styles - end */\r\n"],"sourceRoot":""}]);
+
+
+/* Mobile styles */
+.mobile-background {
+    background-color: #d3d3d3;
+}
+/* Mobile styles - end */
+`, "",{"version":3,"sources":["webpack://./css/styles.css"],"names":[],"mappings":"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","sourcesContent":["@import url('https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700');\r\n@import url('https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/weather-icons.min.css');\r\n\r\n/* Main styles - start */\r\n* {\r\n    box-sizing: border-box;\r\n    margin: 0;\r\n    padding: 0;\r\n}\r\n\r\nbody {\r\n    width: 100%;\r\n    height: 100vh;\r\n    display: flex;\r\n    justify-content: center;\r\n    align-items: center;\r\n    user-select: none;\r\n    overflow-x: hidden;\r\n    font-family: 'Montserrat', sans-serif;\r\n}\r\n\r\n#app {\r\n    width: 580px;\r\n    min-width: 580px;\r\n    height: 600px;\r\n    background: #d3d3d3;\r\n    border-radius: 5px;\r\n}\r\n/* Main styles - end */\r\n\r\n\r\n/* Header styles - start */\r\n.header {\r\n    width: 96%;\r\n    height: 75px;\r\n    display: flex;\r\n    flex-wrap: wrap;\r\n    margin: 0 auto;\r\n    padding: 10px;\r\n    overflow: hidden;\r\n}\r\n\r\n.header .caption {\r\n    height: 30px;\r\n    width: 100%;\r\n    text-align: right;\r\n    margin-top: -0.75em;\r\n}\r\n\r\n.header .current-date {\r\n    height: 20px;\r\n    width: 100%;\r\n    font-size: 0.9em;\r\n    margin: 1em 0 0.25em 0.1em;\r\n}\r\n/* Header styles - end */\r\n\r\n\r\n/* Search section styles - start */\r\n.search {\r\n    width: 95%;\r\n    height: 65px;\r\n    margin: 0 auto;\r\n    padding: 1.5%;\r\n}\r\n\r\n.search form {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n}\r\n\r\n.search input[type='search'] {\r\n    width: 60%;\r\n    height: 30px;\r\n    border-radius: 5px;\r\n    outline: none;\r\n    border: 1px solid black;\r\n    text-align: center;\r\n\r\n    -webkit-appearance: none;\r\n        -moz-appearance: none;\r\n}\r\n\r\n.search input[type='search']::-webkit-search-cancel-button {\r\n    margin-right: 10px;\r\n    height: 12px;\r\n    width: 12px;\r\n    border-radius: 10px;\r\n    background: red;\r\n\r\n    -webkit-appearance: none;\r\n        -moz-appearance: none;\r\n}\r\n\r\n.search input[type='search'].normal::placeholder {\r\n    font-family: 'Montserrat', sans-serif;\r\n    font-weight: 500;\r\n}\r\n\r\n.search input[type='search'].warning::placeholder {\r\n    font-family: 'Montserrat', sans-serif;\r\n    color: red;\r\n    font-weight: 600;\r\n}\r\n\r\n.search input[type='submit'] {\r\n    width: 37%;\r\n    height: 30px;\r\n    border-radius: 5px;\r\n    border: 1px solid black;\r\n    background: #808080;\r\n    outline: none;\r\n    color: #ffffff;\r\n    font-size: 0.9em;\r\n    font-weight: 600;\r\n    letter-spacing: 0.5px;\r\n    transition: all 0.5s;\r\n\r\n    -webkit-appearance: none;\r\n        -moz-appearance: none;\r\n}\r\n\r\n.search input[type='submit']:hover {\r\n    background: #000000;\r\n    color: #ffffff;\r\n}\r\n/* Search section styles - end */\r\n\r\n\r\n/* Current weather section styles - start */\r\n.current-weather {\r\n    width: 93%;\r\n    height: 200px;\r\n    padding: 2%;\r\n    background: #ffffff;\r\n    border-radius: 5px;\r\n    margin: 0 auto 0.75em;\r\n    color: #800080;\r\n    display: flex;\r\n    overflow: hidden;\r\n    flex-wrap: wrap;\r\n}\r\n\r\n.current-weather .local-info {\r\n    width: 100%;\r\n    margin-bottom: 0.3em;\r\n    display: flex;\r\n    justify-content: space-between;\r\n}\r\n\r\n.current-weather .local-info .city {\r\n    width: 110%;\r\n    height: 2.4em;\r\n    overflow: hidden;\r\n}\r\n\r\n.current-weather .local-info .city h3 {\r\n    font-weight: 600;\r\n    margin-left: 0.25em;\r\n    font-size: 1.3em;\r\n}\r\n\r\n.current-weather .local-info .dots-preloader,\r\n.current-weather .local-info .date-time {\r\n    overflow: hidden;\r\n}\r\n\r\n.current-weather .local-info .dots-preloader {\r\n    text-align: center;\r\n    width: 75%;\r\n    padding-left: 10%;\r\n    margin-top: -0.5%;\r\n}\r\n\r\n.current-weather .local-info .date-time {\r\n    text-align: right;\r\n    width: 85%;\r\n    height: 0.9em;\r\n}\r\n\r\n.current-weather .local-info .date-time h6 {\r\n    color: #444444;\r\n    font-weight: 700;\r\n    font-size: 0.8em;\r\n}\r\n\r\n.current-weather .left-col,\r\n.current-weather .right-col {\r\n    height: 130px;\r\n}\r\n\r\n.current-weather .left-col {\r\n    width: 40%;\r\n}\r\n\r\n.current-weather .left-col .left-rows {\r\n    width: 100%;\r\n    height: 25%;\r\n    overflow: hidden;\r\n}\r\n\r\n.current-weather .left-col h3 {\r\n    font-weight: 600;\r\n    line-height: 2.5em;\r\n}\r\n\r\n.current-weather .left-col .left-rows p {\r\n    width: 30px;\r\n    margin-right: 1em;\r\n    text-align: center;\r\n    display: inline-block;\r\n}\r\n\r\n.current-weather .left-col .left-rows h3 {\r\n    display: inline-block;\r\n}\r\n\r\n.current-weather .left-col .left-rows h3 span {\r\n    font-size: 0.8em;\r\n}\r\n\r\n.current-weather .left-col .left-rows p .wi {\r\n    font-size: 1.4em;\r\n    color: #000000;\r\n}\r\n\r\n.current-weather .left-col .left-rows p .wi.wi-strong-wind {\r\n    margin-left: 0.2em;\r\n}\r\n\r\n.current-weather .right-col {\r\n    width: 60%;\r\n    display: flex;\r\n    flex-wrap: wrap;\r\n}\r\n\r\n.current-weather .right-col .col-60,\r\n.current-weather .right-col .col-40 {\r\n    height: 100px;\r\n}\r\n\r\n.current-weather .right-col .col-60 {\r\n    width: 60%;\r\n    text-align: center;\r\n}\r\n\r\n.current-weather .right-col .col-60 h5 {\r\n    margin-top: 2.4em;\r\n    font-weight: 600;\r\n    font-size: 1.1em;\r\n    width: 95%;\r\n}\r\n\r\n.current-weather .right-col .col-40 {\r\n    width: 40%;\r\n}\r\n\r\n.current-weather .right-col .col-40 .current-icon {\r\n    margin: 0.1em -0.1em 0 0;\r\n    color: #000000;\r\n    font-size: 3.5em;\r\n    text-align: center;\r\n}\r\n\r\n.current-weather .right-col .col-40 .current-icon .wi.wi-day-cloudy-high {\r\n    font-size: 1.2em;\r\n}\r\n\r\n.current-weather .right-col .right-bottom {\r\n    width: 100%;\r\n    text-align: right;\r\n    padding-top: 0.1em;\r\n}\r\n\r\n.current-weather .right-col .right-bottom button {\r\n    width: 150px;\r\n    height: 30px;\r\n    border: 1px solid gray;\r\n    border-radius: 4px;\r\n    background: #e0e0e0;\r\n    outline: none;\r\n    color: #000000;\r\n    font-size: 0.9em;\r\n    font-weight: 600;\r\n    transition: all 0.5s;\r\n}\r\n\r\n.current-weather .right-col .right-bottom button:hover {\r\n    background: #ffffff;\r\n    color: #606060;\r\n}\r\n/* Current weather section styles - end */\r\n\r\n\r\n/* Current Chart section styles - start */\r\n.current-chart {\r\n    height: 230px;\r\n}\r\n/* Current Chart section styles - end */\r\n\r\n\r\n/* Next five days section styles - start */\r\n.next-days-weather {\r\n    width: 93%;\r\n    height: 230px;\r\n    margin: 0 auto 15px;\r\n    display: flex;\r\n    justify-content: space-between;\r\n}\r\n\r\n.next-days-weather .day-container {\r\n    width: 19.5%;\r\n    height: 230px;\r\n    background: #f5f5f5;\r\n    padding-bottom: 7px;\r\n    padding-top: 5px;\r\n    display: flex;\r\n    flex-direction: column;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n    overflow: hidden;\r\n}\r\n\r\n.next-days-weather .day-container:first-child {\r\n    border-top-left-radius: 5px;\r\n    border-bottom-left-radius: 5px;\r\n}\r\n\r\n.next-days-weather .day-container:nth-child(5) {\r\n    border-top-right-radius: 5px;\r\n    border-bottom-right-radius: 5px;\r\n}\r\n\r\n.next-days-weather .day-container:nth-child(6) {\r\n    display: none;\r\n}\r\n\r\n.next-days-weather .day-container .row {\r\n    width: 100%;\r\n    padding: 2px 2px 2px 1px;\r\n}\r\n\r\n.next-days-weather .day-container .row.date,\r\n.next-days-weather .day-container .row.icon,\r\n.next-days-weather .day-container .row.description,\r\n.next-days-weather .day-container .row p {\r\n    text-align: center;\r\n}\r\n\r\n.next-days-weather .day-container .row.weather-data {\r\n    width: fit-content;\r\n    margin-left: -10px;\r\n}\r\n\r\n.next-days-weather .day-container .row.date h5 {\r\n    font-weight: 600;\r\n    font-size: 0.8em;\r\n}\r\n\r\n.next-days-weather .day-container .row.icon {\r\n    font-size: 2em;\r\n    padding: 0.1em;\r\n}\r\n\r\n.next-days-weather .day-container .row.icon .current-icon {\r\n    height: 45px;\r\n}\r\n\r\n.next-days-weather .day-container .row.icon .wi.wi-day-cloudy-high {\r\n    font-size: 1.25em;\r\n}\r\n\r\n.next-days-weather .day-container .row.description {\r\n    height: 35px;\r\n}\r\n\r\n.next-days-weather .day-container .row.description h6 {\r\n    width: 90%;\r\n    margin: 0 auto;\r\n    font-weight: 600;\r\n    font-size: 0.7em;\r\n}\r\n\r\n.next-days-weather .day-container .row p {\r\n    display: inline-block;\r\n    width: 40px;\r\n}\r\n\r\n.next-days-weather .day-container .row h5 {\r\n    display: inline-block;\r\n    font-weight: 500;\r\n    font-size: 0.75em;\r\n}\r\n\r\n.next-days-weather .day-container .row p .wi {\r\n    font-size: 1em;\r\n}\r\n/* Next five days section styles - end */\r\n\r\n\r\n/* Preloader Styles - start */\r\n.main-preloader {\r\n    text-align: center;\r\n    padding: 5em;\r\n}\r\n\r\n.main-preloader .info {\r\n    padding: 0.5em;\r\n    font-weight: 600;\r\n}\r\n\r\n.main-preloader .main-loading {\r\n    width: 3.5em;\r\n    height: 3.5em;\r\n}\r\n\r\n.main-preloader .animation {\r\n    animation-name: spin;\r\n    animation-duration: 1800ms;\r\n    animation-iteration-count: infinite;\r\n    animation-timing-function: linear;\r\n}\r\n\r\n@keyframes spin {\r\n    from {\r\n        transform: rotate(0deg);\r\n    }\r\n\r\n    to {\r\n        transform: rotate(360deg);\r\n    }\r\n}\r\n/* Preloader Styles - end */\r\n\r\n\r\n/* Mobile styles */\r\n.mobile-background {\r\n    background-color: #d3d3d3;\r\n}\r\n/* Mobile styles - end */\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -50719,95 +50728,76 @@ document.addEventListener('DOMContentLoaded', function () {
         unitSystem: _js_config_js__WEBPACK_IMPORTED_MODULE_16__.config.unitSystem
       });
       /* geolocation - getting current position by ip address from ipinfo.io */
-      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "getCurrentPosition", /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(/*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee() {
+      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "getCurrentPosition", /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(/*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee2() {
         var data, _data$loc$split, _data$loc$split2, latitude, longitude;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee$(_context) {
-          while (1) switch (_context.prev = _context.next) {
-            case 0:
-              _context.prev = 0;
-              _context.next = 3;
-              return (0,_js_providers_js__WEBPACK_IMPORTED_MODULE_20__.ipInfoGeolocation)();
-            case 3:
-              data = _context.sent;
-              _data$loc$split = data.loc.split(','), _data$loc$split2 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__["default"])(_data$loc$split, 2), latitude = _data$loc$split2[0], longitude = _data$loc$split2[1];
-              _context.next = 7;
-              return new Promise(function (resolve) {
-                _this.setState({
-                  latitude: latitude,
-                  longitude: longitude,
-                  location: {
-                    city: data.city,
-                    country: data.country.toUpperCase()
-                  }
-                }, resolve);
-              });
-            case 7:
-              _context.next = 13;
-              break;
-            case 9:
-              _context.prev = 9;
-              _context.t0 = _context["catch"](0);
-              console.error("getCurrentPosition ".concat(_context.t0));
-              throw _context.t0;
-            case 13:
-              _context.next = 15;
-              return _this.getLocationName();
-            case 15:
-              _context.next = 17;
-              return _this.getWeatherData();
-            case 17:
-            case "end":
-              return _context.stop();
-          }
-        }, _callee, null, [[0, 9]]);
-      })));
-      /* reverse geocoding - getting city name from latitude and longitude using openstreetmap.org */
-      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "getLocationName", /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(/*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee2() {
-        var data;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee2$(_context2) {
           while (1) switch (_context2.prev = _context2.next) {
             case 0:
               _context2.prev = 0;
               _context2.next = 3;
-              return (0,_js_providers_js__WEBPACK_IMPORTED_MODULE_20__.openStreetMapReverseGeocoding)(_this.state.latitude, _this.state.longitude);
+              return (0,_js_providers_js__WEBPACK_IMPORTED_MODULE_20__.ipInfoGeolocation)();
             case 3:
               data = _context2.sent;
+              _data$loc$split = data.loc.split(','), _data$loc$split2 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__["default"])(_data$loc$split, 2), latitude = _data$loc$split2[0], longitude = _data$loc$split2[1];
               _this.setState({
+                latitude: latitude,
+                longitude: longitude,
                 location: {
-                  city: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_19__.placeNameChooser)(data.address),
-                  country: data.address.country_code.toUpperCase()
+                  city: data.city,
+                  country: data.country.toUpperCase()
                 }
-              });
-              _context2.next = 11;
+              }, /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(/*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee() {
+                return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee$(_context) {
+                  while (1) switch (_context.prev = _context.next) {
+                    case 0:
+                      _context.prev = 0;
+                      _context.next = 3;
+                      return _this.getLocationName();
+                    case 3:
+                      _context.next = 5;
+                      return _this.getWeatherData();
+                    case 5:
+                      _context.next = 11;
+                      break;
+                    case 7:
+                      _context.prev = 7;
+                      _context.t0 = _context["catch"](0);
+                      console.error("getCurrentPosition ".concat(_context.t0));
+                      _this.handleError(_context.t0);
+                    case 11:
+                    case "end":
+                      return _context.stop();
+                  }
+                }, _callee, null, [[0, 7]]);
+              })));
+              _context2.next = 12;
               break;
-            case 7:
-              _context2.prev = 7;
+            case 8:
+              _context2.prev = 8;
               _context2.t0 = _context2["catch"](0);
-              console.error("getLocationName ".concat(_context2.t0));
-              throw new Error(_js_consts_js__WEBPACK_IMPORTED_MODULE_17__.ERROR.unableToGeocode);
-            case 11:
+              console.error("getCurrentPosition ".concat(_context2.t0));
+              throw _context2.t0;
+            case 12:
             case "end":
               return _context2.stop();
           }
-        }, _callee2, null, [[0, 7]]);
+        }, _callee2, null, [[0, 8]]);
       })));
-      /* forward geocoding - getting latitude and longitude from city name using openstreetmap.org */
-      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "getCoordinates", /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(/*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee3() {
+      /* reverse geocoding - getting city name from latitude and longitude using openstreetmap.org */
+      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "getLocationName", /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(/*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee3() {
         var data;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee3$(_context3) {
           while (1) switch (_context3.prev = _context3.next) {
             case 0:
               _context3.prev = 0;
               _context3.next = 3;
-              return (0,_js_providers_js__WEBPACK_IMPORTED_MODULE_20__.openStreetMapForwardGeocoding)(_this.state.input);
+              return (0,_js_providers_js__WEBPACK_IMPORTED_MODULE_20__.openStreetMapReverseGeocoding)(_this.state.latitude, _this.state.longitude);
             case 3:
               data = _context3.sent;
               _this.setState({
-                latitude: parseFloat(data[0].lat).toFixed(4),
-                longitude: parseFloat(data[0].lon).toFixed(4),
                 location: {
-                  city: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_19__.placeNameChooser)(data[0].address),
-                  country: data[0].address.country_code.toUpperCase()
+                  city: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_19__.placeNameChooser)(data.address),
+                  country: data.address.country_code.toUpperCase()
                 }
               });
               _context3.next = 11;
@@ -50815,7 +50805,7 @@ document.addEventListener('DOMContentLoaded', function () {
             case 7:
               _context3.prev = 7;
               _context3.t0 = _context3["catch"](0);
-              console.error("getCoordinates ".concat(_context3.t0));
+              console.error("getLocationName ".concat(_context3.t0));
               throw _context3.t0;
             case 11:
             case "end":
@@ -50823,16 +50813,69 @@ document.addEventListener('DOMContentLoaded', function () {
           }
         }, _callee3, null, [[0, 7]]);
       })));
-      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "getWeatherData", /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(/*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee4() {
+      /* forward geocoding - getting latitude and longitude from city name using openstreetmap.org */
+      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "getCoordinates", /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(/*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee5() {
         var data;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee4$(_context4) {
-          while (1) switch (_context4.prev = _context4.next) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee5$(_context5) {
+          while (1) switch (_context5.prev = _context5.next) {
             case 0:
-              _context4.prev = 0;
-              _context4.next = 3;
+              _context5.prev = 0;
+              _context5.next = 3;
+              return (0,_js_providers_js__WEBPACK_IMPORTED_MODULE_20__.openStreetMapForwardGeocoding)(_this.state.input);
+            case 3:
+              data = _context5.sent;
+              _this.setState({
+                latitude: data[0].lat,
+                longitude: data[0].lon,
+                location: {
+                  city: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_19__.placeNameChooser)(data[0].address),
+                  country: data[0].address.country_code.toUpperCase()
+                }
+              }, /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(/*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee4() {
+                return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee4$(_context4) {
+                  while (1) switch (_context4.prev = _context4.next) {
+                    case 0:
+                      _context4.prev = 0;
+                      _context4.next = 3;
+                      return _this.getWeatherData();
+                    case 3:
+                      _context4.next = 9;
+                      break;
+                    case 5:
+                      _context4.prev = 5;
+                      _context4.t0 = _context4["catch"](0);
+                      console.error("getCoordinates ".concat(_context4.t0));
+                      _this.handleError(_context4.t0);
+                    case 9:
+                    case "end":
+                      return _context4.stop();
+                  }
+                }, _callee4, null, [[0, 5]]);
+              })));
+              _context5.next = 11;
+              break;
+            case 7:
+              _context5.prev = 7;
+              _context5.t0 = _context5["catch"](0);
+              console.error("getCoordinates ".concat(_context5.t0));
+              throw _context5.t0;
+            case 11:
+            case "end":
+              return _context5.stop();
+          }
+        }, _callee5, null, [[0, 7]]);
+      })));
+      /* Fetching weather data from OpenWeatherMap API */
+      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "getWeatherData", /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(/*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee6() {
+        var data;
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee6$(_context6) {
+          while (1) switch (_context6.prev = _context6.next) {
+            case 0:
+              _context6.prev = 0;
+              _context6.next = 3;
               return (0,_js_providers_js__WEBPACK_IMPORTED_MODULE_20__.openWeatherMapGetData)(_this.state.latitude, _this.state.longitude);
             case 3:
-              data = _context4.sent;
+              data = _context6.sent;
               _this.setState({
                 currentDayWeatherData: {
                   temp: Math.round(data.current.temp),
@@ -50858,32 +50901,31 @@ document.addEventListener('DOMContentLoaded', function () {
                 currentDayChartData: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_19__.prepareChartData)(data.hourly, data.timezone_offset),
                 displayCurrentDayWeather: true
               });
-              _context4.next = 11;
+              _context6.next = 11;
               break;
             case 7:
-              _context4.prev = 7;
-              _context4.t0 = _context4["catch"](0);
-              console.error("getWeatherData ".concat(_context4.t0));
-              throw _context4.t0;
+              _context6.prev = 7;
+              _context6.t0 = _context6["catch"](0);
+              console.error("getWeatherData ".concat(_context6.t0));
+              throw _context6.t0;
             case 11:
             case "end":
-              return _context4.stop();
+              return _context6.stop();
           }
-        }, _callee4, null, [[0, 7]]);
+        }, _callee6, null, [[0, 7]]);
       })));
       /* removing focus from search field */
       (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "blurSearchField", function () {
         _this.state.inputRef.current && _this.state.inputRef.current.blur();
       });
-      /* 'next days forecast' button handling */
+      /* handling 'next days forecast' button click */
       (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "displayNextDays", function () {
         _this.setState({
           displayNextDaysWeather: !_this.state.displayNextDaysWeather
         });
       });
-      /* 'get weather' button handling */
-      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "handleSubmit", function (event) {
-        event.preventDefault();
+      /* resetting state before fetching new data */
+      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "resetStateBeforeFetching", function () {
         _this.setState({
           input: '',
           displayCurrentDayWeather: false,
@@ -50891,49 +50933,57 @@ document.addEventListener('DOMContentLoaded', function () {
           preloaderAlert: false,
           preloaderInfo: _js_consts_js__WEBPACK_IMPORTED_MODULE_17__.MESSAGE.loadingData
         });
-        _this.blurSearchField();
-        _this.getCoordinates().then(function () {
-          return _this.getWeatherData();
-        })["catch"](function (error) {
-          console.error("handleSubmit ".concat(error));
-          _this.setState({
-            preloaderAlert: true,
-            preloaderInfo: error.message === _js_consts_js__WEBPACK_IMPORTED_MODULE_17__.ERROR.noData ? _js_consts_js__WEBPACK_IMPORTED_MODULE_17__.MESSAGE.wrongCityName : _js_consts_js__WEBPACK_IMPORTED_MODULE_17__.MESSAGE.connectionError
-          });
+      });
+      /* handling errors and displaying relevant message */
+      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "handleError", function (error) {
+        var errorMessageMap = (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])((0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])((0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])({}, _js_consts_js__WEBPACK_IMPORTED_MODULE_17__.ERROR.noData, _js_consts_js__WEBPACK_IMPORTED_MODULE_17__.MESSAGE.wrongCityName), _js_consts_js__WEBPACK_IMPORTED_MODULE_17__.ERROR.unableToGeolocation, _js_consts_js__WEBPACK_IMPORTED_MODULE_17__.MESSAGE.enterManually), _js_consts_js__WEBPACK_IMPORTED_MODULE_17__.ERROR.unableToGeocode, _js_consts_js__WEBPACK_IMPORTED_MODULE_17__.MESSAGE.enterManually);
+        _this.setState({
+          preloaderAlert: true,
+          preloaderInfo: errorMessageMap[error.message] || _js_consts_js__WEBPACK_IMPORTED_MODULE_17__.MESSAGE.connectionError
         });
       });
-      /* input field on change handling */
+      /* handling 'get weather' button click */
+      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "handleSubmit", function (event) {
+        event.preventDefault();
+        _this.resetStateBeforeFetching();
+        _this.blurSearchField();
+        _this.getCoordinates()["catch"](function (error) {
+          console.error("handleSubmit ".concat(error));
+          _this.handleError(error);
+        });
+      });
+      /* handling input field value change */
       (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "handleInputOnChange", function (event) {
         _this.setState({
           input: event.target.value
         });
       });
-      /* input field on focus handling */
+      /* handling input field focus on mobile devices */
       (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "handleInputOnFocus", function () {
-        (0,_js_mobile_js__WEBPACK_IMPORTED_MODULE_18__.isMobile)() && _js_mobile_js__WEBPACK_IMPORTED_MODULE_18__.viewportSettingsChanger.call(_this);
+        if ((0,_js_mobile_js__WEBPACK_IMPORTED_MODULE_18__.isMobile)()) {
+          _js_mobile_js__WEBPACK_IMPORTED_MODULE_18__.viewportSettingsChanger.call(_this);
+        }
       });
       (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "componentDidMount", function () {
+        if ((0,_js_mobile_js__WEBPACK_IMPORTED_MODULE_18__.isMobile)()) {
+          _js_mobile_js__WEBPACK_IMPORTED_MODULE_18__.mobileStyles.call(_this);
+          window.onresize = function () {
+            _js_mobile_js__WEBPACK_IMPORTED_MODULE_18__.mobileStyles.call(_this);
+          };
+        }
         _this.getCurrentPosition()["catch"](function (error) {
-          _this.setState({
-            preloaderAlert: true,
-            preloaderInfo: [_js_consts_js__WEBPACK_IMPORTED_MODULE_17__.ERROR.unableToGeolocation, _js_consts_js__WEBPACK_IMPORTED_MODULE_17__.ERROR.unableToGeocode].includes(error.message) ? _js_consts_js__WEBPACK_IMPORTED_MODULE_17__.MESSAGE.enterManually : _js_consts_js__WEBPACK_IMPORTED_MODULE_17__.MESSAGE.connectionError
-          });
           console.error("componentDidMount ".concat(error));
+          _this.handleError(error);
         });
-        window.onload = function () {
-          (0,_js_mobile_js__WEBPACK_IMPORTED_MODULE_18__.isMobile)() && _js_mobile_js__WEBPACK_IMPORTED_MODULE_18__.mobileStyles.call(_this);
-        };
-        window.onresize = function () {
-          (0,_js_mobile_js__WEBPACK_IMPORTED_MODULE_18__.isMobile)() && _js_mobile_js__WEBPACK_IMPORTED_MODULE_18__.mobileStyles.call(_this);
-        };
         window.screen.orientation.onchange = function () {
           _this.setState({
             screenLandscapeOrientation: !_this.state.screenLandscapeOrientation
+          }, function () {
+            if ((0,_js_mobile_js__WEBPACK_IMPORTED_MODULE_18__.isMobile)()) {
+              _js_mobile_js__WEBPACK_IMPORTED_MODULE_18__.viewportSettingsChanger.call(_this);
+              _js_mobile_js__WEBPACK_IMPORTED_MODULE_18__.mobileStyles.call(_this);
+            }
           });
-          if ((0,_js_mobile_js__WEBPACK_IMPORTED_MODULE_18__.isMobile)()) {
-            _js_mobile_js__WEBPACK_IMPORTED_MODULE_18__.mobileStyles.call(_this);
-            _js_mobile_js__WEBPACK_IMPORTED_MODULE_18__.viewportSettingsChanger.call(_this);
-          }
         };
       });
       (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "render", function () {
