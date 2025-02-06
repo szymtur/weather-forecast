@@ -9,7 +9,7 @@ import { WEATHER_UNITS } from '../js/consts.js';
 
 class CurrentWeather extends React.Component {
 
-    render() {
+    render = () => {
         const { temp, temp_app, pressure, humidity, wind, description, icon } = this.props.currentDay;
         const { temperature: tempUnit, pressure: pressureUnit, humidity: humidityUnit, wind: windUnit } = WEATHER_UNITS[this.props.unitSystem];
         const { time, date, timezone } = this.props.localTime;
@@ -18,6 +18,8 @@ class CurrentWeather extends React.Component {
         if(!this.props.displayComponent) {
             return (
                 <Preloader
+                    isMobile = {this.props.isMobile}
+                    isLandscape = {this.props.isLandscape}
                     preloaderInfo = {this.props.preloaderInfo}
                     preloaderAlert = {this.props.preloaderAlert}
                 />

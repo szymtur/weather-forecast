@@ -283,14 +283,14 @@ var placeNameChooser = function placeNameChooser(address) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   isMobile: () => (/* binding */ isMobile),
+/* harmony export */   checkIsMobile: () => (/* binding */ checkIsMobile),
 /* harmony export */   mobileStyles: () => (/* binding */ mobileStyles),
 /* harmony export */   viewportSettingsChanger: () => (/* binding */ viewportSettingsChanger)
 /* harmony export */ });
 
 
 /* function to detect mobile devices */
-function isMobile() {
+function checkIsMobile() {
   var mobileDevices = [/Android/i.test(navigator.userAgent), /BlackBerry|RIM|BB|PlayBook/i.test(navigator.userAgent), /iPhone|iPad|iPod/i.test(navigator.userAgent), /Opera Mini/i.test(navigator.userAgent), /IEMobile|WPDesktop|Nokia|Windows Phones/i.test(navigator.userAgent), /webOS/i.test(navigator.userAgent), /Kindle|Silk|KFAPW|KFARWI|KFASWI|KFFOWI|KFJW|KFMEWI|KFOT|KFSAW|KFSOWI|KFTBW|KFTHW|KFTT|WFFOWI/i.test(navigator.userAgent)];
   return mobileDevices.some(function (isMobileDevice) {
     return isMobileDevice;
@@ -304,7 +304,7 @@ function viewportSettingsChanger() {
     landscape: "width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes",
     portrait: "width=device-width, height=850, initial-scale=1, maximum-scale=1, shrink-to-fit=yes"
   };
-  if (this.state.screenLandscapeOrientation) {
+  if (this.props.isLandscape) {
     viewportMeta.setAttribute('content', viewportSettings.landscape);
   } else {
     viewportMeta.setAttribute('content', viewportSettings.portrait);
@@ -313,29 +313,13 @@ function viewportSettingsChanger() {
 
 /* function to add custom styles for mobile devices */
 function mobileStyles() {
-  var mainContainer = document.querySelector('#app');
-  var mainPreloader = document.querySelector('.main-preloader');
-  var weatherContainer = document.querySelector('.current-weather');
-  var mainContainerWidth = mainContainer.offsetWidth;
-  var mainContainerHeight = mainContainer.offsetHeight;
-
-  /* styles for body */
-  document.body.classList.add('mobile-background');
-
-  /* styles for main preloader depending on the device's orientation */
-  if (!weatherContainer) {
-    if (this.state.screenLandscapeOrientation && window.innerHeight <= mainContainerHeight / 1.5) {
-      mainPreloader.style.paddingTop = '3em';
-    } else {
-      mainPreloader.style.paddingTop = '8em';
-    }
-  }
-
-  /* styles for main container depending on screen resolution */
-  if (window.innerHeight > mainContainerHeight * 1.05 && window.innerWidth > mainContainerWidth * 1.05) {
-    mainContainer.style.boxShadow = '0 0 4px black';
-  } else {
-    mainContainer.style.boxShadow = 'none';
+  var mainContainer = document.getElementById("app");
+  var widthThreshold = mainContainer.offsetWidth * 1.05;
+  var heightThreshold = mainContainer.offsetHeight * 1.05;
+  mainContainer.classList.toggle("mobile-app-shadow", window.innerWidth > widthThreshold && window.innerHeight > heightThreshold);
+  mainContainer.style.width = this.state.isLandscape ? '620px' : '500px';
+  if (!document.body.classList.contains('mobile-background')) {
+    document.body.classList.add('mobile-background');
   }
 }
 
@@ -429,8 +413,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
 /* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
 /* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
 /* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
@@ -453,7 +437,7 @@ function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.
 var CurrentDateHeader = /*#__PURE__*/function (_React$Component) {
   function CurrentDateHeader() {
     var _this;
-    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, CurrentDateHeader);
+    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, CurrentDateHeader);
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
@@ -471,35 +455,28 @@ var CurrentDateHeader = /*#__PURE__*/function (_React$Component) {
         date: "".concat((0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_7__.appendLeadingZero)(date.getDate()), "-").concat((0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_7__.appendLeadingZero)(date.getMonth() + 1), "-").concat(date.getFullYear())
       });
     });
-    return _this;
-  }
-  (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(CurrentDateHeader, _React$Component);
-  return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(CurrentDateHeader, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      var _this2 = this;
-      this.currentTime();
-      this.interval = setInterval(function () {
-        return _this2.currentTime();
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5__["default"])(_this, "componentDidMount", function () {
+      _this.currentTime();
+      _this.interval = setInterval(function () {
+        return _this.currentTime();
       }, 1000);
-    }
-  }, {
-    key: "componentWillUnmount",
-    value: function componentWillUnmount() {
-      clearInterval(this.interval);
-    }
-  }, {
-    key: "render",
-    value: function render() {
+    });
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5__["default"])(_this, "componentWillUnmount", function () {
+      clearInterval(_this.interval);
+    });
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5__["default"])(_this, "render", function () {
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", {
         className: "header"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", {
         className: "current-date"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("h4", null, this.state.date, " ", this.state.timezone, " ", this.state.time)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("h4", null, _this.state.date, " ", _this.state.timezone, " ", _this.state.time)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", {
         className: "caption"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("h2", null, "Weather Forecast")));
-    }
-  }]);
+    });
+    return _this;
+  }
+  (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(CurrentDateHeader, _React$Component);
+  return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_0__["default"])(CurrentDateHeader);
 }((react__WEBPACK_IMPORTED_MODULE_6___default().Component));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CurrentDateHeader);
 
@@ -516,16 +493,18 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
 /* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
 /* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
 /* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _weatherIcon_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./weatherIcon.jsx */ "./jsx/weatherIcon.jsx");
-/* harmony import */ var _preloader_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./preloader.jsx */ "./jsx/preloader.jsx");
-/* harmony import */ var _js_consts_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../js/consts.js */ "./js/consts.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _weatherIcon_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./weatherIcon.jsx */ "./jsx/weatherIcon.jsx");
+/* harmony import */ var _preloader_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./preloader.jsx */ "./jsx/preloader.jsx");
+/* harmony import */ var _js_consts_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../js/consts.js */ "./js/consts.js");
+
 
 
 
@@ -541,14 +520,14 @@ function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.
 
 var CurrentWeather = /*#__PURE__*/function (_React$Component) {
   function CurrentWeather() {
-    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, CurrentWeather);
-    return _callSuper(this, CurrentWeather, arguments);
-  }
-  (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(CurrentWeather, _React$Component);
-  return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(CurrentWeather, [{
-    key: "render",
-    value: function render() {
-      var _this$props$currentDa = this.props.currentDay,
+    var _this;
+    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, CurrentWeather);
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+    _this = _callSuper(this, CurrentWeather, [].concat(args));
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5__["default"])(_this, "render", function () {
+      var _this$props$currentDa = _this.props.currentDay,
         temp = _this$props$currentDa.temp,
         temp_app = _this$props$currentDa.temp_app,
         pressure = _this$props$currentDa.pressure,
@@ -556,71 +535,459 @@ var CurrentWeather = /*#__PURE__*/function (_React$Component) {
         wind = _this$props$currentDa.wind,
         description = _this$props$currentDa.description,
         icon = _this$props$currentDa.icon;
-      var _WEATHER_UNITS$this$p = _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.WEATHER_UNITS[this.props.unitSystem],
-        tempUnit = _WEATHER_UNITS$this$p.temperature,
-        pressureUnit = _WEATHER_UNITS$this$p.pressure,
-        humidityUnit = _WEATHER_UNITS$this$p.humidity,
-        windUnit = _WEATHER_UNITS$this$p.wind;
-      var _this$props$localTime = this.props.localTime,
+      var _WEATHER_UNITS$_this$ = _js_consts_js__WEBPACK_IMPORTED_MODULE_9__.WEATHER_UNITS[_this.props.unitSystem],
+        tempUnit = _WEATHER_UNITS$_this$.temperature,
+        pressureUnit = _WEATHER_UNITS$_this$.pressure,
+        humidityUnit = _WEATHER_UNITS$_this$.humidity,
+        windUnit = _WEATHER_UNITS$_this$.wind;
+      var _this$props$localTime = _this.props.localTime,
         time = _this$props$localTime.time,
         date = _this$props$localTime.date,
         timezone = _this$props$localTime.timezone;
-      var _this$props$location = this.props.location,
+      var _this$props$location = _this.props.location,
         city = _this$props$location.city,
         country = _this$props$location.country;
-      if (!this.props.displayComponent) {
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement(_preloader_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
-          preloaderInfo: this.props.preloaderInfo,
-          preloaderAlert: this.props.preloaderAlert
+      if (!_this.props.displayComponent) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement(_preloader_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
+          isMobile: _this.props.isMobile,
+          isLandscape: _this.props.isLandscape,
+          preloaderInfo: _this.props.preloaderInfo,
+          preloaderAlert: _this.props.preloaderAlert
         });
       }
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", {
         className: "current-weather"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", {
         className: "local-info"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", {
         className: "city"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("h3", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("h3", {
         style: {
           fontSize: String(city).length >= 20 ? '1em' : null
         }
-      }, city, " ", country)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
+      }, city, " ", country)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", {
         className: "date-time"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("h6", null, date, " ", timezone, " ", time))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("h6", null, date, " ", timezone, " ", time))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", {
         className: "left-col"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", {
         className: "left-rows"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("i", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("i", {
         className: "wi wi-thermometer"
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("h3", null, temp, " ", tempUnit, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("span", null, " / ", temp_app, " ", tempUnit))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("h3", null, temp, " ", tempUnit, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("span", null, " / ", temp_app, " ", tempUnit))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", {
         className: "left-rows"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("i", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("i", {
         className: "wi wi-barometer"
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("h3", null, pressure, " ", pressureUnit)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("h3", null, pressure, " ", pressureUnit)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", {
         className: "left-rows"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("i", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("i", {
         className: "wi wi-humidity"
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("h3", null, humidity, " ", humidityUnit)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("h3", null, humidity, " ", humidityUnit)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", {
         className: "left-rows"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("i", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("i", {
         className: "wi wi-strong-wind"
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("h3", null, wind, " ", windUnit))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("h3", null, wind, " ", windUnit))), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", {
         className: "right-col"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", {
         className: "col-60"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("h5", null, description)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("h5", null, description)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", {
         className: "col-40"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement(_weatherIcon_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement(_weatherIcon_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
         icon: icon
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", {
         className: "right-bottom"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("button", {
-        onClick: this.props.displayNextDays
-      }, this.props.buttonText))));
-    }
-  }]);
-}((react__WEBPACK_IMPORTED_MODULE_5___default().Component));
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("button", {
+        onClick: _this.props.displayNextDays
+      }, _this.props.buttonText))));
+    });
+    return _this;
+  }
+  (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(CurrentWeather, _React$Component);
+  return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_0__["default"])(CurrentWeather);
+}((react__WEBPACK_IMPORTED_MODULE_6___default().Component));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (CurrentWeather);
+
+/***/ }),
+
+/***/ "./jsx/main.jsx":
+/*!**********************!*\
+  !*** ./jsx/main.jsx ***!
+  \**********************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
+/* harmony export */ });
+/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/esm/slicedToArray.js");
+/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
+/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_9__);
+/* harmony import */ var _searchSection_jsx__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! ./searchSection.jsx */ "./jsx/searchSection.jsx");
+/* harmony import */ var _currentDate_jsx__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./currentDate.jsx */ "./jsx/currentDate.jsx");
+/* harmony import */ var _currentWeather_jsx__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./currentWeather.jsx */ "./jsx/currentWeather.jsx");
+/* harmony import */ var _weatherChart_jsx__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./weatherChart.jsx */ "./jsx/weatherChart.jsx");
+/* harmony import */ var _nextDaysWeather_jsx__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./nextDaysWeather.jsx */ "./jsx/nextDaysWeather.jsx");
+/* harmony import */ var _js_config_js__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ../js/config.js */ "./js/config.js");
+/* harmony import */ var _js_consts_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../js/consts.js */ "./js/consts.js");
+/* harmony import */ var _js_mobile_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../js/mobile.js */ "./js/mobile.js");
+/* harmony import */ var _js_helpers_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../js/helpers.js */ "./js/helpers.js");
+/* harmony import */ var _js_providers_js__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../js/providers.js */ "./js/providers.js");
+/* harmony import */ var _css_styles_css__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../css/styles.css */ "./css/styles.css");
+/* harmony import */ var _css_responsive_css__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../css/responsive.css */ "./css/responsive.css");
+
+
+
+
+
+
+
+
+
+
+
+function _callSuper(t, o, e) { return o = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5__["default"])(o), (0,_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4__["default"])(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5__["default"])(t).constructor) : o.apply(t, e)); }
+function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
+
+
+
+
+
+
+
+
+
+
+
+
+
+var Main = /*#__PURE__*/function (_React$Component) {
+  function Main() {
+    var _this;
+    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_3__["default"])(this, Main);
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+    _this = _callSuper(this, Main, [].concat(args));
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "state", {
+      currentDayChartData: {},
+      currentDayWeatherData: {},
+      displayCurrentDayWeather: false,
+      displayNextDaysWeather: false,
+      gpsCoordinates: {
+        latitude: null,
+        longitude: null
+      },
+      input: '',
+      inputRef: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_9___default().createRef(),
+      location: {
+        city: null,
+        country: null
+      },
+      localTime: {
+        date: null,
+        time: null,
+        timezone: null
+      },
+      nextDaysWeatherData: [],
+      preloaderAlert: false,
+      preloaderInfo: _js_consts_js__WEBPACK_IMPORTED_MODULE_16__.MESSAGE.loadingData,
+      unitSystem: _js_config_js__WEBPACK_IMPORTED_MODULE_15__.config.unitSystem
+    });
+    /* geolocation - getting current position by ip address from ipinfo.io */
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "getCurrentPosition", /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(/*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee2() {
+      var data, _data$loc$split, _data$loc$split2, latitude, longitude;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee2$(_context2) {
+        while (1) switch (_context2.prev = _context2.next) {
+          case 0:
+            _context2.prev = 0;
+            _context2.next = 3;
+            return (0,_js_providers_js__WEBPACK_IMPORTED_MODULE_19__.ipInfoGeolocation)();
+          case 3:
+            data = _context2.sent;
+            _data$loc$split = data.loc.split(','), _data$loc$split2 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__["default"])(_data$loc$split, 2), latitude = _data$loc$split2[0], longitude = _data$loc$split2[1];
+            _this.setState({
+              gpsCoordinates: {
+                latitude: latitude,
+                longitude: longitude
+              },
+              location: {
+                city: data.city,
+                country: data.country.toUpperCase()
+              }
+            }, /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(/*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee() {
+              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee$(_context) {
+                while (1) switch (_context.prev = _context.next) {
+                  case 0:
+                    _context.prev = 0;
+                    _context.next = 3;
+                    return _this.getLocationName();
+                  case 3:
+                    _context.next = 5;
+                    return _this.getWeatherData();
+                  case 5:
+                    _context.next = 11;
+                    break;
+                  case 7:
+                    _context.prev = 7;
+                    _context.t0 = _context["catch"](0);
+                    console.error("getCurrentPosition ".concat(_context.t0));
+                    _this.handleError(_context.t0);
+                  case 11:
+                  case "end":
+                    return _context.stop();
+                }
+              }, _callee, null, [[0, 7]]);
+            })));
+            _context2.next = 12;
+            break;
+          case 8:
+            _context2.prev = 8;
+            _context2.t0 = _context2["catch"](0);
+            console.error("getCurrentPosition ".concat(_context2.t0));
+            throw _context2.t0;
+          case 12:
+          case "end":
+            return _context2.stop();
+        }
+      }, _callee2, null, [[0, 8]]);
+    })));
+    /* reverse geocoding - getting city name from latitude and longitude using openstreetmap.org */
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "getLocationName", /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(/*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee3() {
+      var data;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee3$(_context3) {
+        while (1) switch (_context3.prev = _context3.next) {
+          case 0:
+            _context3.prev = 0;
+            _context3.next = 3;
+            return (0,_js_providers_js__WEBPACK_IMPORTED_MODULE_19__.openStreetMapReverseGeocoding)(_this.state.gpsCoordinates.latitude, _this.state.gpsCoordinates.longitude);
+          case 3:
+            data = _context3.sent;
+            _this.setState({
+              location: {
+                city: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_18__.placeNameChooser)(data.address),
+                country: data.address.country_code.toUpperCase()
+              }
+            });
+            _context3.next = 11;
+            break;
+          case 7:
+            _context3.prev = 7;
+            _context3.t0 = _context3["catch"](0);
+            console.error("getLocationName ".concat(_context3.t0));
+            throw _context3.t0;
+          case 11:
+          case "end":
+            return _context3.stop();
+        }
+      }, _callee3, null, [[0, 7]]);
+    })));
+    /* forward geocoding - getting latitude and longitude from city name using openstreetmap.org */
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "getCoordinates", /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(/*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee5() {
+      var data;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee5$(_context5) {
+        while (1) switch (_context5.prev = _context5.next) {
+          case 0:
+            _context5.prev = 0;
+            _context5.next = 3;
+            return (0,_js_providers_js__WEBPACK_IMPORTED_MODULE_19__.openStreetMapForwardGeocoding)(_this.state.input);
+          case 3:
+            data = _context5.sent;
+            _this.setState({
+              gpsCoordinates: {
+                latitude: data[0].lat,
+                longitude: data[0].lon
+              },
+              location: {
+                city: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_18__.placeNameChooser)(data[0].address),
+                country: data[0].address.country_code.toUpperCase()
+              }
+            }, /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(/*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee4() {
+              return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee4$(_context4) {
+                while (1) switch (_context4.prev = _context4.next) {
+                  case 0:
+                    _context4.prev = 0;
+                    _context4.next = 3;
+                    return _this.getWeatherData();
+                  case 3:
+                    _context4.next = 9;
+                    break;
+                  case 5:
+                    _context4.prev = 5;
+                    _context4.t0 = _context4["catch"](0);
+                    console.error("getCoordinates ".concat(_context4.t0));
+                    _this.handleError(_context4.t0);
+                  case 9:
+                  case "end":
+                    return _context4.stop();
+                }
+              }, _callee4, null, [[0, 5]]);
+            })));
+            _context5.next = 11;
+            break;
+          case 7:
+            _context5.prev = 7;
+            _context5.t0 = _context5["catch"](0);
+            console.error("getCoordinates ".concat(_context5.t0));
+            throw _context5.t0;
+          case 11:
+          case "end":
+            return _context5.stop();
+        }
+      }, _callee5, null, [[0, 7]]);
+    })));
+    /* Fetching weather data from OpenWeatherMap API */
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "getWeatherData", /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(/*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee6() {
+      var data;
+      return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee6$(_context6) {
+        while (1) switch (_context6.prev = _context6.next) {
+          case 0:
+            _context6.prev = 0;
+            _context6.next = 3;
+            return (0,_js_providers_js__WEBPACK_IMPORTED_MODULE_19__.openWeatherMapGetData)(_this.state.gpsCoordinates.latitude, _this.state.gpsCoordinates.longitude);
+          case 3:
+            data = _context6.sent;
+            _this.setState({
+              currentDayWeatherData: {
+                temp: Math.round(data.current.temp),
+                temp_app: Math.round(data.current.feels_like),
+                pressure: Math.round(data.current.pressure),
+                humidity: Math.round(data.current.humidity * 100 / 100),
+                wind: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_18__.speedRecalculate)(_this.state.unitSystem, data.current.wind_speed),
+                description: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_18__.capitalizeFirstLetter)(data.current.weather[0].description),
+                icon: data.current.weather[0].icon
+              },
+              nextDaysWeatherData: data.daily.map(function (next_day) {
+                return {
+                  temp: Math.round(next_day.temp.day),
+                  pressure: Math.round(next_day.pressure),
+                  humidity: Math.round(next_day.humidity * 100 / 100),
+                  wind: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_18__.speedRecalculate)(_this.state.unitSystem, next_day.wind_speed),
+                  date: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_18__.timestampToDate)(next_day.dt, data.timezone_offset),
+                  description: next_day.weather[0].description.toLowerCase(),
+                  icon: next_day.weather[0].icon
+                };
+              }),
+              localTime: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_18__.timestampToDate)(data.current.dt, data.timezone_offset),
+              currentDayChartData: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_18__.prepareChartData)(data.hourly, data.timezone_offset),
+              displayCurrentDayWeather: true
+            });
+            _context6.next = 11;
+            break;
+          case 7:
+            _context6.prev = 7;
+            _context6.t0 = _context6["catch"](0);
+            console.error("getWeatherData ".concat(_context6.t0));
+            throw _context6.t0;
+          case 11:
+          case "end":
+            return _context6.stop();
+        }
+      }, _callee6, null, [[0, 7]]);
+    })));
+    /* removing focus from search field */
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "blurSearchField", function () {
+      _this.state.inputRef.current && _this.state.inputRef.current.blur();
+    });
+    /* handling 'next days forecast' button click */
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "displayNextDays", function () {
+      _this.setState({
+        displayNextDaysWeather: !_this.state.displayNextDaysWeather
+      });
+    });
+    /* resetting state before fetching new data */
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "resetStateBeforeFetching", function () {
+      _this.setState({
+        input: '',
+        displayCurrentDayWeather: false,
+        displayNextDaysWeather: false,
+        preloaderAlert: false,
+        preloaderInfo: _js_consts_js__WEBPACK_IMPORTED_MODULE_16__.MESSAGE.loadingData
+      });
+    });
+    /* handling errors and displaying relevant message */
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "handleError", function (error) {
+      var errorMessageMap = (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])((0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])((0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])({}, _js_consts_js__WEBPACK_IMPORTED_MODULE_16__.ERROR.noData, _js_consts_js__WEBPACK_IMPORTED_MODULE_16__.MESSAGE.wrongCityName), _js_consts_js__WEBPACK_IMPORTED_MODULE_16__.ERROR.unableToGeolocation, _js_consts_js__WEBPACK_IMPORTED_MODULE_16__.MESSAGE.enterManually), _js_consts_js__WEBPACK_IMPORTED_MODULE_16__.ERROR.unableToGeocode, _js_consts_js__WEBPACK_IMPORTED_MODULE_16__.MESSAGE.enterManually);
+      _this.setState({
+        preloaderAlert: true,
+        preloaderInfo: errorMessageMap[error.message] || _js_consts_js__WEBPACK_IMPORTED_MODULE_16__.MESSAGE.connectionError
+      });
+    });
+    /* handling 'get weather' button click */
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "handleSubmit", function (event) {
+      event.preventDefault();
+      _this.resetStateBeforeFetching();
+      _this.blurSearchField();
+      _this.getCoordinates()["catch"](function (error) {
+        console.error("handleSubmit ".concat(error));
+        _this.handleError(error);
+      });
+    });
+    /* handling input field value change */
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "handleInputOnChange", function (event) {
+      _this.setState({
+        input: event.target.value
+      });
+    });
+    /* handling input field focus on mobile devices */
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "handleInputOnFocus", function () {
+      if (_this.props.isMobile) {
+        _js_mobile_js__WEBPACK_IMPORTED_MODULE_17__.viewportSettingsChanger.call(_this);
+      }
+    });
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "componentDidMount", function () {
+      _this.getCurrentPosition()["catch"](function (error) {
+        console.error("componentDidMount ".concat(error));
+        _this.handleError(error);
+      });
+    });
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "render", function () {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_9___default().createElement("div", {
+        className: "app-wrapper"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_9___default().createElement(_currentDate_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_9___default().createElement(_searchSection_jsx__WEBPACK_IMPORTED_MODULE_10__["default"], {
+        handleInputOnChange: _this.handleInputOnChange,
+        handleInputOnFocus: _this.handleInputOnFocus,
+        handleSubmit: _this.handleSubmit,
+        input: _this.state.input,
+        inputRef: _this.state.inputRef,
+        isMobile: _this.props.isMobile
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_9___default().createElement(_currentWeather_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
+        buttonText: _this.state.displayNextDaysWeather ? _js_consts_js__WEBPACK_IMPORTED_MODULE_16__.BUTTON.currentDayForecast : _js_consts_js__WEBPACK_IMPORTED_MODULE_16__.BUTTON.nextDaysForecast,
+        currentDay: _this.state.currentDayWeatherData,
+        displayComponent: _this.state.displayCurrentDayWeather,
+        displayNextDays: _this.displayNextDays,
+        isMobile: _this.props.isMobile,
+        localTime: _this.state.localTime,
+        location: _this.state.location,
+        isLandscape: _this.props.isLandscape,
+        preloaderAlert: _this.state.preloaderAlert,
+        preloaderInfo: _this.state.preloaderInfo,
+        unitSystem: _this.state.unitSystem
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_9___default().createElement(_weatherChart_jsx__WEBPACK_IMPORTED_MODULE_13__["default"], {
+        displayComponent: _this.state.displayCurrentDayWeather,
+        hourlyForecast: _this.state.currentDayChartData,
+        switchComponent: _this.state.displayNextDaysWeather,
+        unitSystem: _this.state.unitSystem
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_9___default().createElement(_nextDaysWeather_jsx__WEBPACK_IMPORTED_MODULE_14__["default"], {
+        nextDays: _this.state.nextDaysWeatherData,
+        unitSystem: _this.state.unitSystem,
+        switchComponent: _this.state.displayNextDaysWeather
+      }));
+    });
+    return _this;
+  }
+  (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6__["default"])(Main, _React$Component);
+  return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2__["default"])(Main);
+}((react__WEBPACK_IMPORTED_MODULE_9___default().Component));
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Main);
 
 /***/ }),
 
@@ -635,14 +1002,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
 /* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
 /* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
 /* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _oneDayWeather_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./oneDayWeather.jsx */ "./jsx/oneDayWeather.jsx");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _oneDayWeather_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./oneDayWeather.jsx */ "./jsx/oneDayWeather.jsx");
+
 
 
 
@@ -656,30 +1025,32 @@ function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.
 
 var NextDaysWeather = /*#__PURE__*/function (_React$Component) {
   function NextDaysWeather() {
-    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, NextDaysWeather);
-    return _callSuper(this, NextDaysWeather, arguments);
-  }
-  (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(NextDaysWeather, _React$Component);
-  return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(NextDaysWeather, [{
-    key: "render",
-    value: function render() {
-      var _this = this;
-      var nexDaysComponentsArray = this.props.nextDays.map(function (element, index) {
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement(_oneDayWeather_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
+    var _this;
+    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, NextDaysWeather);
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+    _this = _callSuper(this, NextDaysWeather, [].concat(args));
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5__["default"])(_this, "render", function () {
+      var nexDaysComponentsArray = _this.props.nextDays.map(function (element, index) {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement(_oneDayWeather_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
           nextDay: element,
           unitSystem: _this.props.unitSystem,
           key: index
         });
       });
-      if (!this.props.switchComponent) {
+      if (!_this.props.switchComponent) {
         return null;
       }
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", {
         className: "next-days-weather"
       }, nexDaysComponentsArray.slice(1, 7));
-    }
-  }]);
-}((react__WEBPACK_IMPORTED_MODULE_5___default().Component));
+    });
+    return _this;
+  }
+  (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(NextDaysWeather, _React$Component);
+  return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_0__["default"])(NextDaysWeather);
+}((react__WEBPACK_IMPORTED_MODULE_6___default().Component));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (NextDaysWeather);
 
 /***/ }),
@@ -695,15 +1066,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
 /* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
 /* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
 /* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _weatherIcon_jsx__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ./weatherIcon.jsx */ "./jsx/weatherIcon.jsx");
-/* harmony import */ var _js_consts__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../js/consts */ "./js/consts.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _weatherIcon_jsx__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./weatherIcon.jsx */ "./jsx/weatherIcon.jsx");
+/* harmony import */ var _js_consts__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../js/consts */ "./js/consts.js");
+
 
 
 
@@ -718,14 +1091,14 @@ function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.
 
 var OneDayWeather = /*#__PURE__*/function (_React$Component) {
   function OneDayWeather() {
-    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, OneDayWeather);
-    return _callSuper(this, OneDayWeather, arguments);
-  }
-  (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(OneDayWeather, _React$Component);
-  return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(OneDayWeather, [{
-    key: "render",
-    value: function render() {
-      var _this$props$nextDay = this.props.nextDay,
+    var _this;
+    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, OneDayWeather);
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+    _this = _callSuper(this, OneDayWeather, [].concat(args));
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5__["default"])(_this, "render", function () {
+      var _this$props$nextDay = _this.props.nextDay,
         date = _this$props$nextDay.date,
         temp = _this$props$nextDay.temp,
         pressure = _this$props$nextDay.pressure,
@@ -733,43 +1106,46 @@ var OneDayWeather = /*#__PURE__*/function (_React$Component) {
         wind = _this$props$nextDay.wind,
         description = _this$props$nextDay.description,
         icon = _this$props$nextDay.icon;
-      var _WEATHER_UNITS$this$p = _js_consts__WEBPACK_IMPORTED_MODULE_7__.WEATHER_UNITS[this.props.unitSystem],
-        tempUnit = _WEATHER_UNITS$this$p.temperature,
-        pressureUnit = _WEATHER_UNITS$this$p.pressure,
-        humidityUnit = _WEATHER_UNITS$this$p.humidity,
-        windUnit = _WEATHER_UNITS$this$p.wind;
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
+      var _WEATHER_UNITS$_this$ = _js_consts__WEBPACK_IMPORTED_MODULE_8__.WEATHER_UNITS[_this.props.unitSystem],
+        tempUnit = _WEATHER_UNITS$_this$.temperature,
+        pressureUnit = _WEATHER_UNITS$_this$.pressure,
+        humidityUnit = _WEATHER_UNITS$_this$.humidity,
+        windUnit = _WEATHER_UNITS$_this$.wind;
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", {
         className: "day-container"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", {
         className: "row date"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("h5", null, date.date)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("h5", null, date.date)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", {
         className: "row icon"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement(_weatherIcon_jsx__WEBPACK_IMPORTED_MODULE_6__["default"], {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement(_weatherIcon_jsx__WEBPACK_IMPORTED_MODULE_7__["default"], {
         icon: icon
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", {
         className: "row description"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("h6", null, description)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("h6", null, description)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", {
         className: "row weather-data"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", {
         className: "row"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("i", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("i", {
         className: "wi wi-thermometer"
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("h5", null, temp, " ", tempUnit)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("h5", null, temp, " ", tempUnit)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", {
         className: "row"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("i", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("i", {
         className: "wi wi-barometer"
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("h5", null, pressure, " ", pressureUnit)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("h5", null, pressure, " ", pressureUnit)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", {
         className: "row"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("i", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("i", {
         className: "wi wi-humidity"
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("h5", null, humidity, " ", humidityUnit)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("h5", null, humidity, " ", humidityUnit)), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", {
         className: "row"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("i", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("p", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("i", {
         className: "wi wi-strong-wind"
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("h5", null, wind, " ", windUnit))));
-    }
-  }]);
-}((react__WEBPACK_IMPORTED_MODULE_5___default().Component));
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("h5", null, wind, " ", windUnit))));
+    });
+    return _this;
+  }
+  (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(OneDayWeather, _React$Component);
+  return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_0__["default"])(OneDayWeather);
+}((react__WEBPACK_IMPORTED_MODULE_6___default().Component));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (OneDayWeather);
 
 /***/ }),
@@ -785,13 +1161,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
 /* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
 /* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
 /* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_6__);
+
 
 
 
@@ -804,33 +1182,42 @@ function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.
 
 var Preloader = /*#__PURE__*/function (_React$Component) {
   function Preloader() {
-    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, Preloader);
-    return _callSuper(this, Preloader, arguments);
-  }
-  (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(Preloader, _React$Component);
-  return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(Preloader, [{
-    key: "render",
-    value: function render() {
-      var classes = !this.props.preloaderAlert ? 'main-loading animation' : 'main-loading';
+    var _this;
+    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, Preloader);
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+    _this = _callSuper(this, Preloader, [].concat(args));
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5__["default"])(_this, "render", function () {
+      var _this$props = _this.props,
+        isLandscape = _this$props.isLandscape,
+        isMobile = _this$props.isMobile,
+        preloaderAlert = _this$props.preloaderAlert,
+        preloaderInfo = _this$props.preloaderInfo;
+      var classes = preloaderAlert ? 'main-loading' : 'main-loading animation';
       var styles = {
-        color: !this.props.preloaderAlert ? '#000000' : '#444444'
+        color: preloaderAlert ? '#444444' : '#000000',
+        paddingTop: isMobile ? isLandscape && window.innerHeight <= window.innerWidth / 1.5 ? '3em' : '8em' : '5em'
       };
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", {
         className: "main-preloader",
         style: styles
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("svg", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("svg", {
         className: classes,
         xmlns: "http://www.w3.org/2000/svg",
         viewBox: "0 0 512 512"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("path", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("path", {
         fill: "currentColor",
         d: "M256 160c-52.9 0-96 43.1-96 96s43.1 96 96 96 96-43.1 96-96-43.1-96-96-96zm246.4 80.5l-94.7-47.3 33.5-100.4c4.5-13.6-8.4-26.5-21.9-21.9l-100.4 33.5-47.4-94.8c-6.4-12.8-24.6-12.8-31 0l-47.3 94.7L92.7 70.8c-13.6-4.5-26.5 8.4-21.9 21.9l33.5 100.4-94.7 47.4c-12.8 6.4-12.8 24.6 0 31l94.7 47.3-33.5 100.5c-4.5 13.6 8.4 26.5 21.9 21.9l100.4-33.5 47.3 94.7c6.4 12.8 24.6 12.8 31 0l47.3-94.7 100.4 33.5c13.6 4.5 26.5-8.4 21.9-21.9l-33.5-100.4 94.7-47.3c13-6.5 13-24.7.2-31.1zm-155.9 106c-49.9 49.9-131.1 49.9-181 0-49.9-49.9-49.9-131.1 0-181 49.9-49.9 131.1-49.9 181 0 49.9 49.9 49.9 131.1 0 181z"
-      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("p", {
+      })), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("p", {
         className: "info"
-      }, this.props.preloaderInfo));
-    }
-  }]);
-}((react__WEBPACK_IMPORTED_MODULE_5___default().Component));
+      }, preloaderInfo));
+    });
+    return _this;
+  }
+  (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(Preloader, _React$Component);
+  return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_0__["default"])(Preloader);
+}((react__WEBPACK_IMPORTED_MODULE_6___default().Component));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (Preloader);
 
 /***/ }),
@@ -846,14 +1233,15 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
 /* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
 /* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
 /* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _js_mobile_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../js/mobile.js */ "./js/mobile.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_6__);
+
 
 
 
@@ -864,45 +1252,45 @@ __webpack_require__.r(__webpack_exports__);
 function _callSuper(t, o, e) { return o = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__["default"])(o), (0,_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__["default"])(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__["default"])(t).constructor) : o.apply(t, e)); }
 function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
 
-
 var SearchSection = /*#__PURE__*/function (_React$Component) {
   function SearchSection() {
-    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, SearchSection);
-    return _callSuper(this, SearchSection, arguments);
-  }
-  (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(SearchSection, _React$Component);
-  return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(SearchSection, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      if ((0,_js_mobile_js__WEBPACK_IMPORTED_MODULE_6__.isMobile)()) {
-        var _this$props$inputRef;
-        ((_this$props$inputRef = this.props.inputRef) === null || _this$props$inputRef === void 0 ? void 0 : _this$props$inputRef.current) && this.props.inputRef.current.blur();
-      }
+    var _this;
+    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, SearchSection);
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
     }
-  }, {
-    key: "render",
-    value: function render() {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
+    _this = _callSuper(this, SearchSection, [].concat(args));
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5__["default"])(_this, "componentDidMount", function () {
+      if (_this.props.isMobile) {
+        var _this$props$inputRef;
+        ((_this$props$inputRef = _this.props.inputRef) === null || _this$props$inputRef === void 0 ? void 0 : _this$props$inputRef.current) && _this.props.inputRef.current.blur();
+      }
+    });
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5__["default"])(_this, "render", function () {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", {
         className: "search"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("form", {
-        onSubmit: this.props.handleSubmit
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("input", {
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("form", {
+        onSubmit: _this.props.handleSubmit
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("input", {
         autoFocus: true,
         className: "normal",
-        onFocus: this.props.handleInputOnFocus,
-        onChange: this.props.handleInputOnChange,
+        onFocus: _this.props.handleInputOnFocus,
+        onChange: _this.props.handleInputOnChange,
         placeholder: "city",
-        ref: this.props.inputRef,
+        ref: _this.props.inputRef,
         type: "search",
-        value: this.props.input
-      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("input", {
+        value: _this.props.input
+      }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("input", {
         type: "submit",
         value: "get weather",
-        disabled: !this.props.input
+        disabled: !_this.props.input
       })));
-    }
-  }]);
-}((react__WEBPACK_IMPORTED_MODULE_5___default().Component));
+    });
+    return _this;
+  }
+  (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(SearchSection, _React$Component);
+  return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_0__["default"])(SearchSection);
+}((react__WEBPACK_IMPORTED_MODULE_6___default().Component));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (SearchSection);
 
 /***/ }),
@@ -918,8 +1306,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
 /* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
 /* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
 /* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
@@ -947,7 +1335,7 @@ chart_js__WEBPACK_IMPORTED_MODULE_7__.Chart.register(chart_js__WEBPACK_IMPORTED_
 var WeatherChart = /*#__PURE__*/function (_React$Component) {
   function WeatherChart() {
     var _this;
-    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, WeatherChart);
+    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, WeatherChart);
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
@@ -1052,21 +1440,16 @@ var WeatherChart = /*#__PURE__*/function (_React$Component) {
         }
       }
     });
-    return _this;
-  }
-  (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(WeatherChart, _React$Component);
-  return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(WeatherChart, [{
-    key: "render",
-    value: function render() {
-      var _WEATHER_UNITS$this$p, _WEATHER_UNITS$this$p2;
-      var _this$props$hourlyFor = this.props.hourlyForecast,
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5__["default"])(_this, "render", function () {
+      var _WEATHER_UNITS$_this$, _WEATHER_UNITS$_this$2;
+      var _this$props$hourlyFor = _this.props.hourlyForecast,
         time = _this$props$hourlyFor.time,
         temperature = _this$props$hourlyFor.temperature,
         pressure = _this$props$hourlyFor.pressure;
       var data = {
         labels: time && time.slice(1, 10),
         datasets: [{
-          label: (_WEATHER_UNITS$this$p = _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.WEATHER_UNITS[this.props.unitSystem]) === null || _WEATHER_UNITS$this$p === void 0 ? void 0 : _WEATHER_UNITS$this$p.temperature,
+          label: (_WEATHER_UNITS$_this$ = _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.WEATHER_UNITS[_this.props.unitSystem]) === null || _WEATHER_UNITS$_this$ === void 0 ? void 0 : _WEATHER_UNITS$_this$.temperature,
           data: temperature === null || temperature === void 0 ? void 0 : temperature.slice(1, 10),
           borderColor: '#808080',
           backgroundColor: 'white',
@@ -1075,7 +1458,7 @@ var WeatherChart = /*#__PURE__*/function (_React$Component) {
           borderWidth: 2,
           yAxisID: 'axisY1'
         }, {
-          label: (_WEATHER_UNITS$this$p2 = _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.WEATHER_UNITS[this.props.unitSystem]) === null || _WEATHER_UNITS$this$p2 === void 0 ? void 0 : _WEATHER_UNITS$this$p2.pressure,
+          label: (_WEATHER_UNITS$_this$2 = _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.WEATHER_UNITS[_this.props.unitSystem]) === null || _WEATHER_UNITS$_this$2 === void 0 ? void 0 : _WEATHER_UNITS$_this$2.pressure,
           data: pressure === null || pressure === void 0 ? void 0 : pressure.slice(1, 10),
           borderColor: '#800080',
           backgroundColor: 'white',
@@ -1085,18 +1468,21 @@ var WeatherChart = /*#__PURE__*/function (_React$Component) {
           yAxisID: 'axisY2'
         }]
       };
-      if (!this.props.displayComponent || this.props.switchComponent) {
+      if (!_this.props.displayComponent || _this.props.switchComponent) {
         return null;
       }
       return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", {
         className: "current-weather current-chart"
       }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement(react_chartjs_2__WEBPACK_IMPORTED_MODULE_9__.Chart, {
-        options: this.options,
+        options: _this.options,
         data: data,
         type: "line"
       }));
-    }
-  }]);
+    });
+    return _this;
+  }
+  (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(WeatherChart, _React$Component);
+  return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_0__["default"])(WeatherChart);
 }((react__WEBPACK_IMPORTED_MODULE_6___default().Component));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (WeatherChart);
 
@@ -1113,14 +1499,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (__WEBPACK_DEFAULT_EXPORT__)
 /* harmony export */ });
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
 /* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
 /* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
 /* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_5__);
-/* harmony import */ var _js_consts_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../js/consts.js */ "./js/consts.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var _js_consts_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../js/consts.js */ "./js/consts.js");
+
 
 
 
@@ -1134,21 +1522,24 @@ function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.
 
 var WeatherIcon = /*#__PURE__*/function (_React$Component) {
   function WeatherIcon() {
-    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, WeatherIcon);
-    return _callSuper(this, WeatherIcon, arguments);
+    var _this;
+    (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_1__["default"])(this, WeatherIcon);
+    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
+      args[_key] = arguments[_key];
+    }
+    _this = _callSuper(this, WeatherIcon, [].concat(args));
+    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5__["default"])(_this, "render", function () {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", {
+        className: "current-icon"
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("i", {
+        className: _js_consts_js__WEBPACK_IMPORTED_MODULE_7__.WEATHER_ICON_MAP[_this.props.icon].className
+      }));
+    });
+    return _this;
   }
   (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(WeatherIcon, _React$Component);
-  return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(WeatherIcon, [{
-    key: "render",
-    value: function render() {
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
-        className: "current-icon"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("i", {
-        className: _js_consts_js__WEBPACK_IMPORTED_MODULE_6__.WEATHER_ICON_MAP[this.props.icon].className
-      }));
-    }
-  }]);
-}((react__WEBPACK_IMPORTED_MODULE_5___default().Component));
+  return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_0__["default"])(WeatherIcon);
+}((react__WEBPACK_IMPORTED_MODULE_6___default().Component));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (WeatherIcon);
 
 /***/ }),
@@ -1940,8 +2331,13 @@ body {
 .mobile-background {
     background-color: #d3d3d3;
 }
+
+.mobile-app-shadow {
+    -webkit-box-shadow: 0 0 4px #000000;
+            box-shadow: 0 0 4px #000000;
+}
 /* Mobile styles - end */
-`, "",{"version":3,"sources":["webpack://./css/styles.css"],"names":[],"mappings":"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","sourcesContent":["@import url('https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700');\r\n@import url('https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/weather-icons.min.css');\r\n\r\n/* Main styles - start */\r\n* {\r\n    box-sizing: border-box;\r\n    margin: 0;\r\n    padding: 0;\r\n}\r\n\r\nbody {\r\n    width: 100%;\r\n    height: 100vh;\r\n    display: flex;\r\n    justify-content: center;\r\n    align-items: center;\r\n    user-select: none;\r\n    overflow-x: hidden;\r\n    font-family: 'Montserrat', sans-serif;\r\n}\r\n\r\n#app {\r\n    width: 580px;\r\n    min-width: 580px;\r\n    height: 600px;\r\n    background: #d3d3d3;\r\n    border-radius: 5px;\r\n}\r\n/* Main styles - end */\r\n\r\n\r\n/* Header styles - start */\r\n.header {\r\n    width: 96%;\r\n    height: 75px;\r\n    display: flex;\r\n    flex-wrap: wrap;\r\n    margin: 0 auto;\r\n    padding: 10px;\r\n    overflow: hidden;\r\n}\r\n\r\n.header .caption {\r\n    height: 30px;\r\n    width: 100%;\r\n    text-align: right;\r\n    margin-top: -0.75em;\r\n}\r\n\r\n.header .current-date {\r\n    height: 20px;\r\n    width: 100%;\r\n    font-size: 0.9em;\r\n    margin: 1em 0 0.25em 0.1em;\r\n}\r\n/* Header styles - end */\r\n\r\n\r\n/* Search section styles - start */\r\n.search {\r\n    width: 95%;\r\n    height: 65px;\r\n    margin: 0 auto;\r\n    padding: 1.5%;\r\n}\r\n\r\n.search form {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n}\r\n\r\n.search input[type='search'] {\r\n    width: 60%;\r\n    height: 30px;\r\n    border-radius: 5px;\r\n    outline: none;\r\n    border: 1px solid black;\r\n    text-align: center;\r\n\r\n    -webkit-appearance: none;\r\n        -moz-appearance: none;\r\n}\r\n\r\n.search input[type='search']::-webkit-search-cancel-button {\r\n    margin-right: 10px;\r\n    height: 12px;\r\n    width: 12px;\r\n    border-radius: 10px;\r\n    background: red;\r\n\r\n    -webkit-appearance: none;\r\n        -moz-appearance: none;\r\n}\r\n\r\n.search input[type='search'].normal::placeholder {\r\n    font-family: 'Montserrat', sans-serif;\r\n    font-weight: 500;\r\n}\r\n\r\n.search input[type='search'].warning::placeholder {\r\n    font-family: 'Montserrat', sans-serif;\r\n    color: red;\r\n    font-weight: 600;\r\n}\r\n\r\n.search input[type='submit'] {\r\n    width: 37%;\r\n    height: 30px;\r\n    border-radius: 5px;\r\n    border: 1px solid black;\r\n    background: #808080;\r\n    outline: none;\r\n    color: #ffffff;\r\n    font-size: 0.9em;\r\n    font-weight: 600;\r\n    letter-spacing: 0.5px;\r\n    transition: all 0.5s;\r\n\r\n    -webkit-appearance: none;\r\n        -moz-appearance: none;\r\n}\r\n\r\n.search input[type='submit']:hover {\r\n    background: #000000;\r\n    color: #ffffff;\r\n}\r\n/* Search section styles - end */\r\n\r\n\r\n/* Current weather section styles - start */\r\n.current-weather {\r\n    width: 93%;\r\n    height: 200px;\r\n    padding: 2%;\r\n    background: #ffffff;\r\n    border-radius: 5px;\r\n    margin: 0 auto 0.75em;\r\n    color: #800080;\r\n    display: flex;\r\n    overflow: hidden;\r\n    flex-wrap: wrap;\r\n}\r\n\r\n.current-weather .local-info {\r\n    width: 100%;\r\n    margin-bottom: 0.3em;\r\n    display: flex;\r\n    justify-content: space-between;\r\n}\r\n\r\n.current-weather .local-info .city {\r\n    width: 110%;\r\n    height: 2.4em;\r\n    overflow: hidden;\r\n}\r\n\r\n.current-weather .local-info .city h3 {\r\n    font-weight: 600;\r\n    margin-left: 0.25em;\r\n    font-size: 1.3em;\r\n}\r\n\r\n.current-weather .local-info .dots-preloader,\r\n.current-weather .local-info .date-time {\r\n    overflow: hidden;\r\n}\r\n\r\n.current-weather .local-info .dots-preloader {\r\n    text-align: center;\r\n    width: 75%;\r\n    padding-left: 10%;\r\n    margin-top: -0.5%;\r\n}\r\n\r\n.current-weather .local-info .date-time {\r\n    text-align: right;\r\n    width: 85%;\r\n    height: 0.9em;\r\n}\r\n\r\n.current-weather .local-info .date-time h6 {\r\n    color: #444444;\r\n    font-weight: 700;\r\n    font-size: 0.8em;\r\n}\r\n\r\n.current-weather .left-col,\r\n.current-weather .right-col {\r\n    height: 130px;\r\n}\r\n\r\n.current-weather .left-col {\r\n    width: 40%;\r\n}\r\n\r\n.current-weather .left-col .left-rows {\r\n    width: 100%;\r\n    height: 25%;\r\n    overflow: hidden;\r\n}\r\n\r\n.current-weather .left-col h3 {\r\n    font-weight: 600;\r\n    line-height: 2.5em;\r\n}\r\n\r\n.current-weather .left-col .left-rows p {\r\n    width: 30px;\r\n    margin-right: 1em;\r\n    text-align: center;\r\n    display: inline-block;\r\n}\r\n\r\n.current-weather .left-col .left-rows h3 {\r\n    display: inline-block;\r\n}\r\n\r\n.current-weather .left-col .left-rows h3 span {\r\n    font-size: 0.8em;\r\n}\r\n\r\n.current-weather .left-col .left-rows p .wi {\r\n    font-size: 1.4em;\r\n    color: #000000;\r\n}\r\n\r\n.current-weather .left-col .left-rows p .wi.wi-strong-wind {\r\n    margin-left: 0.2em;\r\n}\r\n\r\n.current-weather .right-col {\r\n    width: 60%;\r\n    display: flex;\r\n    flex-wrap: wrap;\r\n}\r\n\r\n.current-weather .right-col .col-60,\r\n.current-weather .right-col .col-40 {\r\n    height: 100px;\r\n}\r\n\r\n.current-weather .right-col .col-60 {\r\n    width: 60%;\r\n    text-align: center;\r\n}\r\n\r\n.current-weather .right-col .col-60 h5 {\r\n    margin-top: 2.4em;\r\n    font-weight: 600;\r\n    font-size: 1.1em;\r\n    width: 95%;\r\n}\r\n\r\n.current-weather .right-col .col-40 {\r\n    width: 40%;\r\n}\r\n\r\n.current-weather .right-col .col-40 .current-icon {\r\n    margin: 0.1em -0.1em 0 0;\r\n    color: #000000;\r\n    font-size: 3.5em;\r\n    text-align: center;\r\n}\r\n\r\n.current-weather .right-col .col-40 .current-icon .wi.wi-day-cloudy-high {\r\n    font-size: 1.2em;\r\n}\r\n\r\n.current-weather .right-col .right-bottom {\r\n    width: 100%;\r\n    text-align: right;\r\n    padding-top: 0.1em;\r\n}\r\n\r\n.current-weather .right-col .right-bottom button {\r\n    width: 150px;\r\n    height: 30px;\r\n    border: 1px solid gray;\r\n    border-radius: 4px;\r\n    background: #e0e0e0;\r\n    outline: none;\r\n    color: #000000;\r\n    font-size: 0.9em;\r\n    font-weight: 600;\r\n    transition: all 0.5s;\r\n}\r\n\r\n.current-weather .right-col .right-bottom button:hover {\r\n    background: #ffffff;\r\n    color: #606060;\r\n}\r\n/* Current weather section styles - end */\r\n\r\n\r\n/* Current Chart section styles - start */\r\n.current-chart {\r\n    height: 230px;\r\n}\r\n/* Current Chart section styles - end */\r\n\r\n\r\n/* Next five days section styles - start */\r\n.next-days-weather {\r\n    width: 93%;\r\n    height: 230px;\r\n    margin: 0 auto 15px;\r\n    display: flex;\r\n    justify-content: space-between;\r\n}\r\n\r\n.next-days-weather .day-container {\r\n    width: 19.5%;\r\n    height: 230px;\r\n    background: #f5f5f5;\r\n    padding-bottom: 7px;\r\n    padding-top: 5px;\r\n    display: flex;\r\n    flex-direction: column;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n    overflow: hidden;\r\n}\r\n\r\n.next-days-weather .day-container:first-child {\r\n    border-top-left-radius: 5px;\r\n    border-bottom-left-radius: 5px;\r\n}\r\n\r\n.next-days-weather .day-container:nth-child(5) {\r\n    border-top-right-radius: 5px;\r\n    border-bottom-right-radius: 5px;\r\n}\r\n\r\n.next-days-weather .day-container:nth-child(6) {\r\n    display: none;\r\n}\r\n\r\n.next-days-weather .day-container .row {\r\n    width: 100%;\r\n    padding: 2px 2px 2px 1px;\r\n}\r\n\r\n.next-days-weather .day-container .row.date,\r\n.next-days-weather .day-container .row.icon,\r\n.next-days-weather .day-container .row.description,\r\n.next-days-weather .day-container .row p {\r\n    text-align: center;\r\n}\r\n\r\n.next-days-weather .day-container .row.weather-data {\r\n    width: fit-content;\r\n    margin-left: -10px;\r\n}\r\n\r\n.next-days-weather .day-container .row.date h5 {\r\n    font-weight: 600;\r\n    font-size: 0.8em;\r\n}\r\n\r\n.next-days-weather .day-container .row.icon {\r\n    font-size: 2em;\r\n    padding: 0.1em;\r\n}\r\n\r\n.next-days-weather .day-container .row.icon .current-icon {\r\n    height: 45px;\r\n}\r\n\r\n.next-days-weather .day-container .row.icon .wi.wi-day-cloudy-high {\r\n    font-size: 1.25em;\r\n}\r\n\r\n.next-days-weather .day-container .row.description {\r\n    height: 35px;\r\n}\r\n\r\n.next-days-weather .day-container .row.description h6 {\r\n    width: 90%;\r\n    margin: 0 auto;\r\n    font-weight: 600;\r\n    font-size: 0.7em;\r\n}\r\n\r\n.next-days-weather .day-container .row p {\r\n    display: inline-block;\r\n    width: 40px;\r\n}\r\n\r\n.next-days-weather .day-container .row h5 {\r\n    display: inline-block;\r\n    font-weight: 500;\r\n    font-size: 0.75em;\r\n}\r\n\r\n.next-days-weather .day-container .row p .wi {\r\n    font-size: 1em;\r\n}\r\n/* Next five days section styles - end */\r\n\r\n\r\n/* Preloader Styles - start */\r\n.main-preloader {\r\n    text-align: center;\r\n    padding: 5em;\r\n}\r\n\r\n.main-preloader .info {\r\n    padding: 0.5em;\r\n    font-weight: 600;\r\n}\r\n\r\n.main-preloader .main-loading {\r\n    width: 3.5em;\r\n    height: 3.5em;\r\n}\r\n\r\n.main-preloader .animation {\r\n    animation-name: spin;\r\n    animation-duration: 1800ms;\r\n    animation-iteration-count: infinite;\r\n    animation-timing-function: linear;\r\n}\r\n\r\n@keyframes spin {\r\n    from {\r\n        transform: rotate(0deg);\r\n    }\r\n\r\n    to {\r\n        transform: rotate(360deg);\r\n    }\r\n}\r\n/* Preloader Styles - end */\r\n\r\n\r\n/* Mobile styles */\r\n.mobile-background {\r\n    background-color: #d3d3d3;\r\n}\r\n/* Mobile styles - end */\r\n"],"sourceRoot":""}]);
+`, "",{"version":3,"sources":["webpack://./css/styles.css"],"names":[],"mappings":"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","sourcesContent":["@import url('https://fonts.googleapis.com/css?family=Montserrat:400,500,600,700');\r\n@import url('https://cdnjs.cloudflare.com/ajax/libs/weather-icons/2.0.9/css/weather-icons.min.css');\r\n\r\n/* Main styles - start */\r\n* {\r\n    box-sizing: border-box;\r\n    margin: 0;\r\n    padding: 0;\r\n}\r\n\r\nbody {\r\n    width: 100%;\r\n    height: 100vh;\r\n    display: flex;\r\n    justify-content: center;\r\n    align-items: center;\r\n    user-select: none;\r\n    overflow-x: hidden;\r\n    font-family: 'Montserrat', sans-serif;\r\n}\r\n\r\n#app {\r\n    width: 580px;\r\n    min-width: 580px;\r\n    height: 600px;\r\n    background: #d3d3d3;\r\n    border-radius: 5px;\r\n}\r\n/* Main styles - end */\r\n\r\n\r\n/* Header styles - start */\r\n.header {\r\n    width: 96%;\r\n    height: 75px;\r\n    display: flex;\r\n    flex-wrap: wrap;\r\n    margin: 0 auto;\r\n    padding: 10px;\r\n    overflow: hidden;\r\n}\r\n\r\n.header .caption {\r\n    height: 30px;\r\n    width: 100%;\r\n    text-align: right;\r\n    margin-top: -0.75em;\r\n}\r\n\r\n.header .current-date {\r\n    height: 20px;\r\n    width: 100%;\r\n    font-size: 0.9em;\r\n    margin: 1em 0 0.25em 0.1em;\r\n}\r\n/* Header styles - end */\r\n\r\n\r\n/* Search section styles - start */\r\n.search {\r\n    width: 95%;\r\n    height: 65px;\r\n    margin: 0 auto;\r\n    padding: 1.5%;\r\n}\r\n\r\n.search form {\r\n    display: flex;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n}\r\n\r\n.search input[type='search'] {\r\n    width: 60%;\r\n    height: 30px;\r\n    border-radius: 5px;\r\n    outline: none;\r\n    border: 1px solid black;\r\n    text-align: center;\r\n\r\n    -webkit-appearance: none;\r\n        -moz-appearance: none;\r\n}\r\n\r\n.search input[type='search']::-webkit-search-cancel-button {\r\n    margin-right: 10px;\r\n    height: 12px;\r\n    width: 12px;\r\n    border-radius: 10px;\r\n    background: red;\r\n\r\n    -webkit-appearance: none;\r\n        -moz-appearance: none;\r\n}\r\n\r\n.search input[type='search'].normal::placeholder {\r\n    font-family: 'Montserrat', sans-serif;\r\n    font-weight: 500;\r\n}\r\n\r\n.search input[type='search'].warning::placeholder {\r\n    font-family: 'Montserrat', sans-serif;\r\n    color: red;\r\n    font-weight: 600;\r\n}\r\n\r\n.search input[type='submit'] {\r\n    width: 37%;\r\n    height: 30px;\r\n    border-radius: 5px;\r\n    border: 1px solid black;\r\n    background: #808080;\r\n    outline: none;\r\n    color: #ffffff;\r\n    font-size: 0.9em;\r\n    font-weight: 600;\r\n    letter-spacing: 0.5px;\r\n    transition: all 0.5s;\r\n\r\n    -webkit-appearance: none;\r\n        -moz-appearance: none;\r\n}\r\n\r\n.search input[type='submit']:hover {\r\n    background: #000000;\r\n    color: #ffffff;\r\n}\r\n/* Search section styles - end */\r\n\r\n\r\n/* Current weather section styles - start */\r\n.current-weather {\r\n    width: 93%;\r\n    height: 200px;\r\n    padding: 2%;\r\n    background: #ffffff;\r\n    border-radius: 5px;\r\n    margin: 0 auto 0.75em;\r\n    color: #800080;\r\n    display: flex;\r\n    overflow: hidden;\r\n    flex-wrap: wrap;\r\n}\r\n\r\n.current-weather .local-info {\r\n    width: 100%;\r\n    margin-bottom: 0.3em;\r\n    display: flex;\r\n    justify-content: space-between;\r\n}\r\n\r\n.current-weather .local-info .city {\r\n    width: 110%;\r\n    height: 2.4em;\r\n    overflow: hidden;\r\n}\r\n\r\n.current-weather .local-info .city h3 {\r\n    font-weight: 600;\r\n    margin-left: 0.25em;\r\n    font-size: 1.3em;\r\n}\r\n\r\n.current-weather .local-info .dots-preloader,\r\n.current-weather .local-info .date-time {\r\n    overflow: hidden;\r\n}\r\n\r\n.current-weather .local-info .dots-preloader {\r\n    text-align: center;\r\n    width: 75%;\r\n    padding-left: 10%;\r\n    margin-top: -0.5%;\r\n}\r\n\r\n.current-weather .local-info .date-time {\r\n    text-align: right;\r\n    width: 85%;\r\n    height: 0.9em;\r\n}\r\n\r\n.current-weather .local-info .date-time h6 {\r\n    color: #444444;\r\n    font-weight: 700;\r\n    font-size: 0.8em;\r\n}\r\n\r\n.current-weather .left-col,\r\n.current-weather .right-col {\r\n    height: 130px;\r\n}\r\n\r\n.current-weather .left-col {\r\n    width: 40%;\r\n}\r\n\r\n.current-weather .left-col .left-rows {\r\n    width: 100%;\r\n    height: 25%;\r\n    overflow: hidden;\r\n}\r\n\r\n.current-weather .left-col h3 {\r\n    font-weight: 600;\r\n    line-height: 2.5em;\r\n}\r\n\r\n.current-weather .left-col .left-rows p {\r\n    width: 30px;\r\n    margin-right: 1em;\r\n    text-align: center;\r\n    display: inline-block;\r\n}\r\n\r\n.current-weather .left-col .left-rows h3 {\r\n    display: inline-block;\r\n}\r\n\r\n.current-weather .left-col .left-rows h3 span {\r\n    font-size: 0.8em;\r\n}\r\n\r\n.current-weather .left-col .left-rows p .wi {\r\n    font-size: 1.4em;\r\n    color: #000000;\r\n}\r\n\r\n.current-weather .left-col .left-rows p .wi.wi-strong-wind {\r\n    margin-left: 0.2em;\r\n}\r\n\r\n.current-weather .right-col {\r\n    width: 60%;\r\n    display: flex;\r\n    flex-wrap: wrap;\r\n}\r\n\r\n.current-weather .right-col .col-60,\r\n.current-weather .right-col .col-40 {\r\n    height: 100px;\r\n}\r\n\r\n.current-weather .right-col .col-60 {\r\n    width: 60%;\r\n    text-align: center;\r\n}\r\n\r\n.current-weather .right-col .col-60 h5 {\r\n    margin-top: 2.4em;\r\n    font-weight: 600;\r\n    font-size: 1.1em;\r\n    width: 95%;\r\n}\r\n\r\n.current-weather .right-col .col-40 {\r\n    width: 40%;\r\n}\r\n\r\n.current-weather .right-col .col-40 .current-icon {\r\n    margin: 0.1em -0.1em 0 0;\r\n    color: #000000;\r\n    font-size: 3.5em;\r\n    text-align: center;\r\n}\r\n\r\n.current-weather .right-col .col-40 .current-icon .wi.wi-day-cloudy-high {\r\n    font-size: 1.2em;\r\n}\r\n\r\n.current-weather .right-col .right-bottom {\r\n    width: 100%;\r\n    text-align: right;\r\n    padding-top: 0.1em;\r\n}\r\n\r\n.current-weather .right-col .right-bottom button {\r\n    width: 150px;\r\n    height: 30px;\r\n    border: 1px solid gray;\r\n    border-radius: 4px;\r\n    background: #e0e0e0;\r\n    outline: none;\r\n    color: #000000;\r\n    font-size: 0.9em;\r\n    font-weight: 600;\r\n    transition: all 0.5s;\r\n}\r\n\r\n.current-weather .right-col .right-bottom button:hover {\r\n    background: #ffffff;\r\n    color: #606060;\r\n}\r\n/* Current weather section styles - end */\r\n\r\n\r\n/* Current Chart section styles - start */\r\n.current-chart {\r\n    height: 230px;\r\n}\r\n/* Current Chart section styles - end */\r\n\r\n\r\n/* Next five days section styles - start */\r\n.next-days-weather {\r\n    width: 93%;\r\n    height: 230px;\r\n    margin: 0 auto 15px;\r\n    display: flex;\r\n    justify-content: space-between;\r\n}\r\n\r\n.next-days-weather .day-container {\r\n    width: 19.5%;\r\n    height: 230px;\r\n    background: #f5f5f5;\r\n    padding-bottom: 7px;\r\n    padding-top: 5px;\r\n    display: flex;\r\n    flex-direction: column;\r\n    justify-content: space-between;\r\n    align-items: center;\r\n    overflow: hidden;\r\n}\r\n\r\n.next-days-weather .day-container:first-child {\r\n    border-top-left-radius: 5px;\r\n    border-bottom-left-radius: 5px;\r\n}\r\n\r\n.next-days-weather .day-container:nth-child(5) {\r\n    border-top-right-radius: 5px;\r\n    border-bottom-right-radius: 5px;\r\n}\r\n\r\n.next-days-weather .day-container:nth-child(6) {\r\n    display: none;\r\n}\r\n\r\n.next-days-weather .day-container .row {\r\n    width: 100%;\r\n    padding: 2px 2px 2px 1px;\r\n}\r\n\r\n.next-days-weather .day-container .row.date,\r\n.next-days-weather .day-container .row.icon,\r\n.next-days-weather .day-container .row.description,\r\n.next-days-weather .day-container .row p {\r\n    text-align: center;\r\n}\r\n\r\n.next-days-weather .day-container .row.weather-data {\r\n    width: fit-content;\r\n    margin-left: -10px;\r\n}\r\n\r\n.next-days-weather .day-container .row.date h5 {\r\n    font-weight: 600;\r\n    font-size: 0.8em;\r\n}\r\n\r\n.next-days-weather .day-container .row.icon {\r\n    font-size: 2em;\r\n    padding: 0.1em;\r\n}\r\n\r\n.next-days-weather .day-container .row.icon .current-icon {\r\n    height: 45px;\r\n}\r\n\r\n.next-days-weather .day-container .row.icon .wi.wi-day-cloudy-high {\r\n    font-size: 1.25em;\r\n}\r\n\r\n.next-days-weather .day-container .row.description {\r\n    height: 35px;\r\n}\r\n\r\n.next-days-weather .day-container .row.description h6 {\r\n    width: 90%;\r\n    margin: 0 auto;\r\n    font-weight: 600;\r\n    font-size: 0.7em;\r\n}\r\n\r\n.next-days-weather .day-container .row p {\r\n    display: inline-block;\r\n    width: 40px;\r\n}\r\n\r\n.next-days-weather .day-container .row h5 {\r\n    display: inline-block;\r\n    font-weight: 500;\r\n    font-size: 0.75em;\r\n}\r\n\r\n.next-days-weather .day-container .row p .wi {\r\n    font-size: 1em;\r\n}\r\n/* Next five days section styles - end */\r\n\r\n\r\n/* Preloader Styles - start */\r\n.main-preloader {\r\n    text-align: center;\r\n    padding: 5em;\r\n}\r\n\r\n.main-preloader .info {\r\n    padding: 0.5em;\r\n    font-weight: 600;\r\n}\r\n\r\n.main-preloader .main-loading {\r\n    width: 3.5em;\r\n    height: 3.5em;\r\n}\r\n\r\n.main-preloader .animation {\r\n    animation-name: spin;\r\n    animation-duration: 1800ms;\r\n    animation-iteration-count: infinite;\r\n    animation-timing-function: linear;\r\n}\r\n\r\n@keyframes spin {\r\n    from {\r\n        transform: rotate(0deg);\r\n    }\r\n\r\n    to {\r\n        transform: rotate(360deg);\r\n    }\r\n}\r\n/* Preloader Styles - end */\r\n\r\n\r\n/* Mobile styles */\r\n.mobile-background {\r\n    background-color: #d3d3d3;\r\n}\r\n\r\n.mobile-app-shadow {\r\n    box-shadow: 0 0 4px #000000;\r\n}\r\n/* Mobile styles - end */\r\n"],"sourceRoot":""}]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -50646,31 +51042,17 @@ var __webpack_exports__ = {};
   !*** ./jsx/app.jsx ***!
   \*********************/
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/slicedToArray */ "./node_modules/@babel/runtime/helpers/esm/slicedToArray.js");
-/* harmony import */ var _babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/asyncToGenerator */ "./node_modules/@babel/runtime/helpers/esm/asyncToGenerator.js");
-/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
-/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
-/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
-/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
-/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_9___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_9__);
-/* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_10__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
-/* harmony import */ var _searchSection_jsx__WEBPACK_IMPORTED_MODULE_11__ = __webpack_require__(/*! ./searchSection.jsx */ "./jsx/searchSection.jsx");
-/* harmony import */ var _currentDate_jsx__WEBPACK_IMPORTED_MODULE_12__ = __webpack_require__(/*! ./currentDate.jsx */ "./jsx/currentDate.jsx");
-/* harmony import */ var _currentWeather_jsx__WEBPACK_IMPORTED_MODULE_13__ = __webpack_require__(/*! ./currentWeather.jsx */ "./jsx/currentWeather.jsx");
-/* harmony import */ var _weatherChart_jsx__WEBPACK_IMPORTED_MODULE_14__ = __webpack_require__(/*! ./weatherChart.jsx */ "./jsx/weatherChart.jsx");
-/* harmony import */ var _nextDaysWeather_jsx__WEBPACK_IMPORTED_MODULE_15__ = __webpack_require__(/*! ./nextDaysWeather.jsx */ "./jsx/nextDaysWeather.jsx");
-/* harmony import */ var _js_config_js__WEBPACK_IMPORTED_MODULE_16__ = __webpack_require__(/*! ../js/config.js */ "./js/config.js");
-/* harmony import */ var _js_consts_js__WEBPACK_IMPORTED_MODULE_17__ = __webpack_require__(/*! ../js/consts.js */ "./js/consts.js");
-/* harmony import */ var _js_mobile_js__WEBPACK_IMPORTED_MODULE_18__ = __webpack_require__(/*! ../js/mobile.js */ "./js/mobile.js");
-/* harmony import */ var _js_helpers_js__WEBPACK_IMPORTED_MODULE_19__ = __webpack_require__(/*! ../js/helpers.js */ "./js/helpers.js");
-/* harmony import */ var _js_providers_js__WEBPACK_IMPORTED_MODULE_20__ = __webpack_require__(/*! ../js/providers.js */ "./js/providers.js");
-/* harmony import */ var _css_styles_css__WEBPACK_IMPORTED_MODULE_21__ = __webpack_require__(/*! ../css/styles.css */ "./css/styles.css");
-/* harmony import */ var _css_responsive_css__WEBPACK_IMPORTED_MODULE_22__ = __webpack_require__(/*! ../css/responsive.css */ "./css/responsive.css");
+/* harmony import */ var _babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/helpers/classCallCheck */ "./node_modules/@babel/runtime/helpers/esm/classCallCheck.js");
+/* harmony import */ var _babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @babel/runtime/helpers/createClass */ "./node_modules/@babel/runtime/helpers/esm/createClass.js");
+/* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
+/* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
+/* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
+/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_6__);
+/* harmony import */ var react_dom_client__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! react-dom/client */ "./node_modules/react-dom/client.js");
+/* harmony import */ var _main_jsx__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ./main.jsx */ "./jsx/main.jsx");
+/* harmony import */ var _js_mobile_js__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! ../js/mobile.js */ "./js/mobile.js");
 
 
 
@@ -50679,21 +51061,8 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
-
-
-
-function _callSuper(t, o, e) { return o = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5__["default"])(o), (0,_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_4__["default"])(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_5__["default"])(t).constructor) : o.apply(t, e)); }
+function _callSuper(t, o, e) { return o = (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__["default"])(o), (0,_babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__["default"])(t, _isNativeReflectConstruct() ? Reflect.construct(o, e || [], (0,_babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__["default"])(t).constructor) : o.apply(t, e)); }
 function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function () {})); } catch (t) {} return (_isNativeReflectConstruct = function _isNativeReflectConstruct() { return !!t; })(); }
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -50702,340 +51071,50 @@ if (!window.Promise) {
   window.Promise = Promise;
 }
 document.addEventListener('DOMContentLoaded', function () {
-  var Main = /*#__PURE__*/function (_React$Component) {
-    function Main() {
+  var App = /*#__PURE__*/function (_React$Component) {
+    function App() {
       var _this;
-      (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_3__["default"])(this, Main);
+      (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, App);
       for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
         args[_key] = arguments[_key];
       }
-      _this = _callSuper(this, Main, [].concat(args));
-      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "state", {
-        currentDayChartData: {},
-        currentDayWeatherData: {},
-        displayCurrentDayWeather: false,
-        displayNextDaysWeather: false,
-        input: '',
-        inputRef: /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_9___default().createRef(),
-        latitude: null,
-        longitude: null,
-        location: {},
-        localTime: {},
-        nextDaysWeatherData: [],
-        preloaderAlert: false,
-        preloaderInfo: _js_consts_js__WEBPACK_IMPORTED_MODULE_17__.MESSAGE.loadingData,
-        screenLandscapeOrientation: window.innerHeight <= window.innerWidth,
-        unitSystem: _js_config_js__WEBPACK_IMPORTED_MODULE_16__.config.unitSystem
+      _this = _callSuper(this, App, [].concat(args));
+      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5__["default"])(_this, "state", {
+        isMobile: (0,_js_mobile_js__WEBPACK_IMPORTED_MODULE_9__.checkIsMobile)(),
+        isLandscape: window.innerHeight <= window.innerWidth
       });
-      /* geolocation - getting current position by ip address from ipinfo.io */
-      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "getCurrentPosition", /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(/*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee2() {
-        var data, _data$loc$split, _data$loc$split2, latitude, longitude;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee2$(_context2) {
-          while (1) switch (_context2.prev = _context2.next) {
-            case 0:
-              _context2.prev = 0;
-              _context2.next = 3;
-              return (0,_js_providers_js__WEBPACK_IMPORTED_MODULE_20__.ipInfoGeolocation)();
-            case 3:
-              data = _context2.sent;
-              _data$loc$split = data.loc.split(','), _data$loc$split2 = (0,_babel_runtime_helpers_slicedToArray__WEBPACK_IMPORTED_MODULE_0__["default"])(_data$loc$split, 2), latitude = _data$loc$split2[0], longitude = _data$loc$split2[1];
-              _this.setState({
-                latitude: latitude,
-                longitude: longitude,
-                location: {
-                  city: data.city,
-                  country: data.country.toUpperCase()
-                }
-              }, /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(/*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee() {
-                return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee$(_context) {
-                  while (1) switch (_context.prev = _context.next) {
-                    case 0:
-                      _context.prev = 0;
-                      _context.next = 3;
-                      return _this.getLocationName();
-                    case 3:
-                      _context.next = 5;
-                      return _this.getWeatherData();
-                    case 5:
-                      _context.next = 11;
-                      break;
-                    case 7:
-                      _context.prev = 7;
-                      _context.t0 = _context["catch"](0);
-                      console.error("getCurrentPosition ".concat(_context.t0));
-                      _this.handleError(_context.t0);
-                    case 11:
-                    case "end":
-                      return _context.stop();
-                  }
-                }, _callee, null, [[0, 7]]);
-              })));
-              _context2.next = 12;
-              break;
-            case 8:
-              _context2.prev = 8;
-              _context2.t0 = _context2["catch"](0);
-              console.error("getCurrentPosition ".concat(_context2.t0));
-              throw _context2.t0;
-            case 12:
-            case "end":
-              return _context2.stop();
-          }
-        }, _callee2, null, [[0, 8]]);
-      })));
-      /* reverse geocoding - getting city name from latitude and longitude using openstreetmap.org */
-      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "getLocationName", /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(/*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee3() {
-        var data;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee3$(_context3) {
-          while (1) switch (_context3.prev = _context3.next) {
-            case 0:
-              _context3.prev = 0;
-              _context3.next = 3;
-              return (0,_js_providers_js__WEBPACK_IMPORTED_MODULE_20__.openStreetMapReverseGeocoding)(_this.state.latitude, _this.state.longitude);
-            case 3:
-              data = _context3.sent;
-              _this.setState({
-                location: {
-                  city: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_19__.placeNameChooser)(data.address),
-                  country: data.address.country_code.toUpperCase()
-                }
-              });
-              _context3.next = 11;
-              break;
-            case 7:
-              _context3.prev = 7;
-              _context3.t0 = _context3["catch"](0);
-              console.error("getLocationName ".concat(_context3.t0));
-              throw _context3.t0;
-            case 11:
-            case "end":
-              return _context3.stop();
-          }
-        }, _callee3, null, [[0, 7]]);
-      })));
-      /* forward geocoding - getting latitude and longitude from city name using openstreetmap.org */
-      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "getCoordinates", /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(/*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee5() {
-        var data;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee5$(_context5) {
-          while (1) switch (_context5.prev = _context5.next) {
-            case 0:
-              _context5.prev = 0;
-              _context5.next = 3;
-              return (0,_js_providers_js__WEBPACK_IMPORTED_MODULE_20__.openStreetMapForwardGeocoding)(_this.state.input);
-            case 3:
-              data = _context5.sent;
-              _this.setState({
-                latitude: data[0].lat,
-                longitude: data[0].lon,
-                location: {
-                  city: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_19__.placeNameChooser)(data[0].address),
-                  country: data[0].address.country_code.toUpperCase()
-                }
-              }, /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(/*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee4() {
-                return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee4$(_context4) {
-                  while (1) switch (_context4.prev = _context4.next) {
-                    case 0:
-                      _context4.prev = 0;
-                      _context4.next = 3;
-                      return _this.getWeatherData();
-                    case 3:
-                      _context4.next = 9;
-                      break;
-                    case 5:
-                      _context4.prev = 5;
-                      _context4.t0 = _context4["catch"](0);
-                      console.error("getCoordinates ".concat(_context4.t0));
-                      _this.handleError(_context4.t0);
-                    case 9:
-                    case "end":
-                      return _context4.stop();
-                  }
-                }, _callee4, null, [[0, 5]]);
-              })));
-              _context5.next = 11;
-              break;
-            case 7:
-              _context5.prev = 7;
-              _context5.t0 = _context5["catch"](0);
-              console.error("getCoordinates ".concat(_context5.t0));
-              throw _context5.t0;
-            case 11:
-            case "end":
-              return _context5.stop();
-          }
-        }, _callee5, null, [[0, 7]]);
-      })));
-      /* Fetching weather data from OpenWeatherMap API */
-      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "getWeatherData", /*#__PURE__*/(0,_babel_runtime_helpers_asyncToGenerator__WEBPACK_IMPORTED_MODULE_1__["default"])(/*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().mark(function _callee6() {
-        var data;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_8___default().wrap(function _callee6$(_context6) {
-          while (1) switch (_context6.prev = _context6.next) {
-            case 0:
-              _context6.prev = 0;
-              _context6.next = 3;
-              return (0,_js_providers_js__WEBPACK_IMPORTED_MODULE_20__.openWeatherMapGetData)(_this.state.latitude, _this.state.longitude);
-            case 3:
-              data = _context6.sent;
-              _this.setState({
-                currentDayWeatherData: {
-                  temp: Math.round(data.current.temp),
-                  temp_app: Math.round(data.current.feels_like),
-                  pressure: Math.round(data.current.pressure),
-                  humidity: Math.round(data.current.humidity * 100 / 100),
-                  wind: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_19__.speedRecalculate)(_this.state.unitSystem, data.current.wind_speed),
-                  description: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_19__.capitalizeFirstLetter)(data.current.weather[0].description),
-                  icon: data.current.weather[0].icon
-                },
-                nextDaysWeatherData: data.daily.map(function (next_day) {
-                  return {
-                    temp: Math.round(next_day.temp.day),
-                    pressure: Math.round(next_day.pressure),
-                    humidity: Math.round(next_day.humidity * 100 / 100),
-                    wind: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_19__.speedRecalculate)(_this.state.unitSystem, next_day.wind_speed),
-                    date: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_19__.timestampToDate)(next_day.dt, data.timezone_offset),
-                    description: next_day.weather[0].description.toLowerCase(),
-                    icon: next_day.weather[0].icon
-                  };
-                }),
-                localTime: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_19__.timestampToDate)(data.current.dt, data.timezone_offset),
-                currentDayChartData: (0,_js_helpers_js__WEBPACK_IMPORTED_MODULE_19__.prepareChartData)(data.hourly, data.timezone_offset),
-                displayCurrentDayWeather: true
-              });
-              _context6.next = 11;
-              break;
-            case 7:
-              _context6.prev = 7;
-              _context6.t0 = _context6["catch"](0);
-              console.error("getWeatherData ".concat(_context6.t0));
-              throw _context6.t0;
-            case 11:
-            case "end":
-              return _context6.stop();
-          }
-        }, _callee6, null, [[0, 7]]);
-      })));
-      /* removing focus from search field */
-      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "blurSearchField", function () {
-        _this.state.inputRef.current && _this.state.inputRef.current.blur();
-      });
-      /* handling 'next days forecast' button click */
-      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "displayNextDays", function () {
+      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5__["default"])(_this, "updateScreenState", function () {
         _this.setState({
-          displayNextDaysWeather: !_this.state.displayNextDaysWeather
+          isMobile: (0,_js_mobile_js__WEBPACK_IMPORTED_MODULE_9__.checkIsMobile)(),
+          isLandscape: window.innerHeight <= window.innerWidth
+        }, function () {
+          if (_this.state.isMobile) {
+            _js_mobile_js__WEBPACK_IMPORTED_MODULE_9__.mobileStyles.call(_this); // Apply mobile styles only if it's mobile
+          }
         });
       });
-      /* resetting state before fetching new data */
-      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "resetStateBeforeFetching", function () {
-        _this.setState({
-          input: '',
-          displayCurrentDayWeather: false,
-          displayNextDaysWeather: false,
-          preloaderAlert: false,
-          preloaderInfo: _js_consts_js__WEBPACK_IMPORTED_MODULE_17__.MESSAGE.loadingData
-        });
+      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5__["default"])(_this, "componentDidMount", function () {
+        _this.updateScreenState();
+        window.addEventListener('resize', _this.updateScreenState);
       });
-      /* handling errors and displaying relevant message */
-      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "handleError", function (error) {
-        var errorMessageMap = (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])((0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])((0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])({}, _js_consts_js__WEBPACK_IMPORTED_MODULE_17__.ERROR.noData, _js_consts_js__WEBPACK_IMPORTED_MODULE_17__.MESSAGE.wrongCityName), _js_consts_js__WEBPACK_IMPORTED_MODULE_17__.ERROR.unableToGeolocation, _js_consts_js__WEBPACK_IMPORTED_MODULE_17__.MESSAGE.enterManually), _js_consts_js__WEBPACK_IMPORTED_MODULE_17__.ERROR.unableToGeocode, _js_consts_js__WEBPACK_IMPORTED_MODULE_17__.MESSAGE.enterManually);
-        _this.setState({
-          preloaderAlert: true,
-          preloaderInfo: errorMessageMap[error.message] || _js_consts_js__WEBPACK_IMPORTED_MODULE_17__.MESSAGE.connectionError
-        });
-      });
-      /* handling 'get weather' button click */
-      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "handleSubmit", function (event) {
-        event.preventDefault();
-        _this.resetStateBeforeFetching();
-        _this.blurSearchField();
-        _this.getCoordinates()["catch"](function (error) {
-          console.error("handleSubmit ".concat(error));
-          _this.handleError(error);
-        });
-      });
-      /* handling input field value change */
-      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "handleInputOnChange", function (event) {
-        _this.setState({
-          input: event.target.value
-        });
-      });
-      /* handling input field focus on mobile devices */
-      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "handleInputOnFocus", function () {
-        if ((0,_js_mobile_js__WEBPACK_IMPORTED_MODULE_18__.isMobile)()) {
-          _js_mobile_js__WEBPACK_IMPORTED_MODULE_18__.viewportSettingsChanger.call(_this);
-        }
-      });
-      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "componentDidMount", function () {
-        if ((0,_js_mobile_js__WEBPACK_IMPORTED_MODULE_18__.isMobile)()) {
-          _js_mobile_js__WEBPACK_IMPORTED_MODULE_18__.mobileStyles.call(_this);
-          window.onresize = function () {
-            _js_mobile_js__WEBPACK_IMPORTED_MODULE_18__.mobileStyles.call(_this);
-          };
-        }
-        _this.getCurrentPosition()["catch"](function (error) {
-          console.error("componentDidMount ".concat(error));
-          _this.handleError(error);
-        });
-        window.screen.orientation.onchange = function () {
-          _this.setState({
-            screenLandscapeOrientation: !_this.state.screenLandscapeOrientation
-          }, function () {
-            if ((0,_js_mobile_js__WEBPACK_IMPORTED_MODULE_18__.isMobile)()) {
-              _js_mobile_js__WEBPACK_IMPORTED_MODULE_18__.viewportSettingsChanger.call(_this);
-              _js_mobile_js__WEBPACK_IMPORTED_MODULE_18__.mobileStyles.call(_this);
-            }
-          });
-        };
-      });
-      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_7__["default"])(_this, "render", function () {
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_9___default().createElement("div", {
-          className: "app-wrapper"
-        }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_9___default().createElement(_currentDate_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], null), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_9___default().createElement(_searchSection_jsx__WEBPACK_IMPORTED_MODULE_11__["default"], {
-          handleInputOnChange: _this.handleInputOnChange,
-          handleInputOnFocus: _this.handleInputOnFocus,
-          handleSubmit: _this.handleSubmit,
-          input: _this.state.input,
-          inputRef: _this.state.inputRef
-        }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_9___default().createElement(_currentWeather_jsx__WEBPACK_IMPORTED_MODULE_13__["default"], {
-          buttonText: _this.state.displayNextDaysWeather ? _js_consts_js__WEBPACK_IMPORTED_MODULE_17__.BUTTON.currentDayForecast : _js_consts_js__WEBPACK_IMPORTED_MODULE_17__.BUTTON.nextDaysForecast,
-          currentDay: _this.state.currentDayWeatherData,
-          displayComponent: _this.state.displayCurrentDayWeather,
-          displayNextDays: _this.displayNextDays,
-          localTime: _this.state.localTime,
-          location: _this.state.location,
-          preloaderAlert: _this.state.preloaderAlert,
-          preloaderInfo: _this.state.preloaderInfo,
-          unitSystem: _this.state.unitSystem
-        }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_9___default().createElement(_weatherChart_jsx__WEBPACK_IMPORTED_MODULE_14__["default"], {
-          displayComponent: _this.state.displayCurrentDayWeather,
-          hourlyForecast: _this.state.currentDayChartData,
-          switchComponent: _this.state.displayNextDaysWeather,
-          unitSystem: _this.state.unitSystem
-        }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_9___default().createElement(_nextDaysWeather_jsx__WEBPACK_IMPORTED_MODULE_15__["default"], {
-          nextDays: _this.state.nextDaysWeatherData,
-          unitSystem: _this.state.unitSystem,
-          switchComponent: _this.state.displayNextDaysWeather
+      (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5__["default"])(_this, "render", function () {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement(_main_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
+          isMobile: _this.state.isMobile,
+          isLandscape: _this.state.isLandscape
         }));
       });
       return _this;
     }
-    (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6__["default"])(Main, _React$Component);
-    return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2__["default"])(Main);
-  }((react__WEBPACK_IMPORTED_MODULE_9___default().Component));
-  var App = /*#__PURE__*/function (_React$Component2) {
-    function App() {
-      (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_3__["default"])(this, App);
-      return _callSuper(this, App, arguments);
-    }
-    (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_6__["default"])(App, _React$Component2);
-    return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_2__["default"])(App, [{
-      key: "render",
-      value: function render() {
-        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_9___default().createElement(Main, null);
+    (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(App, _React$Component);
+    return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(App, [{
+      key: "componentWillUnmount",
+      value: function componentWillUnmount() {
+        window.removeEventListener('resize', this.updateScreenState);
       }
     }]);
-  }((react__WEBPACK_IMPORTED_MODULE_9___default().Component));
-  var root = react_dom_client__WEBPACK_IMPORTED_MODULE_10__.createRoot(document.getElementById("app"));
-  root.render(/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_9___default().createElement(App, null));
+  }((react__WEBPACK_IMPORTED_MODULE_6___default().Component));
+  var root = react_dom_client__WEBPACK_IMPORTED_MODULE_7__.createRoot(document.getElementById("app"));
+  root.render(/*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement(App, null));
 });
 })();
 

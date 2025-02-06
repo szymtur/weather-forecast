@@ -1,7 +1,7 @@
 'use strict';
 
 /* function to detect mobile devices */
-function isMobile() {
+function checkIsMobile() {
     const mobileDevices = [
         (/Android/i).test(navigator.userAgent),
         (/BlackBerry|RIM|BB|PlayBook/i).test(navigator.userAgent),
@@ -23,7 +23,7 @@ function viewportSettingsChanger() {
         portrait: `width=device-width, height=850, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`
     };
 
-    if(this.state.screenLandscapeOrientation) {
+    if(this.props.isLandscape) {
         viewportMeta.setAttribute('content', viewportSettings.landscape);
     } else {
         viewportMeta.setAttribute('content', viewportSettings.portrait);
@@ -32,36 +32,21 @@ function viewportSettingsChanger() {
 
 /* function to add custom styles for mobile devices */
 function mobileStyles() {
-    const mainContainer = document.querySelector('#app');
-    const mainPreloader = document.querySelector('.main-preloader');
-    const weatherContainer = document.querySelector('.current-weather');
+    const mainContainer = document.getElementById("app");
 
-    const mainContainerWidth = mainContainer.offsetWidth;
-    const mainContainerHeight = mainContainer.offsetHeight;
+    const widthThreshold = mainContainer.offsetWidth * 1.05;
+    const heightThreshold = mainContainer.offsetHeight * 1.05;
 
-    /* styles for body */
-    document.body.classList.add('mobile-background');
+    mainContainer.classList.toggle("mobile-app-shadow", window.innerWidth > widthThreshold && window.innerHeight > heightThreshold);
+    mainContainer.style.width = (this.state.isLandscape ? '620px' : '500px');
 
-    /* styles for main preloader depending on the device's orientation */
-    if(!weatherContainer) {
-        if (this.state.screenLandscapeOrientation && window.innerHeight <= mainContainerHeight / 1.5) {
-            mainPreloader.style.paddingTop ='3em';
-        }
-        else {
-            mainPreloader.style.paddingTop ='8em';
-        }
-    }
-
-    /* styles for main container depending on screen resolution */
-    if(window.innerHeight > mainContainerHeight * 1.05 && window.innerWidth > mainContainerWidth * 1.05) {
-        mainContainer.style.boxShadow = '0 0 4px black';
-    } else {
-        mainContainer.style.boxShadow = 'none';
+    if (!document.body.classList.contains('mobile-background')) {
+        document.body.classList.add('mobile-background');
     }
 }
 
 export {
-    isMobile,
+    checkIsMobile,
     viewportSettingsChanger,
     mobileStyles
 };

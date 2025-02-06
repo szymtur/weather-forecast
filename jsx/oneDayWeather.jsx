@@ -6,7 +6,8 @@ import WeatherIcon from './weatherIcon.jsx';
 import { WEATHER_UNITS } from "../js/consts";
 
 class OneDayWeather extends React.Component {
-    render() {
+
+    render = () => {
         const { date, temp, pressure, humidity, wind, description, icon } = this.props.nextDay;
         const { temperature: tempUnit, pressure: pressureUnit, humidity: humidityUnit, wind: windUnit } = WEATHER_UNITS[this.props.unitSystem];
 

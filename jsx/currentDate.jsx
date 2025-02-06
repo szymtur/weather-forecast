@@ -17,16 +17,16 @@ class CurrentDateHeader extends React.Component {
         })
     }
 
-    componentDidMount() {
+    componentDidMount = () => {
         this.currentTime();
         this.interval = setInterval(() => this.currentTime(), 1000);
     }
 
-    componentWillUnmount() {
+    componentWillUnmount = () => {
         clearInterval(this.interval);
     }
 
-    render() {
+    render = () => {
         return(
             <div className="header">
                 <div className="current-date">

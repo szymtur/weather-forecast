@@ -4,7 +4,8 @@ import React from 'react';
 import OneDayWeather from './oneDayWeather.jsx';
 
 class NextDaysWeather extends React.Component {
-    render() {
+
+    render = () => {
         const nexDaysComponentsArray = this.props.nextDays.map((element, index) => {
 
             return (
