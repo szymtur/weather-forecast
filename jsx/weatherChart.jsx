@@ -101,7 +101,7 @@ class WeatherChart extends React.Component {
                     color: '#000000',
                     padding: 10,
                     font: {
-                        size: 22,
+                        size: !this.props.isLandscape && this.props.isMobile ? 20 : 22,
                         family: 'Weathericons',
                     },
                     callback: (_, index) => this.props.hourlyForecast.icon.slice(1, 10)[index]
@@ -115,7 +115,7 @@ class WeatherChart extends React.Component {
         const { time, temperature, pressure } = this.props.hourlyForecast;
 
         const data = {
-            labels: time && time.slice(1, 10),
+            labels: !this.props.isLandscape && this.props.isMobile ? time?.map(time => time.split(':')[0]).slice(1, 10) : time?.slice(1, 10),
             datasets: [
                 {
                     label: WEATHER_UNITS[this.props.unitSystem]?.temperature,

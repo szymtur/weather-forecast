@@ -964,16 +964,18 @@ var Main = /*#__PURE__*/function (_React$Component) {
         currentDay: _this.state.currentDayWeatherData,
         displayComponent: _this.state.displayCurrentDayWeather,
         displayNextDays: _this.displayNextDays,
+        isLandscape: _this.props.isLandscape,
         isMobile: _this.props.isMobile,
         localTime: _this.state.localTime,
         location: _this.state.location,
-        isLandscape: _this.props.isLandscape,
         preloaderAlert: _this.state.preloaderAlert,
         preloaderInfo: _this.state.preloaderInfo,
         unitSystem: _this.state.unitSystem
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_9___default().createElement(_weatherChart_jsx__WEBPACK_IMPORTED_MODULE_13__["default"], {
         displayComponent: _this.state.displayCurrentDayWeather,
         hourlyForecast: _this.state.currentDayChartData,
+        isLandscape: _this.props.isLandscape,
+        isMobile: _this.props.isMobile,
         switchComponent: _this.state.displayNextDaysWeather,
         unitSystem: _this.state.unitSystem
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_9___default().createElement(_nextDaysWeather_jsx__WEBPACK_IMPORTED_MODULE_14__["default"], {
@@ -1430,7 +1432,7 @@ var WeatherChart = /*#__PURE__*/function (_React$Component) {
             color: '#000000',
             padding: 10,
             font: {
-              size: 22,
+              size: !_this.props.isLandscape && _this.props.isMobile ? 20 : 22,
               family: 'Weathericons'
             },
             callback: function callback(_, index) {
@@ -1447,7 +1449,9 @@ var WeatherChart = /*#__PURE__*/function (_React$Component) {
         temperature = _this$props$hourlyFor.temperature,
         pressure = _this$props$hourlyFor.pressure;
       var data = {
-        labels: time && time.slice(1, 10),
+        labels: !_this.props.isLandscape && _this.props.isMobile ? time === null || time === void 0 ? void 0 : time.map(function (time) {
+          return time.split(':')[0];
+        }).slice(1, 10) : time === null || time === void 0 ? void 0 : time.slice(1, 10),
         datasets: [{
           label: (_WEATHER_UNITS$_this$ = _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.WEATHER_UNITS[_this.props.unitSystem]) === null || _WEATHER_UNITS$_this$ === void 0 ? void 0 : _WEATHER_UNITS$_this$.temperature,
           data: temperature === null || temperature === void 0 ? void 0 : temperature.slice(1, 10),
