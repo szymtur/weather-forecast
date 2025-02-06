@@ -16,14 +16,14 @@ function checkIsMobile() {
 }
 
 /* function to change viewport settings */
-function viewportSettingsChanger() {
+function viewportSettingsChanger(isLandscape) {
     const viewportMeta = document.querySelector('meta[name="viewport"]');
     const viewportSettings = {
         landscape: `width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`,
         portrait: `width=device-width, height=850, initial-scale=1, maximum-scale=1, shrink-to-fit=yes`
     };
 
-    if(this.props.isLandscape) {
+    if(isLandscape) {
         viewportMeta.setAttribute('content', viewportSettings.landscape);
     } else {
         viewportMeta.setAttribute('content', viewportSettings.portrait);
@@ -31,14 +31,14 @@ function viewportSettingsChanger() {
 }
 
 /* function to add custom styles for mobile devices */
-function mobileStyles() {
+function mobileStyles(isLandscape) {
     const mainContainer = document.getElementById("app");
 
     const widthThreshold = mainContainer.offsetWidth * 1.05;
     const heightThreshold = mainContainer.offsetHeight * 1.05;
 
     mainContainer.classList.toggle("mobile-app-shadow", window.innerWidth > widthThreshold && window.innerHeight > heightThreshold);
-    mainContainer.style.width = (this.state.isLandscape ? '620px' : '500px');
+    mainContainer.style.width = (isLandscape ? '620px' : '500px');
 
     if (!document.body.classList.contains('mobile-background')) {
         document.body.classList.add('mobile-background');

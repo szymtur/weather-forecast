@@ -4,7 +4,7 @@ import React from 'react';
 import ReactDOM from 'react-dom/client';
 
 import Main from './main.jsx';
-import { checkIsMobile, mobileStyles } from '../js/mobile.js';
+import { checkIsMobile, mobileStyles, viewportSettingsChanger } from '../js/mobile.js';
 
 if (!window.Promise) { window.Promise = Promise }
 
@@ -23,7 +23,8 @@ document.addEventListener('DOMContentLoaded', function() {
                 isLandscape: window.innerHeight <= window.innerWidth,
             }, () => {
                 if (this.state.isMobile) {
-                    mobileStyles.call(this); // Apply mobile styles only if it's mobile
+                    mobileStyles(this.state.isLandscape);
+                    viewportSettingsChanger(this.state.isLandscape);
                 }
             });
         };

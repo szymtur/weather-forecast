@@ -212,7 +212,7 @@ class Main extends React.Component {
     /* handling input field focus on mobile devices */
     handleInputOnFocus() {
         if (this.props.isMobile) {
-            viewportSettingsChanger.call(this);
+            viewportSettingsChanger(this.props.isLandscape);
         }
     };
 

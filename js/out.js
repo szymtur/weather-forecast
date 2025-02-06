@@ -298,13 +298,13 @@ function checkIsMobile() {
 }
 
 /* function to change viewport settings */
-function viewportSettingsChanger() {
+function viewportSettingsChanger(isLandscape) {
   var viewportMeta = document.querySelector('meta[name="viewport"]');
   var viewportSettings = {
     landscape: "width=device-width, height=device-height, initial-scale=1, maximum-scale=1, shrink-to-fit=yes",
     portrait: "width=device-width, height=850, initial-scale=1, maximum-scale=1, shrink-to-fit=yes"
   };
-  if (this.props.isLandscape) {
+  if (isLandscape) {
     viewportMeta.setAttribute('content', viewportSettings.landscape);
   } else {
     viewportMeta.setAttribute('content', viewportSettings.portrait);
@@ -312,12 +312,12 @@ function viewportSettingsChanger() {
 }
 
 /* function to add custom styles for mobile devices */
-function mobileStyles() {
+function mobileStyles(isLandscape) {
   var mainContainer = document.getElementById("app");
   var widthThreshold = mainContainer.offsetWidth * 1.05;
   var heightThreshold = mainContainer.offsetHeight * 1.05;
   mainContainer.classList.toggle("mobile-app-shadow", window.innerWidth > widthThreshold && window.innerHeight > heightThreshold);
-  mainContainer.style.width = this.state.isLandscape ? '620px' : '500px';
+  mainContainer.style.width = isLandscape ? '620px' : '500px';
   if (!document.body.classList.contains('mobile-background')) {
     document.body.classList.add('mobile-background');
   }
@@ -995,7 +995,7 @@ var Main = /*#__PURE__*/function (_React$Component) {
     value: /* handling input field focus on mobile devices */
     function handleInputOnFocus() {
       if (this.props.isMobile) {
-        _js_mobile_js__WEBPACK_IMPORTED_MODULE_17__.viewportSettingsChanger.call(this);
+        (0,_js_mobile_js__WEBPACK_IMPORTED_MODULE_17__.viewportSettingsChanger)(this.props.isLandscape);
       }
     }
   }, {
@@ -51136,7 +51136,8 @@ document.addEventListener('DOMContentLoaded', function () {
           isLandscape: window.innerHeight <= window.innerWidth
         }, function () {
           if (_this2.state.isMobile) {
-            _js_mobile_js__WEBPACK_IMPORTED_MODULE_9__.mobileStyles.call(_this2); // Apply mobile styles only if it's mobile
+            (0,_js_mobile_js__WEBPACK_IMPORTED_MODULE_9__.mobileStyles)(_this2.state.isLandscape);
+            (0,_js_mobile_js__WEBPACK_IMPORTED_MODULE_9__.viewportSettingsChanger)(_this2.state.isLandscape);
           }
         });
       }
