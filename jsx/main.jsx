@@ -242,7 +242,7 @@ class Main extends React.Component {
                     buttonText={this.state.displayNextDaysWeather ? BUTTON.currentDayForecast : BUTTON.nextDaysForecast}
                     currentDay={this.state.currentDayWeatherData}
                     displayComponent={this.state.displayCurrentDayWeather}
-                    displayNextDays={this.displayNextDays}
+                    displayNextDays={this.displayNextDays.bind(this)}
                     isLandscape={this.props.isLandscape}
                     isMobile={this.props.isMobile}
                     localTime={this.state.localTime}

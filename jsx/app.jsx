@@ -30,11 +30,11 @@ document.addEventListener('DOMContentLoaded', function() {
 
         componentDidMount() {
             this.updateScreenState();
-            window.addEventListener('resize', this.updateScreenState);
+            window.addEventListener('resize', this.updateScreenState.bind(this));
         }
 
         componentWillUnmount() {
-            window.removeEventListener('resize', this.updateScreenState);
+            window.removeEventListener('resize', this.updateScreenState.bind(this));
         }
 
         render() {
