@@ -4,13 +4,13 @@ import React from 'react';
 
 class SearchSection extends React.Component {
 
-    componentDidMount = () => {
+    componentDidMount() {
         if (this.props.isMobile) {
             this.props.inputRef?.current && this.props.inputRef.current.blur();
         }
     }
 
-    render = () => {
+    render() {
         return (
             <div className='search'>
                 <form onSubmit={this.props.handleSubmit}>
