@@ -243,10 +243,10 @@ class Main extends React.Component {
                     currentDay={this.state.currentDayWeatherData}
                     displayComponent={this.state.displayCurrentDayWeather}
                     displayNextDays={this.displayNextDays}
+                    isLandscape={this.props.isLandscape}
                     isMobile={this.props.isMobile}
                     localTime={this.state.localTime}
                     location={this.state.location}
-                    isLandscape={this.props.isLandscape}
                     preloaderAlert={this.state.preloaderAlert}
                     preloaderInfo={this.state.preloaderInfo}
                     unitSystem={this.state.unitSystem}
@@ -254,6 +254,8 @@ class Main extends React.Component {
                 <WeatherChart
                     displayComponent={this.state.displayCurrentDayWeather}
                     hourlyForecast={this.state.currentDayChartData}
+                    isLandscape={this.props.isLandscape}
+                    isMobile={this.props.isMobile}
                     switchComponent={this.state.displayNextDaysWeather}
                     unitSystem={this.state.unitSystem}
                 />
