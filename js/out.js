@@ -960,6 +960,7 @@ var Main = /*#__PURE__*/function (_React$Component) {
         inputRef: _this.state.inputRef,
         isMobile: _this.props.isMobile
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_9___default().createElement(_currentWeather_jsx__WEBPACK_IMPORTED_MODULE_12__["default"], {
+<<<<<<< Updated upstream
         buttonText: _this.state.displayNextDaysWeather ? _js_consts_js__WEBPACK_IMPORTED_MODULE_16__.BUTTON.currentDayForecast : _js_consts_js__WEBPACK_IMPORTED_MODULE_16__.BUTTON.nextDaysForecast,
         currentDay: _this.state.currentDayWeatherData,
         displayComponent: _this.state.displayCurrentDayWeather,
@@ -971,6 +972,19 @@ var Main = /*#__PURE__*/function (_React$Component) {
         preloaderAlert: _this.state.preloaderAlert,
         preloaderInfo: _this.state.preloaderInfo,
         unitSystem: _this.state.unitSystem
+=======
+        buttonText: this.state.displayNextDaysWeather ? _js_consts_js__WEBPACK_IMPORTED_MODULE_16__.BUTTON.currentDayForecast : _js_consts_js__WEBPACK_IMPORTED_MODULE_16__.BUTTON.nextDaysForecast,
+        currentDay: this.state.currentDayWeatherData,
+        displayComponent: this.state.displayCurrentDayWeather,
+        displayNextDays: this.displayNextDays.bind(this),
+        isLandscape: this.props.isLandscape,
+        isMobile: this.props.isMobile,
+        localTime: this.state.localTime,
+        location: this.state.location,
+        preloaderAlert: this.state.preloaderAlert,
+        preloaderInfo: this.state.preloaderInfo,
+        unitSystem: this.state.unitSystem
+>>>>>>> Stashed changes
       }), /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_9___default().createElement(_weatherChart_jsx__WEBPACK_IMPORTED_MODULE_13__["default"], {
         displayComponent: _this.state.displayCurrentDayWeather,
         hourlyForecast: _this.state.currentDayChartData,
@@ -51111,9 +51125,42 @@ document.addEventListener('DOMContentLoaded', function () {
     }
     (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(App, _React$Component);
     return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(App, [{
+<<<<<<< Updated upstream
       key: "componentWillUnmount",
       value: function componentWillUnmount() {
         window.removeEventListener('resize', this.updateScreenState.bind(this));
+=======
+      key: "updateScreenState",
+      value: function updateScreenState() {
+        var _this2 = this;
+        this.setState({
+          isMobile: (0,_js_mobile_js__WEBPACK_IMPORTED_MODULE_9__.checkIsMobile)(),
+          isLandscape: window.innerHeight <= window.innerWidth
+        }, function () {
+          if (_this2.state.isMobile) {
+            _js_mobile_js__WEBPACK_IMPORTED_MODULE_9__.mobileStyles.call(_this2); // Apply mobile styles only if it's mobile
+          }
+        });
+      }
+    }, {
+      key: "componentDidMount",
+      value: function componentDidMount() {
+        this.updateScreenState();
+        window.addEventListener('resize', this.updateScreenState.bind(this));
+      }
+    }, {
+      key: "componentWillUnmount",
+      value: function componentWillUnmount() {
+        window.removeEventListener('resize', this.updateScreenState.bind(this));
+      }
+    }, {
+      key: "render",
+      value: function render() {
+        return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement(_main_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
+          isMobile: this.state.isMobile,
+          isLandscape: this.state.isLandscape
+        }));
+>>>>>>> Stashed changes
       }
     }]);
   }((react__WEBPACK_IMPORTED_MODULE_6___default().Component));
