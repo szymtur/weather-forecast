@@ -111,7 +111,7 @@ class WeatherChart extends React.Component {
     };
 
 
-    render = () => {
+    render() {
         const { time, temperature, pressure } = this.props.hourlyForecast;
 
         const data = {
