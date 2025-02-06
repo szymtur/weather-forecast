@@ -963,7 +963,7 @@ var Main = /*#__PURE__*/function (_React$Component) {
         buttonText: _this.state.displayNextDaysWeather ? _js_consts_js__WEBPACK_IMPORTED_MODULE_16__.BUTTON.currentDayForecast : _js_consts_js__WEBPACK_IMPORTED_MODULE_16__.BUTTON.nextDaysForecast,
         currentDay: _this.state.currentDayWeatherData,
         displayComponent: _this.state.displayCurrentDayWeather,
-        displayNextDays: _this.displayNextDays,
+        displayNextDays: _this.displayNextDays.bind(_this),
         isLandscape: _this.props.isLandscape,
         isMobile: _this.props.isMobile,
         localTime: _this.state.localTime,
@@ -51099,7 +51099,7 @@ document.addEventListener('DOMContentLoaded', function () {
       });
       (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5__["default"])(_this, "componentDidMount", function () {
         _this.updateScreenState();
-        window.addEventListener('resize', _this.updateScreenState);
+        window.addEventListener('resize', _this.updateScreenState.bind(_this));
       });
       (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5__["default"])(_this, "render", function () {
         return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", null, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement(_main_jsx__WEBPACK_IMPORTED_MODULE_8__["default"], {
@@ -51113,7 +51113,7 @@ document.addEventListener('DOMContentLoaded', function () {
     return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(App, [{
       key: "componentWillUnmount",
       value: function componentWillUnmount() {
-        window.removeEventListener('resize', this.updateScreenState);
+        window.removeEventListener('resize', this.updateScreenState.bind(this));
       }
     }]);
   }((react__WEBPACK_IMPORTED_MODULE_6___default().Component));
