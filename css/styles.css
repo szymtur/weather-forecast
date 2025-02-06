@@ -438,4 +438,8 @@ body {
 .mobile-background {
     background-color: #d3d3d3;
 }
+
+.mobile-app-shadow {
+    box-shadow: 0 0 4px #000000;
+}
 /* Mobile styles - end */

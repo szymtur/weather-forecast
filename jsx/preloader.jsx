@@ -3,9 +3,17 @@
 import React from 'react';
 
 class Preloader extends React.Component {
-    render() {
-        const classes = !this.props.preloaderAlert ? 'main-loading animation' : 'main-loading';
-        const styles = { color: !this.props.preloaderAlert ? '#000000' : '#444444' };
+
+    render = () => {
+
+        const { isLandscape, isMobile, preloaderAlert, preloaderInfo } = this.props;
+
+        const classes = preloaderAlert ? 'main-loading' : 'main-loading animation';
+
+        const styles = {
+            color: preloaderAlert ? '#444444' : '#000000',
+            paddingTop: isMobile ? (isLandscape && window.innerHeight <= window.innerWidth / 1.5 ? '3em' : '8em') : '5em'
+        };
 
         return (
             <div className='main-preloader' style={styles}>
@@ -15,7 +23,7 @@ class Preloader extends React.Component {
                         d='M256 160c-52.9 0-96 43.1-96 96s43.1 96 96 96 96-43.1 96-96-43.1-96-96-96zm246.4 80.5l-94.7-47.3 33.5-100.4c4.5-13.6-8.4-26.5-21.9-21.9l-100.4 33.5-47.4-94.8c-6.4-12.8-24.6-12.8-31 0l-47.3 94.7L92.7 70.8c-13.6-4.5-26.5 8.4-21.9 21.9l33.5 100.4-94.7 47.4c-12.8 6.4-12.8 24.6 0 31l94.7 47.3-33.5 100.5c-4.5 13.6 8.4 26.5 21.9 21.9l100.4-33.5 47.3 94.7c6.4 12.8 24.6 12.8 31 0l47.3-94.7 100.4 33.5c13.6 4.5 26.5-8.4 21.9-21.9l-33.5-100.4 94.7-47.3c13-6.5 13-24.7.2-31.1zm-155.9 106c-49.9 49.9-131.1 49.9-181 0-49.9-49.9-49.9-131.1 0-181 49.9-49.9 131.1-49.9 181 0 49.9 49.9 49.9 131.1 0 181z'>
                     </path>
                 </svg>
-                <p className='info'>{this.props.preloaderInfo}</p>
+                <p className='info'>{preloaderInfo}</p>
             </div>
         )
     }

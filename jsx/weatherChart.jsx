@@ -10,6 +10,7 @@ import { WEATHER_UNITS } from '../js/consts.js';
 Chart.register(CategoryScale, Legend, LinearScale, LineElement, PointElement);
 
 class WeatherChart extends React.Component {
+
     options = {
         responsive: true,
         maintainAspectRatio: false,
@@ -110,7 +111,7 @@ class WeatherChart extends React.Component {
     };
 
 
-    render() {
+    render = () => {
         const { time, temperature, pressure } = this.props.hourlyForecast;
 
         const data = {
