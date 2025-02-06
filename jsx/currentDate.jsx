@@ -4,30 +4,30 @@ import React from 'react';
 import { appendLeadingZero } from '../js/helpers.js';
 
 class CurrentDateHeader extends React.Component {
-
     state = { timezone: null, time: null, date: null };
 
-    currentTime = () => {
+    currentTime() {
         const date = new Date();
+        const timezoneOffset = -date.getTimezoneOffset() / 60;
 
         this.setState({
-            timezone: date.getTimezoneOffset() < 0 ? `(GMT+${date.getTimezoneOffset()/-60})` : `(GMT-${date.getTimezoneOffset()/60})`,
+            timezone: `(GMT${timezoneOffset >= 0 ? `+${timezoneOffset}` : timezoneOffset})`,
             time: `${appendLeadingZero(date.getHours())}:${appendLeadingZero(date.getMinutes())}:${appendLeadingZero(date.getSeconds())}`,
-            date: `${appendLeadingZero(date.getDate())}-${appendLeadingZero(date.getMonth()+1)}-${date.getFullYear()}`
-        })
+            date: `${appendLeadingZero(date.getDate())}-${appendLeadingZero(date.getMonth() + 1)}-${date.getFullYear()}`
+        });
     }
 
-    componentDidMount = () => {
+    componentDidMount() {
         this.currentTime();
         this.interval = setInterval(() => this.currentTime(), 1000);
     }
 
-    componentWillUnmount = () => {
+    componentWillUnmount() {
         clearInterval(this.interval);
     }
 
-    render = () => {
-        return(
+    render() {
+        return (
             <div className="header">
                 <div className="current-date">
                     <h4>{this.state.date} {this.state.timezone} {this.state.time}</h4>
@@ -36,7 +36,7 @@ class CurrentDateHeader extends React.Component {
                     <h2>Weather Forecast</h2>
                 </div>
             </div>
-        )
+        );
     }
 }
 

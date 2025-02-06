@@ -38,7 +38,7 @@ class Main extends React.Component {
 
 
     /* geolocation - getting current position by ip address from ipinfo.io */
-    getCurrentPosition = async () => {
+    async getCurrentPosition() {
         try {
             const data = await ipInfoGeolocation();
             const [latitude, longitude] = data.loc.split(',');
@@ -64,7 +64,7 @@ class Main extends React.Component {
 
 
     /* reverse geocoding - getting city name from latitude and longitude using openstreetmap.org */
-    getLocationName = async () => {
+    async getLocationName() {
         try {
             const data = await openStreetMapReverseGeocoding(this.state.gpsCoordinates.latitude, this.state.gpsCoordinates.longitude);
 
@@ -83,7 +83,7 @@ class Main extends React.Component {
 
 
     /* forward geocoding - getting latitude and longitude from city name using openstreetmap.org */
-    getCoordinates = async () => {
+    async getCoordinates() {
         try {
             const data = await openStreetMapForwardGeocoding(this.state.input);
 
@@ -113,7 +113,7 @@ class Main extends React.Component {
 
 
     /* Fetching weather data from OpenWeatherMap API */
-    getWeatherData = async () => {
+    async getWeatherData() {
         try {
             const data = await openWeatherMapGetData(this.state.gpsCoordinates.latitude, this.state.gpsCoordinates.longitude);
 
@@ -148,13 +148,13 @@ class Main extends React.Component {
 
 
     /* removing focus from search field */
-    blurSearchField = () => {
+    blurSearchField() {
         this.state.inputRef.current && this.state.inputRef.current.blur();
     };
 
 
     /* handling 'next days forecast' button click */
-    displayNextDays = () => {
+    displayNextDays() {
         this.setState({
             displayNextDaysWeather: !this.state.displayNextDaysWeather
         });
@@ -162,7 +162,7 @@ class Main extends React.Component {
 
 
     /* resetting state before fetching new data */
-    resetStateBeforeFetching = () => {
+    resetStateBeforeFetching() {
         this.setState({
             input: '',
             displayCurrentDayWeather: false,
@@ -174,7 +174,7 @@ class Main extends React.Component {
 
 
     /* handling errors and displaying relevant message */
-    handleError = (error) => {
+    handleError(error) {
         const errorMessageMap = {
             [ERROR.noData]: MESSAGE.wrongCityName,
             [ERROR.unableToGeolocation]: MESSAGE.enterManually,
@@ -189,7 +189,7 @@ class Main extends React.Component {
 
 
     /* handling 'get weather' button click */
-    handleSubmit = (event) => {
+    handleSubmit(event) {
         event.preventDefault();
 
         this.resetStateBeforeFetching();
@@ -204,20 +204,20 @@ class Main extends React.Component {
 
 
     /* handling input field value change */
-    handleInputOnChange = (event) => {
+    handleInputOnChange(event) {
         this.setState({ input: event.target.value });
     };
 
 
     /* handling input field focus on mobile devices */
-    handleInputOnFocus = () => {
+    handleInputOnFocus() {
         if (this.props.isMobile) {
             viewportSettingsChanger.call(this);
         }
     };
 
 
-    componentDidMount = () => {
+    componentDidMount() {
         this.getCurrentPosition()
             .catch((error) => {
                 console.error(`componentDidMount ${error}`);
@@ -226,14 +226,14 @@ class Main extends React.Component {
     };
 
 
-    render = () => {
+    render() {
         return (
             <div className='app-wrapper'>
                 <CurrentDateHeader/>
                 <SearchSection
-                    handleInputOnChange={this.handleInputOnChange}
-                    handleInputOnFocus={this.handleInputOnFocus}
-                    handleSubmit={this.handleSubmit}
+                    handleInputOnChange={this.handleInputOnChange.bind(this)}
+                    handleInputOnFocus={this.handleInputOnFocus.bind(this)}
+                    handleSubmit={this.handleSubmit.bind(this)}
                     input={this.state.input}
                     inputRef={this.state.inputRef}
                     isMobile={this.props.isMobile}

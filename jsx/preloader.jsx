@@ -4,7 +4,7 @@ import React from 'react';
 
 class Preloader extends React.Component {
 
-    render = () => {
+    render() {
 
         const { isLandscape, isMobile, preloaderAlert, preloaderInfo } = this.props;
 

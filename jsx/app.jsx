@@ -17,7 +17,7 @@ document.addEventListener('DOMContentLoaded', function() {
             isLandscape: window.innerHeight <= window.innerWidth,
         }
 
-        updateScreenState = () => {
+        updateScreenState() {
             this.setState({
                 isMobile: checkIsMobile(),
                 isLandscape: window.innerHeight <= window.innerWidth,
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', function() {
             });
         };
 
-        componentDidMount = () => {
+        componentDidMount() {
             this.updateScreenState();
             window.addEventListener('resize', this.updateScreenState.bind(this));
         }
@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', function() {
             window.removeEventListener('resize', this.updateScreenState.bind(this));
         }
 
-        render = () => {
+        render() {
             return (
                 <div>
                     <Main
