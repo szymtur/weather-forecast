@@ -11,108 +11,107 @@ Chart.register(CategoryScale, Legend, LinearScale, LineElement, PointElement);
 
 class WeatherChart extends React.Component {
 
-    options = {
-        responsive: true,
-        maintainAspectRatio: false,
-        interaction: {
-            mode: 'index',
-            intersect: true,
-        },
-        stacked: false,
-        layout: {
-            padding: {
-                bottom: -5
-            }
-        },
-        plugins: {
-            legend: {
-                display: true,
-                onClick: null,
-                position: 'bottom',
-                labels: {
-                    color: '#000000',
-                    font: {
-                        weight: 500,
-                        size: 13,
-                        family: '"Montserrat", sans-serif'
-                    },
-                    pointStyle: 'circle',
-                    usePointStyle: true,
-                    boxHeight: 4,
-                }
-            }
-        },
-        scales: {
-            axisY1: {
-                type: 'linear',
-                display: true,
-                position: 'left',
-                grace: 1,
-                grid: {
-                    borderColor: '#808080',
-                    borderWidth: 2,
-                },
-                ticks: {
-                    color: '#808080',
-                    maxTicksLimit: 6,
-                    precision: 0,
-                    font: {
-                        weight: 600,
-                        size: 12,
-                        family: '"Montserrat", sans-serif'
-                    }
-                }
-            },
-            axisY2: {
-                type: 'linear',
-                display: true,
-                position: 'right',
-                grace: 1,
-                grid: {
-                    drawOnChartArea: false,
-                    borderColor: '#800080',
-                    borderWidth: 2,
-                },
-                ticks: {
-                    color: '#800080',
-                    maxTicksLimit: 5,
-                    precision: 0,
-                    font: {
-                        size: 12,
-                        weight: 600,
-                        family: '"Montserrat", sans-serif'
-                    }
-                }
-            },
-            x: {
-                position: 'bottom',
-                ticks: {
-                    color: '#000000',
-                    font: {
-                        size: 12,
-                        weight: 600,
-                        family: '"Montserrat", sans-serif',
-                    }
-                }
-            },
-            x2: {
-                position: 'top',
-                ticks: {
-                    color: '#000000',
-                    padding: 10,
-                    font: {
-                        size: !this.props.isLandscape && this.props.isMobile ? 20 : 22,
-                        family: 'Weathericons',
-                    },
-                    callback: (_, index) => this.props.hourlyForecast.icon.slice(1, 10)[index]
-                }
-            }
-        }
-    };
-
-
     render() {
         const { time, temperature, pressure } = this.props.hourlyForecast;
+
+        const options = {
+            responsive: true,
+            maintainAspectRatio: false,
+            interaction: {
+                mode: 'index',
+                intersect: true,
+            },
+            stacked: false,
+            layout: {
+                padding: {
+                    bottom: -5
+                }
+            },
+            plugins: {
+                legend: {
+                    display: true,
+                    onClick: null,
+                    position: 'bottom',
+                    labels: {
+                        color: '#000000',
+                        font: {
+                            weight: 500,
+                            size: 13,
+                            family: '"Montserrat", sans-serif'
+                        },
+                        pointStyle: 'circle',
+                        usePointStyle: true,
+                        boxHeight: 4,
+                    }
+                }
+            },
+            scales: {
+                axisY1: {
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                    grace: 1,
+                    grid: {
+                        borderColor: '#808080',
+                        borderWidth: 2,
+                    },
+                    ticks: {
+                        color: '#808080',
+                        maxTicksLimit: 6,
+                        precision: 0,
+                        font: {
+                            weight: 600,
+                            size: 12,
+                            family: '"Montserrat", sans-serif'
+                        }
+                    }
+                },
+                axisY2: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    grace: 1,
+                    grid: {
+                        drawOnChartArea: false,
+                        borderColor: '#800080',
+                        borderWidth: 2,
+                    },
+                    ticks: {
+                        color: '#800080',
+                        maxTicksLimit: 5,
+                        precision: 0,
+                        font: {
+                            size: 12,
+                            weight: 600,
+                            family: '"Montserrat", sans-serif'
+                        }
+                    }
+                },
+                x: {
+                    position: 'bottom',
+                    ticks: {
+                        color: '#000000',
+                        font: {
+                            size: 12,
+                            weight: 600,
+                            family: '"Montserrat", sans-serif',
+                        }
+                    }
+                },
+                x2: {
+                    position: 'top',
+                    ticks: {
+                        color: '#000000',
+                        padding: 10,
+                        font: {
+                            size: !this.props.isLandscape && this.props.isMobile ? 19 : 24,
+                            family: 'Weathericons',
+                        },
+                        callback: (_, index) => this.props.hourlyForecast.icon.slice(1, 10)[index]
+                    }
+                }
+            }
+        };
 
         const data = {
             labels: !this.props.isLandscape && this.props.isMobile ? time?.map(time => time.split(':')[0]).slice(1, 10) : time?.slice(1, 10),
@@ -147,7 +146,7 @@ class WeatherChart extends React.Component {
         return (
             <div className='current-weather current-chart'>
                 <ChartJs
-                    options={this.options}
+                    options={options}
                     data={data}
                     type='line'
                 />
