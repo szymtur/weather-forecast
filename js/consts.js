@@ -53,7 +53,7 @@ const WEATHER_ICON_MAP = {
     '02n': { className: 'wi wi-night-cloudy', code: '\uf031' },
     '03d': { className: 'wi wi-day-cloudy', code: '\uf002' },
     '03n': { className: 'wi wi-night-cloudy', code: '\uf031' },
-    '04d': { className: 'wi wi-day-cloudy-high', code: '\uf07d' },
+    '04d': { className: 'wi wi-day-cloudy', code: '\uf002' },
     '04n': { className: 'wi wi-night-cloudy-high', code: '\uf080' },
     '09d': { className: 'wi wi-day-showers', code: '\uf009' },
     '09n': { className: 'wi wi-night-showers', code: '\uf037' },

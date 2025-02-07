@@ -149,8 +149,8 @@ var WEATHER_ICON_MAP = {
     code: "\uF031"
   },
   '04d': {
-    className: 'wi wi-day-cloudy-high',
-    code: "\uF07D"
+    className: 'wi wi-day-cloudy',
+    code: "\uF002"
   },
   '04n': {
     className: 'wi wi-night-cloudy-high',
@@ -1353,13 +1353,11 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _babel_runtime_helpers_possibleConstructorReturn__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! @babel/runtime/helpers/possibleConstructorReturn */ "./node_modules/@babel/runtime/helpers/esm/possibleConstructorReturn.js");
 /* harmony import */ var _babel_runtime_helpers_getPrototypeOf__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @babel/runtime/helpers/getPrototypeOf */ "./node_modules/@babel/runtime/helpers/esm/getPrototypeOf.js");
 /* harmony import */ var _babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @babel/runtime/helpers/inherits */ "./node_modules/@babel/runtime/helpers/esm/inherits.js");
-/* harmony import */ var _babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @babel/runtime/helpers/defineProperty */ "./node_modules/@babel/runtime/helpers/esm/defineProperty.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_6___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_6__);
-/* harmony import */ var react_chartjs_2__WEBPACK_IMPORTED_MODULE_9__ = __webpack_require__(/*! react-chartjs-2 */ "./node_modules/react-chartjs-2/dist/index.js");
-/* harmony import */ var chart_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! chart.js */ "./node_modules/chart.js/dist/chart.mjs");
-/* harmony import */ var _js_consts_js__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! ../js/consts.js */ "./js/consts.js");
-
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_5___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_5__);
+/* harmony import */ var react_chartjs_2__WEBPACK_IMPORTED_MODULE_8__ = __webpack_require__(/*! react-chartjs-2 */ "./node_modules/react-chartjs-2/dist/index.js");
+/* harmony import */ var chart_js__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! chart.js */ "./node_modules/chart.js/dist/chart.mjs");
+/* harmony import */ var _js_consts_js__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ../js/consts.js */ "./js/consts.js");
 
 
 
@@ -1373,132 +1371,129 @@ function _isNativeReflectConstruct() { try { var t = !Boolean.prototype.valueOf.
 
 
 
-chart_js__WEBPACK_IMPORTED_MODULE_7__.Chart.register(chart_js__WEBPACK_IMPORTED_MODULE_7__.CategoryScale, chart_js__WEBPACK_IMPORTED_MODULE_7__.Legend, chart_js__WEBPACK_IMPORTED_MODULE_7__.LinearScale, chart_js__WEBPACK_IMPORTED_MODULE_7__.LineElement, chart_js__WEBPACK_IMPORTED_MODULE_7__.PointElement);
+chart_js__WEBPACK_IMPORTED_MODULE_6__.Chart.register(chart_js__WEBPACK_IMPORTED_MODULE_6__.CategoryScale, chart_js__WEBPACK_IMPORTED_MODULE_6__.Legend, chart_js__WEBPACK_IMPORTED_MODULE_6__.LinearScale, chart_js__WEBPACK_IMPORTED_MODULE_6__.LineElement, chart_js__WEBPACK_IMPORTED_MODULE_6__.PointElement);
 var WeatherChart = /*#__PURE__*/function (_React$Component) {
   function WeatherChart() {
-    var _this;
     (0,_babel_runtime_helpers_classCallCheck__WEBPACK_IMPORTED_MODULE_0__["default"])(this, WeatherChart);
-    for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-      args[_key] = arguments[_key];
-    }
-    _this = _callSuper(this, WeatherChart, [].concat(args));
-    (0,_babel_runtime_helpers_defineProperty__WEBPACK_IMPORTED_MODULE_5__["default"])(_this, "options", {
-      responsive: true,
-      maintainAspectRatio: false,
-      interaction: {
-        mode: 'index',
-        intersect: true
-      },
-      stacked: false,
-      layout: {
-        padding: {
-          bottom: -5
-        }
-      },
-      plugins: {
-        legend: {
-          display: true,
-          onClick: null,
-          position: 'bottom',
-          labels: {
-            color: '#000000',
-            font: {
-              weight: 500,
-              size: 13,
-              family: '"Montserrat", sans-serif'
-            },
-            pointStyle: 'circle',
-            usePointStyle: true,
-            boxHeight: 4
-          }
-        }
-      },
-      scales: {
-        axisY1: {
-          type: 'linear',
-          display: true,
-          position: 'left',
-          grace: 1,
-          grid: {
-            borderColor: '#808080',
-            borderWidth: 2
-          },
-          ticks: {
-            color: '#808080',
-            maxTicksLimit: 6,
-            precision: 0,
-            font: {
-              weight: 600,
-              size: 12,
-              family: '"Montserrat", sans-serif'
-            }
-          }
-        },
-        axisY2: {
-          type: 'linear',
-          display: true,
-          position: 'right',
-          grace: 1,
-          grid: {
-            drawOnChartArea: false,
-            borderColor: '#800080',
-            borderWidth: 2
-          },
-          ticks: {
-            color: '#800080',
-            maxTicksLimit: 5,
-            precision: 0,
-            font: {
-              size: 12,
-              weight: 600,
-              family: '"Montserrat", sans-serif'
-            }
-          }
-        },
-        x: {
-          position: 'bottom',
-          ticks: {
-            color: '#000000',
-            font: {
-              size: 12,
-              weight: 600,
-              family: '"Montserrat", sans-serif'
-            }
-          }
-        },
-        x2: {
-          position: 'top',
-          ticks: {
-            color: '#000000',
-            padding: 10,
-            font: {
-              size: !_this.props.isLandscape && _this.props.isMobile ? 20 : 22,
-              family: 'Weathericons'
-            },
-            callback: function callback(_, index) {
-              return _this.props.hourlyForecast.icon.slice(1, 10)[index];
-            }
-          }
-        }
-      }
-    });
-    return _this;
+    return _callSuper(this, WeatherChart, arguments);
   }
   (0,_babel_runtime_helpers_inherits__WEBPACK_IMPORTED_MODULE_4__["default"])(WeatherChart, _React$Component);
   return (0,_babel_runtime_helpers_createClass__WEBPACK_IMPORTED_MODULE_1__["default"])(WeatherChart, [{
     key: "render",
     value: function render() {
-      var _WEATHER_UNITS$this$p, _WEATHER_UNITS$this$p2;
+      var _this = this,
+        _WEATHER_UNITS$this$p,
+        _WEATHER_UNITS$this$p2;
       var _this$props$hourlyFor = this.props.hourlyForecast,
         time = _this$props$hourlyFor.time,
         temperature = _this$props$hourlyFor.temperature,
         pressure = _this$props$hourlyFor.pressure;
+      var options = {
+        responsive: true,
+        maintainAspectRatio: false,
+        interaction: {
+          mode: 'index',
+          intersect: true
+        },
+        stacked: false,
+        layout: {
+          padding: {
+            bottom: -5
+          }
+        },
+        plugins: {
+          legend: {
+            display: true,
+            onClick: null,
+            position: 'bottom',
+            labels: {
+              color: '#000000',
+              font: {
+                weight: 500,
+                size: 13,
+                family: '"Montserrat", sans-serif'
+              },
+              pointStyle: 'circle',
+              usePointStyle: true,
+              boxHeight: 4
+            }
+          }
+        },
+        scales: {
+          axisY1: {
+            type: 'linear',
+            display: true,
+            position: 'left',
+            grace: 1,
+            grid: {
+              borderColor: '#808080',
+              borderWidth: 2
+            },
+            ticks: {
+              color: '#808080',
+              maxTicksLimit: 6,
+              precision: 0,
+              font: {
+                weight: 600,
+                size: 12,
+                family: '"Montserrat", sans-serif'
+              }
+            }
+          },
+          axisY2: {
+            type: 'linear',
+            display: true,
+            position: 'right',
+            grace: 1,
+            grid: {
+              drawOnChartArea: false,
+              borderColor: '#800080',
+              borderWidth: 2
+            },
+            ticks: {
+              color: '#800080',
+              maxTicksLimit: 5,
+              precision: 0,
+              font: {
+                size: 12,
+                weight: 600,
+                family: '"Montserrat", sans-serif'
+              }
+            }
+          },
+          x: {
+            position: 'bottom',
+            ticks: {
+              color: '#000000',
+              font: {
+                size: 12,
+                weight: 600,
+                family: '"Montserrat", sans-serif'
+              }
+            }
+          },
+          x2: {
+            position: 'top',
+            ticks: {
+              color: '#000000',
+              padding: 10,
+              font: {
+                size: !this.props.isLandscape && this.props.isMobile ? 19 : 24,
+                family: 'Weathericons'
+              },
+              callback: function callback(_, index) {
+                return _this.props.hourlyForecast.icon.slice(1, 10)[index];
+              }
+            }
+          }
+        }
+      };
       var data = {
         labels: !this.props.isLandscape && this.props.isMobile ? time === null || time === void 0 ? void 0 : time.map(function (time) {
           return time.split(':')[0];
         }).slice(1, 10) : time === null || time === void 0 ? void 0 : time.slice(1, 10),
         datasets: [{
-          label: (_WEATHER_UNITS$this$p = _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.WEATHER_UNITS[this.props.unitSystem]) === null || _WEATHER_UNITS$this$p === void 0 ? void 0 : _WEATHER_UNITS$this$p.temperature,
+          label: (_WEATHER_UNITS$this$p = _js_consts_js__WEBPACK_IMPORTED_MODULE_7__.WEATHER_UNITS[this.props.unitSystem]) === null || _WEATHER_UNITS$this$p === void 0 ? void 0 : _WEATHER_UNITS$this$p.temperature,
           data: temperature === null || temperature === void 0 ? void 0 : temperature.slice(1, 10),
           borderColor: '#808080',
           backgroundColor: 'white',
@@ -1507,7 +1502,7 @@ var WeatherChart = /*#__PURE__*/function (_React$Component) {
           borderWidth: 2,
           yAxisID: 'axisY1'
         }, {
-          label: (_WEATHER_UNITS$this$p2 = _js_consts_js__WEBPACK_IMPORTED_MODULE_8__.WEATHER_UNITS[this.props.unitSystem]) === null || _WEATHER_UNITS$this$p2 === void 0 ? void 0 : _WEATHER_UNITS$this$p2.pressure,
+          label: (_WEATHER_UNITS$this$p2 = _js_consts_js__WEBPACK_IMPORTED_MODULE_7__.WEATHER_UNITS[this.props.unitSystem]) === null || _WEATHER_UNITS$this$p2 === void 0 ? void 0 : _WEATHER_UNITS$this$p2.pressure,
           data: pressure === null || pressure === void 0 ? void 0 : pressure.slice(1, 10),
           borderColor: '#800080',
           backgroundColor: 'white',
@@ -1520,16 +1515,16 @@ var WeatherChart = /*#__PURE__*/function (_React$Component) {
       if (!this.props.displayComponent || this.props.switchComponent) {
         return null;
       }
-      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement("div", {
+      return /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement("div", {
         className: "current-weather current-chart"
-      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_6___default().createElement(react_chartjs_2__WEBPACK_IMPORTED_MODULE_9__.Chart, {
-        options: this.options,
+      }, /*#__PURE__*/react__WEBPACK_IMPORTED_MODULE_5___default().createElement(react_chartjs_2__WEBPACK_IMPORTED_MODULE_8__.Chart, {
+        options: options,
         data: data,
         type: "line"
       }));
     }
   }]);
-}((react__WEBPACK_IMPORTED_MODULE_6___default().Component));
+}((react__WEBPACK_IMPORTED_MODULE_5___default().Component));
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (WeatherChart);
 
 /***/ }),
